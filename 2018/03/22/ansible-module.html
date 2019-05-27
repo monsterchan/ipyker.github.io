@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: true,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"shrinkIn","post_header":"slideLeftIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideDownIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "bd399fce"
+    });
+  daovoice('update');
+  </script>
+
+  <meta name="description" content="本文主要讲解ansible的常用命令和简单安装步骤，具体配置文件详解以及playbook暂未涉及！后续更新。。。。  安装Ansible1$ yum install epel-release ansible -y 配置文件配置 常用ansible.cfg配置文件 123456789101112131415161718192021222324252627$ cat /etc/ansible/ans">
+<meta name="keywords" content="ansible">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible 常用模块指令">
+<meta property="og:url" content="https://www.ipyker.com/2018/03/22/ansible-module.html">
+<meta property="og:site_name" content="派 | Pyker">
+<meta property="og:description" content="本文主要讲解ansible的常用命令和简单安装步骤，具体配置文件详解以及playbook暂未涉及！后续更新。。。。  安装Ansible1$ yum install epel-release ansible -y 配置文件配置 常用ansible.cfg配置文件 123456789101112131415161718192021222324252627$ cat /etc/ansible/ans">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-23T18:36:18.762Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ansible 常用模块指令">
+<meta name="twitter:description" content="本文主要讲解ansible的常用命令和简单安装步骤，具体配置文件详解以及playbook暂未涉及！后续更新。。。。  安装Ansible1$ yum install epel-release ansible -y 配置文件配置 常用ansible.cfg配置文件 123456789101112131415161718192021222324252627$ cat /etc/ansible/ans">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="派 | Pyker" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.ipyker.com/2018/03/22/ansible-module">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Ansible 常用模块指令 | 派 | Pyker</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">派 | Pyker</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-bookmark"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-互动">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/guestbook/" rel="section"><i class="menu-item-icon fa fa-fw fa-comments"></i> <br>互动</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2018/03/22/ansible-module.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="丨Pyker丨">
+      <meta itemprop="description" content="与其临渊羡鱼，不如退而结网。">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="派 | Pyker">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ansible 常用模块指令
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-03-22 14:47:00" itemprop="dateCreated datePublished" datetime="2018-03-22T14:47:00+08:00">2018-03-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-24 02:36:18" itemprop="dateModified" datetime="2019-05-24T02:36:18+08:00">2019-05-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/CI-CD/" itemprop="url" rel="index"><span itemprop="name">CI/CD</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">8.7k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">8 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p><strong>本文主要讲解ansible的常用命令和简单安装步骤，具体配置文件详解以及playbook暂未涉及！后续更新。。。。</strong></p>
+</blockquote>
+<h3 id="安装Ansible"><a href="#安装Ansible" class="headerlink" title="安装Ansible"></a>安装Ansible</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum install epel-release ansible -y</span><br></pre></td></tr></table></figure>
+<h3 id="配置文件配置"><a href="#配置文件配置" class="headerlink" title="配置文件配置"></a>配置文件配置</h3><ul>
+<li><p>常用ansible.cfg配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/ansible/ansible.cfg </span><br><span class="line">  [defaults]</span><br><span class="line">  inventory      = /etc/ansible/hosts           <span class="comment">#主机清单</span></span><br><span class="line">  library        = /usr/share/my_modules/       <span class="comment"># 使用的模块</span></span><br><span class="line">  forks          = 5                            <span class="comment">#处理并发的进程数，建议设置控制机的数量</span></span><br><span class="line">  sudo_user      = root                         <span class="comment">#默认执行远程命令的用户</span></span><br><span class="line">  remote_port    = 22                           <span class="comment">#SSH连接被控制机的端口</span></span><br><span class="line">  gathering = smart                             <span class="comment">#'smart'收集facts的信息，如已收集，则采用缓存。可选参数'implicit'、'explicit'，分别表示每次都收集和默认不收集facts信息</span></span><br><span class="line">  fact_caching_timeout = 86400                  <span class="comment">#'gathering为smart'可用，设置收集超时时间</span></span><br><span class="line">  fact_caching = jsonfile                       <span class="comment">#'gathering为smart'可用，设置以什么存储facts信息。还可在本地安装redis、memcache来作为facts的存储。</span></span><br><span class="line">  fact_caching_connection = /etc/ansible/ansible_facts_cache  <span class="comment">#'gathering为smart'可用，设置缓存路径。</span></span><br><span class="line">  roles_path    = /etc/ansible/roles            <span class="comment">#设置ansible其他roles的路径</span></span><br><span class="line">  host_key_checking = <span class="literal">false</span>                     <span class="comment">#忽略检查主机密钥</span></span><br><span class="line">  log_path = /var/<span class="built_in">log</span>/ansible.log               <span class="comment">#ansible日志路径</span></span><br><span class="line">  module_name = <span class="built_in">command</span>                         <span class="comment">#ansible默认的模块</span></span><br><span class="line">  deprecation_warnings = False                  <span class="comment">#禁用ansible“不建议使用”的警告</span></span><br><span class="line"></span><br><span class="line">  [ssh_connection]</span><br><span class="line">  ssh_args = -C -o ControlMaster=auto -o ControlPersist=1d        <span class="comment">#开启ssh长连接，保存时间为1天</span></span><br><span class="line">  control_path_dir = /etc/ansible/ssh-socket                      <span class="comment">#ssh长连接存放的路径</span></span><br><span class="line">  control_path = %(directory)s/%%h-%%p-%%r                        <span class="comment">#ssh长连接的格式名称</span></span><br><span class="line">  pipelining = True                                               <span class="comment">#减少执行远程模块SSH操作次数，开启这个设置,将显著提高性能，但被控制机需要将/etc/sudoers下"Defaults requiretty"注释掉</span></span><br><span class="line"></span><br><span class="line">  [accelerate]</span><br><span class="line">  accelerate_port = 5099                        <span class="comment">#使用python程序在被控制机上运行一个守护进程，ansible通过这个守护进程监听的端口进行通信。所有机器都要安装python-keyczar包</span></span><br><span class="line">  accelerate_timeout = 30                       <span class="comment">#设置用来控制从客户机获取数据的超时时间，如果在这段时间内没有数据传输,套接字连接会被关闭。</span></span><br><span class="line">  accelerate_connect_timeout = 5.0              <span class="comment">#设置空着套接字调用的超时时间.这个应该设置相对比较短.这个和`accelerate_port`连接在回滚到ssh或者paramiko连接方式之前会尝试三次开始远程加速daemon守护进程.默认设置为1.0秒:</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hosts 文件<br>（机器清单，进行分组管理）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[tomcat]</span><br><span class="line">192.168.16.192</span><br><span class="line">192.168.16.193</span><br><span class="line">[nginx]</span><br><span class="line">app1 ansible_ssh_host=192.168.16.190 ansible_ssh_pass=<span class="string">"2039"</span></span><br><span class="line">app2 ansible_ssh_host=192.168.16.191 sudo_user=”ald” ansible_ssh_pass=<span class="string">"2039"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p><em>sudo_user和ansible_ssh_pass为帐号密码方式验证，建议用密钥。</em></p>
+</blockquote>
+<h3 id="Ansible指令参数"><a href="#Ansible指令参数" class="headerlink" title="Ansible指令参数"></a>Ansible指令参数</h3><ul>
+<li><p><strong>ansible 常用命令参数</strong><br>-m指定模块<br>-a 指定模块的命令。默认是command模块，可以省略<br>-B 指定ansible后台运行超时时间<br>-C 测试运行效果，而不是正在运行<br>-f 指定使用的并行进程的数量<br>-i 指定inventory/hosts文件，默认/etc/ansiable/hosts文件<br>–limit=xxx.xxx.xxx.xxx 限制对某个ip或者网段或者组执行<br>–list-hosts 显示将要执行命令的主机</p>
+</li>
+<li><p><strong>ansible-doc 常用命令参数</strong><br>-M –module-path=/xxx/xxx  查询模块 默认是/usr/share/ansible/<br>-l  –list          显示已存在的所有模块<br>-s  command     显示playbook制定模块的用法，类似 man 命令</p>
+</li>
+<li><p><strong>ansible-galaxy</strong> </p>
+<blockquote>
+<p>下载第三方模块指令，类似yum、pip、easy_install这样的命令</p>
+</blockquote>
+<p> ansible-galaxy install &lt;module_name&gt;</p>
+</li>
+<li><p><strong>ansible-playbook</strong> 常用命令参数<br>–syntax-check  [yaml文件]         语法检测<br>-t TAGS    只允许指定的tags标签任务，多个以 , 分开<br>–skip-tags=SKIP_TAGS   跳过指定的标签<br>–start-at-task=START_AT   从哪个任务后执行</p>
+</li>
+</ul>
+<h3 id="常用指令模块"><a href="#常用指令模块" class="headerlink" title="常用指令模块"></a>常用指令模块</h3><p>1、 copy——拷贝模块   (用于将本地或远程机器上的文件拷贝到远程主机上)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible all –m copy -a “src=/xxx/xxx dest=/yyy/yyy owner=root group=root mode=644 force=yes/no backup=yes/no”</span><br><span class="line">解释：将src 文件/目录复制到远程dest上，所有者/组为root 权限为644，force为是否强制替换，backup为替换前是否需要备份远程远文件</span><br></pre></td></tr></table></figure></p>
+<p>2、 raw——命令模块 （和command、shell类似）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible all –m raw -a <span class="string">"ifconfig"</span></span><br><span class="line">解释：在所有主机上执行ifocnfig命令。</span><br></pre></td></tr></table></figure></p>
+<p>3、 yum——安装模块 （安装程序）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible all –m yum –a “name=httpd state=present”</span><br><span class="line">解释：安装httpd程序，state可以是present、latest、installed表示安装程序，absent、removed表示卸载程序</span><br></pre></td></tr></table></figure></p>
+<p>4、 file——文件模块 （文件属性修改）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ansible all –m file –a “src=/xxx/xxx/1 dest=/yyy/1 state=link owner=alad group=alad mode=777”</span><br><span class="line">$ ansible develop -m file -a <span class="string">"path=/xxx/dir recurse=yes owner=root group=alad mode=644"</span></span><br><span class="line">解释：1、将src的文件软连接到dest目录下，并修改所有者/组和权限</span><br><span class="line">      2、将path路径的目录递归形式设置所有者和权限</span><br><span class="line">*、state还可以是directory：如果目录不存在，创建目录</span><br><span class="line">    file：即使文件不存在，也不会被创建</span><br><span class="line">	hard：创建硬链接</span><br><span class="line">    touch：如果文件不存在，则会创建一个新的文件，如果文件或目录已存在，则更新其最后修改时间</span><br><span class="line">    absent：删除目录、文件或者取消链接文件</span><br></pre></td></tr></table></figure></p>
+<p>5、 cron——计划任务模块 （计划任务crontab）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m cron -a <span class="string">"name='show time' minute=*/1 hour=* day=* month=* weekday=* job='/bin/date'"</span></span><br><span class="line">$ ansible develop -m cron -a <span class="string">"name='show time' state=absent"</span></span><br><span class="line">解释：1、创建一个每分钟显示时间的计划任务</span><br><span class="line">      2、删除名为show time这个计划任务</span><br></pre></td></tr></table></figure></p>
+<p>6、 group——组模块（用户组）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible all-m group -a <span class="string">"name=develop"</span></span><br><span class="line">解释：在所有主机上创建一个develop的组 ，state=absent表示删除该组</span><br></pre></td></tr></table></figure></p>
+<p>7、 user——用户模块（用户）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m user -a <span class="string">"name=harlan groups=root password=-1vFO89dP6qyK"</span></span><br><span class="line">$ ansible develop -m user -a <span class="string">"name=harlan state=absent remove=yes"</span></span><br><span class="line">解释：1、在所有主机上创建harlan用户，并将其添加到root组，密码是经过<span class="built_in">hash</span>加密后的，明文密码会被哈希，所以先填入<span class="built_in">hash</span>后的密码即可</span><br><span class="line">可用此命令<span class="built_in">hash</span>密码  openssl passwd -salt -1 <span class="string">"123456"</span></span><br><span class="line">      2、删除harlan用户。Remove表示是否删除用户的同时删除家目录</span><br></pre></td></tr></table></figure></p>
+<p>8、 service——服务模块（服务状态）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m service -a <span class="string">"name=nginx state=running"</span></span><br><span class="line">$ ansible develop -m service -a <span class="string">"name=nginx state=restarted enabled=yes"</span></span><br><span class="line">解释：1、无论服务处在什么状态，最后都是将服务状态设置为启动，当服务正在运行的时候，显示为changed为<span class="literal">false</span>，state显示为状态，表示为正在运行；当服务停止的时候，显示为changed为<span class="literal">true</span>，表示这个时候将服务进行了启动，状态为启动</span><br><span class="line">      2、表示重启nginx并且将nginx设置为开机自启动，state还有staeted、reloaded、stoped值</span><br></pre></td></tr></table></figure></p>
+<p>9、 script——脚本模块（运行脚本）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m script -a <span class="string">"/root/a.sh"</span></span><br><span class="line">解释：在develop主机上运行当前服务器上的a.sh脚本</span><br></pre></td></tr></table></figure></p>
+<p>10、get_url——下载url上指定文件（类似wget）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m get_url -a <span class="string">"url=http://file.alavening.com/alading_file/head_img/1526900421976.jpg dest=/home/ owner=alad group=alad mode=644"</span></span><br><span class="line">解释：将url上的图片下载到dest目的目录上,并且设置相应的所有者/组和权限。</span><br></pre></td></tr></table></figure></p>
+<p>11、synchronize——同步目录（默认推送，mode=pull为拉取）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m synchronize -a <span class="string">"src=/home/test/ dest=/home/test compress=yes delete=yes"</span></span><br><span class="line">$ ansible develop -m synchronize -a <span class="string">"src=/home/test/ dest=/home/test compress=yes mode=pull"</span></span><br><span class="line">解释：1、将src下的文件同步到dest上，delete=yes表示以src 目录为准镜像同步。</span><br><span class="line">      2、拉取远程src上的目录文件到本地dest上</span><br></pre></td></tr></table></figure></p>
+<p>12、template——文档内变量的替换的模块<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop –m template –a ‘src=/mytemplates/foo.j2 dest=/etc/file.conf mode=<span class="string">"u=rw,g=r,o=r"</span>’</span><br><span class="line">解释：将src上foo.j2的变量模版复制到dest上。Template适合用playbook编写 ，通过变量然后拷贝到远程主机。</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>可以参考：<a href="https://www.cnblogs.com/jsonhc/p/7895399.html" target="_blank" rel="noopener">https://www.cnblogs.com/jsonhc/p/7895399.html</a></p>
+</blockquote>
+<p>13、fetch——从远程主机下载文件（不能拉取目录）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m fetch -a <span class="string">"src=/home/test/xxx dest=/home/ flat=yes"</span></span><br><span class="line">解释：将远程xxx文件拉取到本地home目录下，目录结构会是dest路径+远程主机名+src，假如远程主机名为develop，拉取的xxx文件在本地的/home/develop/home/<span class="built_in">test</span>目录。如果需要指定拉取到某目录下 加个flat=yes的参数即可。</span><br></pre></td></tr></table></figure></p>
+<p>14、unarchive——解压文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m unarchive -a <span class="string">"src=/root/apache-tomcat-7.0.85.tar.gz dest=/home/test owner=alad group=alad mode=755"</span></span><br><span class="line">$ ansible develop -m unarchive -a <span class="string">"src=/home/alad/ansible/elk/logstash-6.2.4.tar.gz dest=/home/test remote_src=yes"</span></span><br><span class="line">$ ansible develop -m unarchive -a <span class="string">"src=http://mirrors.linuxeye.com/oneinstack-full.tar.gz dest=/home/test remote_src=yes"</span></span><br><span class="line">解释：将本地的tomcat压缩包解压到远程主机dest目录下，并修改其权限和所有者/组，remote_src=yes 表示解压远程主机已有的压缩包，src为url表示下载此包到远程主机dest目录进行解压缩后，并删除压缩包源文件</span><br></pre></td></tr></table></figure></p>
+<p>15、command和shell——linux命令模块<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">shell</span><span class="bash">和<span class="built_in">command</span>的区别：shell模块可以特殊字符，而<span class="built_in">command</span>是不支持</span></span><br><span class="line">简单说：command运行的命令中无法使用变量，管道。如果需要使用管道、变量，请使用raw模块,或者<span class="keyword">shell</span><span class="bash">模块。</span></span><br></pre></td></tr></table></figure></p>
+<p>16、setup——获取主机信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ansible develop -m setup</span><br><span class="line">$ ansible develop -m setup -a <span class="string">'filter=ansible_*_mb'</span></span><br><span class="line">解释：1、显示系统所有信息</span><br><span class="line">      2、通常配合filter进行过滤来获取主机信息，（例子是显示内存信息）</span><br></pre></td></tr></table></figure></p>
+<p>17、assemble——配置文件组装发送到远程主机<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ansible <span class="built_in">test</span> -m assemble -a <span class="string">"src=/root/test dest=/root/ansible/fileone mode=777 remote_src=False delimiter='========'"</span></span><br><span class="line">解释：将src <span class="built_in">test</span>目录下所有文件（不含<span class="built_in">test</span>子目录内容）的内容发送到dest fileone文件中，remote_src默认为Ture表示src为远程主机上的路径，False为ansible控制端的路径，delimiter为文件之间内容分隔符。</span><br></pre></td></tr></table></figure></p>
+<h3 id="Playbook语法和结构"><a href="#Playbook语法和结构" class="headerlink" title="Playbook语法和结构"></a>Playbook语法和结构</h3><p>Playbook需要7个文件夹，如ansible安装nginx，则需要在/etc/ansible/roles目录下建立以下文件夹。<br>mkdir -pv nginx/{default,tasks,vars,meta,handlers,templates,files}<br>对于Ansible，几乎每个YAML文件都以一个列表开始。列表中的每个项目都是键/值对列表，通常称为“散列”或“字典”。所以，我们需要知道如何在YAML中编写列表和字典。<br>YAML还有一个小小的怪癖。所有YAML文件（无论它们是否与Ansible相关联）都可以选择开始—和结束—.。这是YAML格式的一部分，并指示文档的开始和结束。<br>列表中的所有成员都是以相同的缩进级别开头的行（短划线和空格）：”- “</p>
+<p>例如：<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    - bsh:</span> <span class="string">b.sh</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">httprpm:</span> <span class="string">httpd</span></span><br><span class="line"><span class="attr">  task:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">install</span> <span class="string">httpd</span></span><br><span class="line">	  <span class="attr">yum:</span> <span class="string">name=&#123;&#123;</span> <span class="string">httprpm</span> <span class="string">&#125;&#125;</span> <span class="string">state=present”</span></span><br><span class="line">	  <span class="attr">tags:</span> <span class="string">install_httpd</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">name:</span> <span class="string">copy</span> <span class="string">b.sh</span></span><br><span class="line">	  <span class="attr">copy:</span> <span class="string">src=/root/&#123;&#123;</span> <span class="string">bsh</span> <span class="string">&#125;&#125;</span> <span class="string">dest=/root/</span> <span class="string">owner=ala</span> <span class="string">group=ala</span> <span class="string">mode=0644</span></span><br><span class="line">	  <span class="attr">notify:</span></span><br><span class="line">	    <span class="bullet">-</span> <span class="string">reload</span> <span class="string">httpd</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">name:</span> <span class="string">start</span> <span class="string">httpd</span></span><br><span class="line">	  <span class="attr">service:</span> <span class="string">name=httpd</span> <span class="string">state=started</span> <span class="string">enabled=yes</span></span><br><span class="line"><span class="attr">  handlers:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">reload</span> <span class="string">httpd</span></span><br><span class="line">	  <span class="attr">service:</span> <span class="string">name=httpd</span> <span class="string">state=reloaded</span></span><br></pre></td></tr></table></figure></p>
+<p>第一次的话都会运行，后边如果copy的文件内容发生改变就会触发 notify ，然后会直接执行 handlers 的内容（ 这里notify后边的事件就都不会执行了 ）。</p>
+<h3 id="template模块jinja2语法"><a href="#template模块jinja2语法" class="headerlink" title="template模块jinja2语法"></a>template模块jinja2语法</h3><ul>
+<li><strong>template:使用了Jinjia2格式作为文件模版，进行文档内变量的替换的模块。相当于copy，将jinja2的文件模板理解并执行，转化为各个主机间的对应值。</strong><br>如：template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf</li>
+</ul>
+<blockquote>
+<p>http.conf.j2必须是完整的文件内容，因为这是覆盖操作，而非只选择性远程主机替换变量，dest要指定文件名，如果是目录就相当于copy了http.conf.j2到远程目录下，不是我们要的结果。</p>
+</blockquote>
+<ul>
+<li><strong>when语句：在tasks中使用，Jinja2的语法格式</strong></li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">start</span> <span class="string">nginx</span> <span class="string">service</span></span><br><span class="line"><span class="attr"> shell:</span> <span class="string">systemctl</span> <span class="string">start</span> <span class="string">nginx.service</span></span><br><span class="line"><span class="attr"> when:</span> <span class="string">ansible_distribution</span> <span class="string">==</span> <span class="string">"CentOS"</span> <span class="string">and</span> <span class="string">ansible_distribution_major_version</span> <span class="string">==</span> <span class="string">"7"</span></span><br></pre></td></tr></table></figure>
+<p>当系统为 centos 7的时候执行sysctemctl命令，否则不执行</p>
+<ul>
+<li><strong>循环：迭代，需要重复执行的任务</strong></li>
+</ul>
+<blockquote>
+<p>变量名为item，而with_item为要迭代的元素。如果某个任务出错，后面不执行</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">install</span> <span class="string">packages</span></span><br><span class="line"><span class="attr"> yum:</span> <span class="string">name=&#123;&#123;</span> <span class="string">item</span> <span class="string">&#125;&#125;</span> <span class="string">state=latest</span></span><br><span class="line"><span class="attr"> with_items:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">httpd</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">php</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这是基于字符串列表给出元素示例 </p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">create</span> <span class="string">users</span></span><br><span class="line"><span class="attr">    user:</span> <span class="string">name=&#123;&#123;</span> <span class="string">item.name</span> <span class="string">&#125;&#125;</span> <span class="string">group=&#123;&#123;</span> <span class="string">item.group</span> <span class="string">&#125;&#125;</span> <span class="string">state=present</span></span><br><span class="line"><span class="attr">    with_items:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">&#123;name:</span> <span class="string">'userx1'</span><span class="string">,</span> <span class="attr">group:</span> <span class="string">'groupx1'</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">&#123;name:</span> <span class="string">'userx2'</span><span class="string">,</span> <span class="attr">group:</span> <span class="string">'groupx2'</span><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这是基于字典列表给元素示例：item.name  . 后边的表示键。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/wechatpay.png" alt="丨Pyker丨 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/alipay.png" alt="丨Pyker丨 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Pyker</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://www.ipyker.com/2018/03/22/ansible-module.html" title="Ansible 常用模块指令">https://www.ipyker.com/2018/03/22/ansible-module.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ansible/" rel="tag"><i class="fa fa-tag"></i> ansible</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/23/nginx-variable.html" rel="next" title="Nginx内置变量">
+                <i class="fa fa-chevron-left"></i> Nginx内置变量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/23/ansible-playbook.html" rel="prev" title="Ansible playbook详解">
+                Ansible playbook详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NDM5Mi8yMDkyNA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="丨Pyker丨">
+            
+              <p class="site-author-name" itemprop="name">丨Pyker丨</p>
+              <div class="site-description motion-element" itemprop="description">与其临渊羡鱼，不如退而结网。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ipyker" title="GitHub &rarr; https://github.com/ipyker" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:pyker@qq.com" title="E-Mail &rarr; mailto:pyker@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/viszhang" title="Weibo &rarr; https://weibo.com/viszhang" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="tencent://message/?uin=123435796&Site=&menu=yes" title="QQ &rarr; tencent://message/?uin=123435796&Site=&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-book"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ttlsa.com/" title="http://www.ttlsa.com/" rel="noopener" target="_blank">运维生存时间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.iyunw.cn" title="https://www.iyunw.cn" rel="noopener" target="_blank">爱运维</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nginxconfig.io/" title="https://nginxconfig.io/" rel="noopener" target="_blank">Nginxconfig</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://linux.51yip.com/" title="http://linux.51yip.com/" rel="noopener" target="_blank">Linux命令手册</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://echarts.baidu.com/index.html" title="https://echarts.baidu.com/index.html" rel="noopener" target="_blank">echarts可视化库</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Ansible"><span class="nav-number">1.</span> <span class="nav-text">安装Ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件配置"><span class="nav-number">2.</span> <span class="nav-text">配置文件配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ansible指令参数"><span class="nav-number">3.</span> <span class="nav-text">Ansible指令参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用指令模块"><span class="nav-number">4.</span> <span class="nav-text">常用指令模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Playbook语法和结构"><span class="nav-number">5.</span> <span class="nav-text">Playbook语法和结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#template模块jinja2语法"><span class="nav-number">6.</span> <span class="nav-text">template模块jinja2语法</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style=" text-align:center;">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pyker</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"> 站点字数合计:</i>
+    </span>
+    
+    <span title="站点总字数">171k</span>
+  
+  
+  <span class="post-meta-divider">|</span>
+  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">粤ICP备19028706号 </a>
+
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+<div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("07/23/2017 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+        
+<div class="busuanzi-count" style=" text-align:center;">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+    
+    
+      
+    
+  
+  <script color="255,0,255" opacity="0.7" zindex="-1" count="140" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <script id="ribbon" size="300" alpha="0.1" zindex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2018/03/22/ansible-module.html'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":250,"height":500},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

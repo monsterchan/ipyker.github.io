@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: true,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"shrinkIn","post_header":"slideLeftIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideDownIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "bd399fce"
+    });
+  daovoice('update');
+  </script>
+
+  <meta name="description" content="Mysql在安装运行后，其性能并不一定为实际需要的性能，因此我们常常会在mysql运行一段时间后进行mysql的性能状态查询来了解mysql服务器的性能指标，从而来优化mysql。 查看mysql性能状态命令查看mysql全局状态12mysql&amp;gt; show global status;可以列出MySQL服务器运行各种状态值，另外，查询MySQL服务器配置信息语句。 12mysql&amp;gt; s">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql状态信息查询">
+<meta property="og:url" content="https://www.ipyker.com/2018/10/22/mysql-status.html">
+<meta property="og:site_name" content="派 | Pyker">
+<meta property="og:description" content="Mysql在安装运行后，其性能并不一定为实际需要的性能，因此我们常常会在mysql运行一段时间后进行mysql的性能状态查询来了解mysql服务器的性能指标，从而来优化mysql。 查看mysql性能状态命令查看mysql全局状态12mysql&amp;gt; show global status;可以列出MySQL服务器运行各种状态值，另外，查询MySQL服务器配置信息语句。 12mysql&amp;gt; s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-23T18:38:07.189Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql状态信息查询">
+<meta name="twitter:description" content="Mysql在安装运行后，其性能并不一定为实际需要的性能，因此我们常常会在mysql运行一段时间后进行mysql的性能状态查询来了解mysql服务器的性能指标，从而来优化mysql。 查看mysql性能状态命令查看mysql全局状态12mysql&amp;gt; show global status;可以列出MySQL服务器运行各种状态值，另外，查询MySQL服务器配置信息语句。 12mysql&amp;gt; s">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="派 | Pyker" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.ipyker.com/2018/10/22/mysql-status">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Mysql状态信息查询 | 派 | Pyker</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">派 | Pyker</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-bookmark"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-互动">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/guestbook/" rel="section"><i class="menu-item-icon fa fa-fw fa-comments"></i> <br>互动</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2018/10/22/mysql-status.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="丨Pyker丨">
+      <meta itemprop="description" content="与其临渊羡鱼，不如退而结网。">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="派 | Pyker">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mysql状态信息查询
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-22 21:47:00" itemprop="dateCreated datePublished" datetime="2018-10-22T21:47:00+08:00">2018-10-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-24 02:38:07" itemprop="dateModified" datetime="2019-05-24T02:38:07+08:00">2019-05-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/SQL/" itemprop="url" rel="index"><span itemprop="name">SQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Mysql在安装运行后，其性能并不一定为实际需要的性能，因此我们常常会在mysql运行一段时间后进行mysql的性能状态查询来了解mysql服务器的性能指标，从而来优化mysql。</p>
+<h3 id="查看mysql性能状态命令"><a href="#查看mysql性能状态命令" class="headerlink" title="查看mysql性能状态命令"></a>查看mysql性能状态命令</h3><h4 id="查看mysql全局状态"><a href="#查看mysql全局状态" class="headerlink" title="查看mysql全局状态"></a>查看mysql全局状态</h4><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="built_in">show</span> global <span class="built_in">status</span>;</span><br><span class="line">可以列出MySQL服务器运行各种状态值，另外，查询MySQL服务器配置信息语句。</span><br></pre></td></tr></table></figure>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show <span class="keyword">variables</span>;</span><br><span class="line">可以查看Mysql系统变量及其值。</span><br></pre></td></tr></table></figure>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">show </span>processlist<span class="comment">;</span></span><br><span class="line">可以查看Mysql当前连接数的进程以及状态。</span><br></pre></td></tr></table></figure>
+<h4 id="慢查询"><a href="#慢查询" class="headerlink" title="慢查询"></a>慢查询</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like '%slow%'; </span><br><span class="line">+------------------+-------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------+-------+ </span></span><br><span class="line">|<span class="string"> log_slow_queries </span>|<span class="string"> ON </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> slow_launch_time </span>|<span class="string"> 2 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------+-------+ </span></span><br><span class="line"></span><br><span class="line"><span class="string">mysql&gt; show global status like '%slow%'; </span></span><br><span class="line"><span class="string">+---------------------+-------+ </span></span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------------+-------+ </span></span><br><span class="line">|<span class="string"> Slow_launch_threads </span>|<span class="string"> 0 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Slow_queries </span>|<span class="string"> 4148 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<p>配置中打开了记录慢查询，执行时间超过2秒的即为慢查询，系统显示有4148个慢查询，你可以分析慢查询日志，找出有问题的SQL语句，慢查询时间不宜设置过长，否则意义不大，最好在5秒以内，如果你需要微秒级别的慢查询，可以考虑给<a href="http://www.percona.com/docs/wiki/release:start" target="_blank" rel="noopener">MySQL打补丁</a> ，记得找对应的版本。</p>
+<p>打开慢查询日志可能会对系统性能有一点点影响，如果你的MySQL是主-从结构，可以考虑打开其中一台从服务器的慢查询日志，这样既可以监控慢查询，对系统性能影响又小。</p>
+<h4 id="连接数"><a href="#连接数" class="headerlink" title="连接数"></a>连接数</h4><p>经常会遇见<code>”MySQL: ERROR 1040: Too many connections”</code>的情况，一种是访问量确实很高，MySQL服务器抗不住，这个时候就要考虑增加从服务器分散读压力，另外一种情况是MySQL配置文件中max_connections值过小：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like 'max_connections'; </span><br><span class="line">+-----------------+-------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------+-------+ </span></span><br><span class="line">|<span class="string"> max_connections </span>|<span class="string"> 256 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------+-------+</span></span><br></pre></td></tr></table></figure></p>
+<p>这台MySQL服务器最大连接数是256，然后查询一下服务器响应的最大连接数：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="built_in">show</span> global <span class="built_in">status</span> like ‘Max_used_connections’;</span><br></pre></td></tr></table></figure></p>
+<p>MySQL服务器过去的最大连接数是245，没有达到服务器连接数上限256，应该没有出现1040错误，比较理想的设置是：<code>Max_used_connections / max_connections * 100% ≈ 85%</code> 最大连接数占上限连接数的85%左右，如果发现比例在10%以下，MySQL服务器连接数上限设置的过高了。</p>
+<h4 id="Key-buffer-size"><a href="#Key-buffer-size" class="headerlink" title="Key_buffer_size"></a>Key_buffer_size</h4><p>key_buffer_size是对MyISAM表性能影响最大的一个参数，下面一台以MyISAM为主要存储引擎服务器的配置：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like ‘key_buffer_size’; </span><br><span class="line">+-----------------+------------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------+------------+ </span></span><br><span class="line">|<span class="string"> key_buffer_size </span>|<span class="string"> 536870912 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------+------------+</span></span><br></pre></td></tr></table></figure></p>
+<p>分配了512MB内存给key_buffer_size，我们再看一下key_buffer_size的使用情况：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'key_read%'; </span><br><span class="line">+------------------------+-------------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> mysql </span></span><br><span class="line"><span class="string">+------------------------+-------------+ </span></span><br><span class="line">|<span class="string"> Key_read_requests </span>|<span class="string"> 27813678764 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Key_reads </span>|<span class="string"> 6798830 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------------+-------------+</span></span><br></pre></td></tr></table></figure></p>
+<p>一共有27813678764个索引读取请求，有6798830个请求在内存中没有找到直接从硬盘读取索引，计算索引未命中缓存的概率：<code>key_cache_miss_rate = Key_reads / Key_read_requests * 100%</code><br>比如上面的数据，key_cache_miss_rate为0.0244%，4000个索引读取请求才有一个直接读硬盘，已经很BT了,key_cache_miss_rate在0.1%以下都很好(每1000个请求有一个直接读硬盘)，如果key_cache_miss_rate在0.01%以下的话，key_buffer_size分配的过多，可以适当减少。<br>MySQL服务器还提供了key_blocks_*参数：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'key_blocks_u%'; </span><br><span class="line">+------------------------+-------------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------------+-------------+ </span></span><br><span class="line">|<span class="string"> Key_blocks_unused </span>|<span class="string"> 0 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Key_blocks_used </span>|<span class="string"> 413543 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------------+-------------+</span></span><br></pre></td></tr></table></figure></p>
+<p>Key_blocks_unused表示未使用的缓存簇(blocks)数，Key_blocks_used表示曾经用到的最大的blocks数，比如这台服务器，所有的缓存都用到了，要么增加key_buffer_size，要么就是过渡索引了，把缓存占满了。比较理想的设置：<br>Key_blocks_used / (Key_blocks_unused + Key_blocks_used) * 100% ≈ 80%</p>
+<h4 id="临时表"><a href="#临时表" class="headerlink" title="临时表"></a>临时表</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'created_tmp%'; </span><br><span class="line">+-------------------------+---------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------------+---------+ </span></span><br><span class="line">|<span class="string"> Created_tmp_disk_tables </span>|<span class="string"> 21197 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Created_tmp_files </span>|<span class="string"> 58 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Created_tmp_tables </span>|<span class="string"> 1771587 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------------+---------+</span></span><br></pre></td></tr></table></figure>
+<p>每次创建临时表，Created_tmp_tables增加，如果是在磁盘上创建临时表，Created_tmp_disk_tables也增加,Created_tmp_files表示MySQL服务创建的临时文件文件数，比较理想的配置是：<br><code>Created_tmp_disk_tables / Created_tmp_tables * 100% &lt;= 25%</code><br>比如上面的服务器<code>Created_tmp_disk_tables / Created_tmp_tables * 100% = 1.20%</code>, 应该相当好了。我们再看一下MySQL服务器对临时表的配置：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables where Variable<span class="emphasis">_name in ('tmp_</span>table<span class="emphasis">_size', 'max_</span>heap<span class="emphasis">_table_</span>size'); </span><br><span class="line"><span class="code">+---------------------+</span>-----------+ </span><br><span class="line">| Variable<span class="emphasis">_name | Value | </span></span><br><span class="line"><span class="emphasis">+---------------------+-----------+ </span></span><br><span class="line"><span class="emphasis">| max_</span>heap<span class="emphasis">_table_</span>size | 268435456 | </span><br><span class="line">| tmp<span class="emphasis">_table_</span>size | 536870912 | </span><br><span class="line"><span class="code">+---------------------+</span>-----------+</span><br></pre></td></tr></table></figure></p>
+<p>只有256MB以下的临时表才能全部放内存，超过的就会用到硬盘临时表。</p>
+<h4 id="Open-Table"><a href="#Open-Table" class="headerlink" title="Open Table"></a>Open Table</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like <span class="emphasis">'open%tables%'</span>; </span><br><span class="line"><span class="code">+---------------+</span>-------+ </span><br><span class="line">| Variable<span class="emphasis">_name | Value | </span></span><br><span class="line"><span class="emphasis">+---------------+-------+ </span></span><br><span class="line"><span class="emphasis">| Open_</span>tables | 919 | </span><br><span class="line">| Opened<span class="emphasis">_tables | 1951 | </span></span><br><span class="line"><span class="emphasis">+---------------+-------+</span></span><br></pre></td></tr></table></figure>
+<p>Open_tables表示打开表的数量，Opened_tables表示打开过的表数量，如果Opened_tables数量过大，说明配置中table_cache(5.1.3之后这个值叫做table_open_cache)值可能太小，我们查询一下服务器table_cache值：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like 'table_cache'; </span><br><span class="line">+---------------+-------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------+-------+ </span></span><br><span class="line">|<span class="string"> table_cache </span>|<span class="string"> 2048 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------+-------+</span></span><br></pre></td></tr></table></figure></p>
+<p>比较合适的值为：<br><code>Open_tables / Opened_tables * 100% &gt;= 85%</code>, 及<code>Open_tables / table_cache * 100% &lt;= 95%`</code></p>
+<p>六、进程使用情况<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like ‘Thread%’; </span><br><span class="line">+-------------------+-------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------+-------+ </span></span><br><span class="line">|<span class="string"> Threads_cached </span>|<span class="string"> 46 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Threads_connected </span>|<span class="string"> 2 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Threads_created </span>|<span class="string"> 570 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Threads_running </span>|<span class="string"> 1 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------+-------+</span></span><br></pre></td></tr></table></figure></p>
+<p>如果我们在MySQL服务器配置文件中设置了<code>thread_cache_size</code>， 当客户端断开之后，服务器处理此客户的线程将会缓存起来以响应下一个客户而不是销毁(前提是缓存数未达上限)。Threads_created表示创建过的线程数，如果发现Threads_created值过大的话，表明MySQL服务器一直在创建线程，这也是比较耗资源，可以适当增加配置文件中thread_cache_size值，查询服务器thread_cache_size配置：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like 'thread_cache_size'; </span><br><span class="line">+-------------------+-------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------+-------+ </span></span><br><span class="line">|<span class="string"> thread_cache_size </span>|<span class="string"> 64 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------+-------+</span></span><br></pre></td></tr></table></figure></p>
+<p>示例中的服务器还是挺健康的。</p>
+<h4 id="查询缓存-query-cache"><a href="#查询缓存-query-cache" class="headerlink" title="查询缓存(query cache)"></a>查询缓存(query cache)</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'qcache%'; </span><br><span class="line">+-------------------------+-----------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------------+-----------+ </span></span><br><span class="line">|<span class="string"> Qcache_free_blocks </span>|<span class="string"> 22756 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_free_memory </span>|<span class="string"> 76764704 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_hits </span>|<span class="string"> 213028692 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_inserts </span>|<span class="string"> 208894227 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_lowmem_prunes </span>|<span class="string"> 4010916 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_not_cached </span>|<span class="string"> 13385031 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_queries_in_cache </span>|<span class="string"> 43560 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Qcache_total_blocks </span>|<span class="string"> 111212 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------------+-----------+</span></span><br></pre></td></tr></table></figure>
+<p>MySQL查询缓存变量解释：<br><code>Qcache_free_blocks</code>： 缓存中相邻内存块的个数。数目大说明可能有碎片。FLUSH QUERY CACHE会对缓存中的碎片进行整理，从而得到一个空闲块。<br><code>Qcache_free_memory</code>： 缓存中的空闲内存。<br><code>Qcache_hits</code>： 每次查询在缓存中命中时就增大<br><code>Qcache_inserts</code>： 每次插入一个查询时就增大。命中次数除以插入次数就是不中比率。<br><code>Qcache_lowmem_prunes</code>： 缓存出现内存不足并且必须要进行清理以便为更多查询提供空间的次数。这个数字最好长时间来看;如果这个数字在不断增长，就表示可能碎片非常严重，或者内存很少。(上面的 free_blocks和free_memory可以告诉您属于哪种情况)<br><code>Qcache_not_cached</code>： 不适合进行缓存的查询的数量，通常是由于这些查询不是 SELECT 语句或者用了now()之类的函数。<br><code>Qcache_queries_in_cache</code>： 当前缓存的查询(和响应)的数量。<br><code>Qcache_total_blocks</code>： 缓存中块的数量。</p>
+<p>我们再查询一下服务器关于query_cache的配置：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like 'query_cache%'; </span><br><span class="line">+------------------------------+-----------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------------------+-----------+ </span></span><br><span class="line">|<span class="string"> query_cache_limit </span>|<span class="string"> 2097152 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> query_cache_min_res_unit </span>|<span class="string"> 4096 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> query_cache_size </span>|<span class="string"> 203423744 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> query_cache_type </span>|<span class="string"> ON </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> query_cache_wlock_invalidate </span>|<span class="string"> OFF </span>|</span><br><span class="line">+——————————+———–+</span><br></pre></td></tr></table></figure></p>
+<p>各字段的解释：<br><code>query_cache_limit</code>： 超过此大小的查询将不缓存<br><code>query_cache_min_res_unit</code>： 缓存块的最小大小<br><code>query_cache_size</code>： 查询缓存大小<br><code>query_cache_type</code>： 缓存类型，决定缓存什么样的查询，示例中表示不缓存 select sql_no_cache 查询<br><code>query_cache_wlock_invalidate</code>： 当有其他客户端正在对MyISAM表进行写操作时，如果查询在query cache中，是否返回cache结果还是等写操作完成再读表获取结果。<br><code>query_cache_min_res_unit</code> 的配置是一柄”双刃剑”，默认是4KB，设置值大对大数据查询有好处，但如果你的查询都是小数据查询，就容易造成内存碎片和浪费。</p>
+<p>查询缓存碎片率 = <code>Qcache_free_blocks / Qcache_total_blocks * 100%</code><br>如果查询缓存碎片率超过20%，可以用FLUSH QUERY CACHE整理缓存碎片，或者试试减小query_cache_min_res_unit，如果你的查询都是小数据量的话。<br>查询缓存利用率 = <code>(query_cache_size - Qcache_free_memory) / query_cache_size * 100%</code><br>查询缓存利用率在25%以下的话说明<code>query_cache_size</code>设置的过大，可适当减小;查询缓存利用率在80%以上而且Qcache_lowmem_prunes &gt; 50的话说明query_cache_size可能有点小，要不就是碎片太多。<br>查询缓存命中率 = <code>(Qcache_hits - Qcache_inserts) / Qcache_hits * 100%</code><br>示例服务器 查询缓存碎片率 = 20.46%，查询缓存利用率 = 62.26%，查询缓存命中率 = 1.94%，命中率很差，可能写操作比较频繁吧，而且可能有些碎片。</p>
+<h4 id="排序使用情况"><a href="#排序使用情况" class="headerlink" title="排序使用情况"></a>排序使用情况</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'sort%'; </span><br><span class="line">+-------------------+------------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------+------------+ </span></span><br><span class="line">|<span class="string"> Sort_merge_passes </span>|<span class="string"> 29 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Sort_range </span>|<span class="string"> 37432840 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Sort_rows </span>|<span class="string"> 9178691532 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Sort_scan </span>|<span class="string"> 1860569 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-------------------+------------+</span></span><br></pre></td></tr></table></figure>
+<p><code>Sort_merge_passes</code> 包括两步。MySQL 首先会尝试在内存中做排序，使用的内存大小由系统变量 Sort_buffer_size 决定，如果它的大小不够把所有的记录都读到内存中，MySQL 就会把每次在内存中排序的结果存到临时文件中，等 MySQL 找到所有记录之后，再把临时文件中的记录做一次排序。这再次排序就会增加 Sort_merge_passes。实际上，MySQL 会用另一个临时文件来存再次排序的结果，所以通常会看到 Sort_merge_passes 增加的数值是建临时文件数的两倍。因为用到了临时文件，所以速度可能会比较慢，增加 Sort_buffer_size 会减少 Sort_merge_passes 和 创建临时文件的次数。但盲目的增加 Sort_buffer_size 并不一定能提高速度。<br>另外，增加read_rnd_buffer_size(3.2.3是record_rnd_buffer_size)的值对排序的操作也有一点的好处，参见：<a href="http://www.mysqlperformanceblog.com/2007/07/24/what-exactly-is-read_rnd_buffer_size/" target="_blank" rel="noopener">http://www.mysqlperformanceblog.com/2007/07/24/what-exactly-is-read_rnd_buffer_size/</a></p>
+<h4 id="文件打开数-open-files"><a href="#文件打开数-open-files" class="headerlink" title="文件打开数(open_files)"></a>文件打开数(open_files)</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'open_files'; </span><br><span class="line">+---------------+-------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------+-------+ </span></span><br><span class="line">|<span class="string"> Open_files </span>|<span class="string"> 1410 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------+-------+ </span></span><br><span class="line"><span class="string">mysql&gt; show variables like 'open_files_limit'; </span></span><br><span class="line"><span class="string">+------------------+-------+ </span></span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------+-------+ </span></span><br><span class="line">|<span class="string"> open_files_limit </span>|<span class="string"> 4590 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+------------------+-------+</span></span><br></pre></td></tr></table></figure>
+<p>比较合适的设置：<code>Open_files / open_files_limit * 100% &lt;= 75%</code></p>
+<h4 id="表锁情况"><a href="#表锁情况" class="headerlink" title="表锁情况"></a>表锁情况</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'table_locks%'; </span><br><span class="line">+-----------------------+-----------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------------+-----------+ </span></span><br><span class="line">|<span class="string"> Table_locks_immediate </span>|<span class="string"> 490206328 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Table_locks_waited </span>|<span class="string"> 2084912 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------------+-----------+</span></span><br></pre></td></tr></table></figure>
+<p><code>Table_locks_immediate</code> 表示立即释放表锁数，<code>Table_locks_waited</code> 表示需要等待的表锁数，如果Table_locks_immediate / Table_locks_waited &gt; 5000，最好采用InnoDB引擎，因为InnoDB是行锁而MyISAM是表锁，对于高并发写入的应用InnoDB效果会好些。示例中的服务器Table_locks_immediate / Table_locks_waited = 235，MyISAM就足够了。</p>
+<h4 id="表扫描情况"><a href="#表扫描情况" class="headerlink" title="表扫描情况"></a>表扫描情况</h4><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like 'handler_read%'; </span><br><span class="line">+-----------------------+-------------+ </span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------------+-------------+ </span></span><br><span class="line">|<span class="string"> Handler_read_first </span>|<span class="string"> 5803750 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Handler_read_key </span>|<span class="string"> 6049319850 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Handler_read_next </span>|<span class="string"> 94440908210 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Handler_read_prev </span>|<span class="string"> 34822001724 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Handler_read_rnd </span>|<span class="string"> 405482605 </span>|<span class="string"> </span></span><br><span class="line">|<span class="string"> Handler_read_rnd_next </span>|<span class="string"> 18912877839 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+-----------------------+-------------+　　</span></span><br><span class="line"></span><br><span class="line"><span class="string">mysql&gt; show global status like 'com_select'; </span></span><br><span class="line"><span class="string">+---------------+-----------+ </span></span><br><span class="line">|<span class="string"> Variable_name </span>|<span class="string"> Value </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------+-----------+ </span></span><br><span class="line">|<span class="string"> Com_select </span>|<span class="string"> 222693559 </span>|<span class="string"> </span></span><br><span class="line"><span class="string">+---------------+-----------+</span></span><br></pre></td></tr></table></figure>
+<p>计算表扫描率：<br>表扫描率 = Handler_read_rnd_next / Com_select<br>如果表扫描率超过4000，说明进行了太多表扫描，很有可能索引没有建好，增加read_buffer_size值会有一些好处，但最好不要超过8MB。</p>
+<h3 id="查看Mysql状态QPS-TPS-缓存命中率"><a href="#查看Mysql状态QPS-TPS-缓存命中率" class="headerlink" title="查看Mysql状态QPS/TPS/缓存命中率"></a>查看Mysql状态QPS/TPS/缓存命中率</h3><h4 id="QPS-每秒Query量"><a href="#QPS-每秒Query量" class="headerlink" title="QPS(每秒Query量)"></a>QPS(每秒Query量)</h4><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QPS = Questions(<span class="keyword">or</span> Queries) / seconds </span><br><span class="line">mysql &gt; show  <span class="keyword">global</span>  status <span class="keyword">like</span> <span class="comment">'Question%';</span></span><br></pre></td></tr></table></figure>
+<h4 id="TPS-每秒事务量"><a href="#TPS-每秒事务量" class="headerlink" title="TPS(每秒事务量)"></a>TPS(每秒事务量)</h4><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TPS = (Com_commit + Com_rollback) / seconds </span><br><span class="line">mysql &gt; show <span class="keyword">global</span> status <span class="keyword">like</span> <span class="comment">'Com_commit'; </span></span><br><span class="line">mysql &gt; show <span class="keyword">global</span> status <span class="keyword">like</span> <span class="comment">'Com_rollback';</span></span><br></pre></td></tr></table></figure>
+<h4 id="key-Buffer-命中率"><a href="#key-Buffer-命中率" class="headerlink" title="key Buffer 命中率"></a>key Buffer 命中率</h4><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;show  global   status  like   <span class="string">'key%'</span>; </span><br><span class="line">key_buffer_read_hits = (<span class="number">1</span>-key_reads / key_read_requests) * <span class="number">100</span>% </span><br><span class="line">key_buffer_write_hits = (<span class="number">1</span>-key_writes / key_write_requests) * <span class="number">100</span>% </span><br><span class="line">``` </span><br><span class="line">#### InnoDB Buffer命中率</span><br></pre></td></tr></table></figure>
+<p>mysql&gt; show status like ‘innodb_buffer_pool_read%’;<br>innodb_buffer_read_hits = (1 - innodb_buffer_pool_reads / innodb_buffer_pool_read_requests) * 100%<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### Query Cache命中率 </span><br><span class="line">`</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; show status like ‘Qcache%’;<br>Query_cache_hits = (Qcahce_hits / (Qcache_hits + Qcache_inserts )) * 100%;<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### Table Cache状态量</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; show global  status like ‘open%’;<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">比较 open_tables  与 opend_tables 值 </span><br><span class="line"> </span><br><span class="line">#### Thread Cache 命中率</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; show global status like ‘Thread%’;<br>mysql&gt; show global status like ‘Connections’;<br>Thread_cache_hits = (1 - Threads_created / connections ) * 100%<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### 锁定状态</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; show global  status like ‘%lock%’;<br>Table_locks_waited/Table_locks_immediate=0.3%  如果这个比值比较大的话，说明表锁造成的阻塞比较严重<br>Innodb_row_lock_waits innodb行锁，太大可能是间隙锁造成的<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### 复制延时量</span><br></pre></td></tr></table></figure></p>
+<p>mysql &gt; show slave status<br>查看延时时间<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### Tmp Table 状况(临时表状况)</span><br></pre></td></tr></table></figure></p>
+<p>mysql &gt; show status like ‘Create_tmp%’;<br>Created_tmp_disk_tables/Created_tmp_tables比值最好不要超过10%，如果Created_tmp_tables值比较大，<br>可能是排序句子过多或者是连接句子不够优化<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### Binlog Cache 使用状况</span><br></pre></td></tr></table></figure></p>
+<p>mysql &gt; show status like ‘Binlog_cache%’;<br>如果Binlog_cache_disk_use值不为0 ，可能需要调大 binlog_cache_size大小<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### Innodb_log_waits 量</span><br></pre></td></tr></table></figure></p>
+<p>mysql &gt; show status like ‘innodb_log_waits’;<br>Innodb_log_waits值不等于0的话，表明 innodb log  buffer 因为空间不足而等待<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">### Mysql查看死锁和解除锁</span><br><span class="line">所谓死锁&lt;DeadLock&gt;：是指两个或两个以上的进程在执行过程中,因争夺资源而造成的一种互相等待的现象,若无外力作用，它们都将无法推进下去.此时称系统处于死锁状态或系统产生了死锁，这些永远在互相等待的进程称为死锁进程。表级锁不会产生死锁.所以解决死锁主要还是针对于最常用的InnoDB。</span><br><span class="line"></span><br><span class="line">解除正在死锁的状态有两种方法：</span><br><span class="line">* **第一种**</span><br><span class="line"><span class="number">1.</span>查询是否锁表</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; show OPEN TABLES where In_use &gt; 0;<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span>.查询进程（如果您有<span class="keyword">SUPER</span>权限，您可以看到所有线程。否则，您只能看到您自己的线程）</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; show processlist;<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span>杀死进程<span class="built_in">id</span>（就是上面命令的<span class="built_in">id</span>列）</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; kill id<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">* </span>*<span class="strong">*第二种*</span><span class="strong">*</span></span><br><span class="line"><span class="strong">1.查看下在锁的事务</span></span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; SELECT * FROM INFORMATION_SCHEMA.INNODB_TRX;<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2.</span>杀死进程<span class="built_in">id</span>（就是上面命令的trx_mysql_thread_id列）</span><br></pre></td></tr></table></figure></p>
+<p>mysql&gt; kill 线程ID<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;例子：</span><br><span class="line">查出死锁进程：mysql&gt; <span class="keyword">SHOW </span>PROCESSLIST</span><br><span class="line">杀掉进程: mysql&gt; KILL <span class="number">420821</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">其它关于查看死锁的命令：</span><br></pre></td></tr></table></figure></p>
+<p>1：查看当前的事务<br>mysql&gt; SELECT <em> FROM INFORMATION_SCHEMA.INNODB_TRX;<br>2：查看当前锁定的事务<br>mysql&gt; SELECT </em> FROM INFORMATION_SCHEMA.INNODB_LOCKS;<br>3：查看当前等锁的事务<br>mysql&gt; SELECT * FROM INFORMATION_SCHEMA.INNODB_LOCK_WAITS;<br><code>`</code></p>
+<p>后记：<br>文中提到一些数字都是参考值，了解基本原理就可以，除了MySQL提供的各种status值外，操作系统的一些性能指标也很重要，比如常用的top,iostat等，尤其是iostat，现在的系统瓶颈一般都在磁盘IO上，关于iostat的使用.<br>在尝试学习新的语言之前先理解这门语言的设计原理能够让你在探索这门新语言时保持一个清醒而且开发的状态。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/wechatpay.png" alt="丨Pyker丨 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/alipay.png" alt="丨Pyker丨 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Pyker</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://www.ipyker.com/2018/10/22/mysql-status.html" title="Mysql状态信息查询">https://www.ipyker.com/2018/10/22/mysql-status.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/13/zabbox-alert.html" rel="next" title="Zabbix服务器监控之《配置Zabbix报警》（六）">
+                <i class="fa fa-chevron-left"></i> Zabbix服务器监控之《配置Zabbix报警》（六）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/29/install-gitlab-ce.html" rel="prev" title="Gitlab-CE社区版安装">
+                Gitlab-CE社区版安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NDM5Mi8yMDkyNA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="丨Pyker丨">
+            
+              <p class="site-author-name" itemprop="name">丨Pyker丨</p>
+              <div class="site-description motion-element" itemprop="description">与其临渊羡鱼，不如退而结网。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ipyker" title="GitHub &rarr; https://github.com/ipyker" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:pyker@qq.com" title="E-Mail &rarr; mailto:pyker@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/viszhang" title="Weibo &rarr; https://weibo.com/viszhang" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="tencent://message/?uin=123435796&Site=&menu=yes" title="QQ &rarr; tencent://message/?uin=123435796&Site=&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-book"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ttlsa.com/" title="http://www.ttlsa.com/" rel="noopener" target="_blank">运维生存时间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.iyunw.cn" title="https://www.iyunw.cn" rel="noopener" target="_blank">爱运维</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nginxconfig.io/" title="https://nginxconfig.io/" rel="noopener" target="_blank">Nginxconfig</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://linux.51yip.com/" title="http://linux.51yip.com/" rel="noopener" target="_blank">Linux命令手册</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://echarts.baidu.com/index.html" title="https://echarts.baidu.com/index.html" rel="noopener" target="_blank">echarts可视化库</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看mysql性能状态命令"><span class="nav-number">1.</span> <span class="nav-text">查看mysql性能状态命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看mysql全局状态"><span class="nav-number">1.1.</span> <span class="nav-text">查看mysql全局状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#慢查询"><span class="nav-number">1.2.</span> <span class="nav-text">慢查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接数"><span class="nav-number">1.3.</span> <span class="nav-text">连接数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Key-buffer-size"><span class="nav-number">1.4.</span> <span class="nav-text">Key_buffer_size</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#临时表"><span class="nav-number">1.5.</span> <span class="nav-text">临时表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Open-Table"><span class="nav-number">1.6.</span> <span class="nav-text">Open Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询缓存-query-cache"><span class="nav-number">1.7.</span> <span class="nav-text">查询缓存(query cache)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#排序使用情况"><span class="nav-number">1.8.</span> <span class="nav-text">排序使用情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件打开数-open-files"><span class="nav-number">1.9.</span> <span class="nav-text">文件打开数(open_files)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表锁情况"><span class="nav-number">1.10.</span> <span class="nav-text">表锁情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表扫描情况"><span class="nav-number">1.11.</span> <span class="nav-text">表扫描情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看Mysql状态QPS-TPS-缓存命中率"><span class="nav-number">2.</span> <span class="nav-text">查看Mysql状态QPS/TPS/缓存命中率</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#QPS-每秒Query量"><span class="nav-number">2.1.</span> <span class="nav-text">QPS(每秒Query量)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TPS-每秒事务量"><span class="nav-number">2.2.</span> <span class="nav-text">TPS(每秒事务量)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#key-Buffer-命中率"><span class="nav-number">2.3.</span> <span class="nav-text">key Buffer 命中率</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style=" text-align:center;">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pyker</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"> 站点字数合计:</i>
+    </span>
+    
+    <span title="站点总字数">171k</span>
+  
+  
+  <span class="post-meta-divider">|</span>
+  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">粤ICP备19028706号 </a>
+
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+<div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("07/23/2017 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+        
+<div class="busuanzi-count" style=" text-align:center;">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+    
+    
+      
+    
+  
+  <script color="255,0,255" opacity="0.7" zindex="-1" count="140" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <script id="ribbon" size="300" alpha="0.1" zindex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2018/10/22/mysql-status.html'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":250,"height":500},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
