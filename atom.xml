@@ -92,9 +92,9 @@
       <category term="elastic" scheme="https://www.ipyker.com/categories/elastic/"/>
     
     
-      <category term="filebeat" scheme="https://www.ipyker.com/tags/filebeat/"/>
-    
       <category term="elasticsearch" scheme="https://www.ipyker.com/tags/elasticsearch/"/>
+    
+      <category term="filebeat" scheme="https://www.ipyker.com/tags/filebeat/"/>
     
       <category term="kibana" scheme="https://www.ipyker.com/tags/kibana/"/>
     

@@ -31,8 +31,8 @@
         <category>elastic</category>
       </categories>
       <tags>
-        <tag>filebeat</tag>
         <tag>elasticsearch</tag>
+        <tag>filebeat</tag>
         <tag>kibana</tag>
       </tags>
   </entry>
