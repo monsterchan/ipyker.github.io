@@ -13,7 +13,7 @@ date: 2019-05-01 13:30:00
 [nexT7.x](https://github.com/theme-next/hexo-theme-next)
 
 ## 目录
-我们主要对next主题进行了如下配置操作，该配置后的next主题获取地址：https://github.com/ipyker/ipyker.github.io/tree/hexo
+我们主要对next主题进行了如下配置操作，该配置后的next主题获取地址：https://github.com/ipyker/hexo-next-theme
 {% note danger %}
 * 设置中文语言
 * 设置博主文字描述
