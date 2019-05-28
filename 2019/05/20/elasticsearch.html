@@ -154,7 +154,7 @@
 <meta property="og:site_name" content="派 | Pyker">
 <meta property="og:description" content="什么是ElasticsearchElasticsearch是一个高度可扩展的开源全文搜索和分析引擎。 它允许您快速，近乎实时地存储，搜索和分析大量数据。 它通常用作底层引擎/技术，本身扩展性很好，可以扩展到上百台服务器，处理PB级别的数据。 为具有复杂搜索特性和需求的应用程序提供支持。Elasticsearch也使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-28T15:06:27.857Z">
+<meta property="og:updated_time" content="2019-05-28T16:04:55.400Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch7.0详解">
 <meta name="twitter:description" content="什么是ElasticsearchElasticsearch是一个高度可扩展的开源全文搜索和分析引擎。 它允许您快速，近乎实时地存储，搜索和分析大量数据。 它通常用作底层引擎/技术，本身扩展性很好，可以扩展到上百台服务器，处理PB级别的数据。 为具有复杂搜索特性和需求的应用程序提供支持。Elasticsearch也使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是">
@@ -499,7 +499,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-28 23:06:27" itemprop="dateModified" datetime="2019-05-28T23:06:27+08:00">2019-05-28</time>
+                <time title="修改时间：2019-05-29 00:04:55" itemprop="dateModified" datetime="2019-05-29T00:04:55+08:00">2019-05-29</time>
               
             
           </span>
@@ -552,7 +552,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">2.9k</span>
+                <span title="本文字数">3.1k</span>
               
 
               
@@ -601,32 +601,34 @@
 <li>Elasticsearch是一个近实时搜索平台。 这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。</li>
 </ul>
 <h2 id="Cluster：集群"><a href="#Cluster：集群" class="headerlink" title="Cluster：集群"></a>Cluster：集群</h2><ul>
-<li><p>cluster是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。 群集由唯一名称标识，默认情况下为“elasticsearch”。 此名称很重要，因为如果节点设置为按名称加入群集，则该节点只能是群集的一部分。</p>
+<li><p>cluster是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。 群集由唯一名称标识，默认情况下为“elasticsearch”。 这个标识很重要，节点会根据这个标识加入到一个集群。</p>
 </li>
-<li><p>确保不要在不同的环境中重用相同的群集名称，否则最终会导致节点加入错误的群集。 例如，您可以将logging-dev，logging-stage和logging-prod用于开发，测试和生产集群。</p>
-</li>
-<li><p>请注意，拥有一个只包含单个节点的集群是完全正常的。 此外，您还可以拥有多个独立的集群，每个集群都有自己唯一的集群名称。</p>
+<li><p>确保不要在不同的环境中使用相同的群集名称，这会导致节点加入错误的集群。例如，您可以将logging-dev，logging-stage和logging-prod用于开发，测试和生产集群。</p>
+<div class="note warning">
+            <p>请注意，如果一个集群只有一个节点也是完全可行的，此外你也可以建立多个独立的集群，每个集群有自己的唯一标识。</p>
+          </div>
 </li>
 </ul>
 <h2 id="Node：节点"><a href="#Node：节点" class="headerlink" title="Node：节点"></a>Node：节点</h2><ul>
-<li><p>节点是作为群集一部分的单个服务器，存储数据并参与群集的索引和搜索功能。 与集群一样，节点由名称标识，默认情况下，该名称是在启动时分配给节点的随机通用唯一标识符（UUID）。 如果不需要默认值，可以定义所需的任何节点名称。 此名称对于管理目的非常重要，您可以在其中识别网络中的哪些服务器与Elasticsearch集群中的哪些节点相对应。</p>
+<li><p>节点是作为群集一部分的单个服务器，用于存储集群数据并为集群提供<code>索引</code>和<code>搜索</code>能力。 与集群一样，每个节点也有一个唯一名称标识，在节点启动的时候会默认分配给它一个随机通用唯一标识(UUID)。 你也可以自定义节点标识，以代替默认标识。在集群的管理中，可以使用节点标识来对应网络中的服务器名称。</p>
 </li>
-<li><p>可以将节点配置为按群集名称加入特定群集。 默认情况下，每个节点都设置为加入名为elasticsearch的集群，这意味着如果您在网络上启动了许多节点并且假设它们可以相互发现 - 它们将自动形成并加入名为elasticsearch的单个集群。</p>
+<li><p>节点可以根据配置的集群标识加入指定的集群。一般来说，每个节点在启动之后会默认加入一个叫elasticsearch的集群。假如在一个节点可以相互发现对方的网络环境中，启动多个节点，他们会自动加入到一个标识为elasticsearch的集群。</p>
 </li>
-<li><p>在单个群集中，您可以拥有任意数量的节点。 此外，如果您的网络上当前没有其他Elasticsearch节点正在运行，则默认情况下启动单个节点将形成名为elasticsearch的新单节点集群。</p>
+<li><p>在一个独立的集群中，你可以建立任意个数的节点。此外，如果当前网络环境中没有其他的elasticsearch节点在运行，那么单独启动一个节点会形成一个单节点的集群，其集群标识为elasticsearch</p>
 </li>
 </ul>
-<h2 id="Index：索引"><a href="#Index：索引" class="headerlink" title="Index：索引"></a>Index：索引</h2><p>索引是具有某些类似特征的文档集合。 例如，可以为客户数据建立索引，为产品目录建立另一个索引，为订单数据建立另一个索引。索引由名称标识(必须全部为小写)，当对其中的文档执行索引、搜索、更新和删除操作时，此名称用于引用索引。</p>
-<h2 id="Type：类型"><a href="#Type：类型" class="headerlink" title="Type：类型"></a>Type：类型</h2><ul>
-<li>它曾经是索引的逻辑类别/分区，允许您在同一索引中存储不同类型的文档，例如，一种用户类型，另一种用于博客帖子。 不再可能在索引中创建多个类型。在Elasticsearch 7.0.0或更高版本中创建的索引不再接受<em>default</em>映射。 在6.x中创建的索引将继续像以前一样在Elasticsearch 6.x中运行。 在7.0中的API中不推荐使用type，对索引创建，放置映射，获取映射，放置模板，获取模板和获取字段映射API进行重大更改。<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html" target="_blank" rel="noopener">参考官网说明</a></li>
+<h2 id="Index：索引"><a href="#Index：索引" class="headerlink" title="Index：索引"></a>Index：索引</h2><p>索引是具有某些类似特征的<code>文档（Document）</code>集合。 例如，可以为客户数据建立索引，为产品目录建立另一个索引，为订单数据建立另一个索引。索引由名称标识(必须全部为小写)，当对其中的文档执行索引、搜索、更新和删除操作时，需要引用索引名称。</p>
+<h2 id="Type：类型"><a href="#Type：类型" class="headerlink" title="Type：类型"></a><del>Type：类型</del></h2><span class="label danger">warning :在6.0.0后弃用</span>
+<ul>
+<li>它曾经是索引的逻辑类别/分区，允许您在同一索引中存储不同类型的文档，例如，一种用户类型，另一种用于博客帖子。 不再可能在索引中创建多个类型。在Elasticsearch 7.0.0或更高版本中创建的索引不再接受<em>default</em>映射。 在6.x中创建的索引将继续像以前一样在Elasticsearch 6.x中运行。 在7.0中的API中不推荐使用type，对索引创建，放置映射，获取映射，放置模板，获取模板和获取字段映射API进行重大更改。详见<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html" target="_blank" rel="noopener">Removal of mapping types</a></li>
 </ul>
 <h2 id="Document：文档"><a href="#Document：文档" class="headerlink" title="Document：文档"></a>Document：文档</h2><ul>
-<li>Document是可以编制索引的基本信息单元。 例如，您可以为单个客户提供文档，为单个产品提供另一个文档，为单个订单提供另一个文档。 该文档以JSON（JavaScript Object Notation）表示，JSON是一种普遍存在的互联网数据交换格式。 在索引中，您可以根据需要存储任意数量的文档。</li>
+<li>Document是可以被索引的基本信息单元。 例如，您可以为单个客户提供文档，为单个产品提供另一个文档，为单个订单提供另一个文档。 该文档以JSON格式表示。在<code>索引（index）</code>或者<code>类型（type）</code>中可以存储任意多的文档。尽管文档实际存储在索引中，但是使用中必须把文档编入或者分配到一个索引的类型中。</li>
 </ul>
 <h2 id="Shard：分片"><a href="#Shard：分片" class="headerlink" title="Shard：分片"></a>Shard：分片</h2><ul>
-<li><p>索引可能存储大量可能超过单个节点的硬件限制的数据。 例如，占用1TB磁盘空间的十亿个文档的单个索引可能不适合单个节点的磁盘，或者可能太慢而无法单独从单个节点提供搜索请求。</p>
+<li><p>一个索引index可能会存储大量的数据，大到超过一个节点的存储能力。例如：一个占用1T磁盘存储空间的索引，对单节点来说可能会太大，或者造成查询请求太慢。</p>
 </li>
-<li><p>为了解决这个问题，Elasticsearch提供了将索引细分为多个称为分片的功能。 创建索引时，只需定义所需的分片数即可。 每个分片本身都是一个功能齐全且独立的“索引”，每个分片可以放到不同的服务器上。</p>
+<li><p>为了解决这个问题，Elasticsearch提供了将索引细分为多个称为<code>分片(shard)</code>的功能。 创建索引时，只需定义所需的分片数即可。 每个分片本身都是一个功能齐全且独立的“索引”，每个分片可以放到不同的服务器上。</p>
 </li>
 <li><p>当你查询的索引分布在多个分片上时，Elasticsearch会把查询发送给每个相关的分片，并将结果组合在一起，而应用程序并不知道分片的存在。即：这个过程对用户来说是透明的。</p>
 </li>
@@ -636,6 +638,13 @@
 </ul>
 <h2 id="Full-text-search：全文检索"><a href="#Full-text-search：全文检索" class="headerlink" title="Full-text-search：全文检索"></a>Full-text-search：全文检索</h2><p>全文检索就是对一篇文章进行索引，可以根据关键字搜索，类似于mysql里的like语句。 全文索引就是把内容根据词的意义进行分词，然后分别创建索引，例如“你们的激情是因为什么事情来的” 可能会被分词成：“你们“，”激情“，“什么事情“，”来“ 等token，这样当你搜索“你们” 或者 “激情” 都会把这句搜出来。</p>
 <h1 id="Elasticsearch的安装"><a href="#Elasticsearch的安装" class="headerlink" title="Elasticsearch的安装"></a>Elasticsearch的安装</h1><p>由于<a href="https://www.ipyker.com/2019/03/15/install-efk.html">上篇文章</a>已经对elasticsearch7.0.1版本进行了安装，用户可以参考该安装方式，进行多节点集群安装部署。</p>
+<h1 id="Restful-API接口规范"><a href="#Restful-API接口规范" class="headerlink" title="Restful API接口规范"></a>Restful API接口规范</h1><p>Elasticsearch提供了一个非常全面和强大的REST API，可以使用它与集群进行交互。使用该API可以做一些事情如下:</p>
+<ul>
+<li>检查群集，节点和索引运行状况，状态和统计信息</li>
+<li>管理您的群集，节点和索引数据和元数据</li>
+<li>对索引执行CRUD（创建，读取，更新和删除）和搜索操作</li>
+<li>执行高级搜索操作，例如分页，排序，过滤，脚本编写，聚合等等</li>
+</ul>
 
       
     </div>
@@ -1036,7 +1045,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是Elasticsearch"><span class="nav-number">1.</span> <span class="nav-text">什么是Elasticsearch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch能干什么"><span class="nav-number">2.</span> <span class="nav-text">Elasticsearch能干什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch核心概念"><span class="nav-number">3.</span> <span class="nav-text">Elasticsearch核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Near-realtime-NRT-：-近实时"><span class="nav-number">3.1.</span> <span class="nav-text">Near-realtime(NRT)： 近实时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster：集群"><span class="nav-number">3.2.</span> <span class="nav-text">Cluster：集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node：节点"><span class="nav-number">3.3.</span> <span class="nav-text">Node：节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index：索引"><span class="nav-number">3.4.</span> <span class="nav-text">Index：索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type：类型"><span class="nav-number">3.5.</span> <span class="nav-text">Type：类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Document：文档"><span class="nav-number">3.6.</span> <span class="nav-text">Document：文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shard：分片"><span class="nav-number">3.7.</span> <span class="nav-text">Shard：分片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Replicas：副本"><span class="nav-number">3.8.</span> <span class="nav-text">Replicas：副本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Full-text-search：全文检索"><span class="nav-number">3.9.</span> <span class="nav-text">Full-text-search：全文检索</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch的安装"><span class="nav-number">4.</span> <span class="nav-text">Elasticsearch的安装</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是Elasticsearch"><span class="nav-number">1.</span> <span class="nav-text">什么是Elasticsearch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch能干什么"><span class="nav-number">2.</span> <span class="nav-text">Elasticsearch能干什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch核心概念"><span class="nav-number">3.</span> <span class="nav-text">Elasticsearch核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Near-realtime-NRT-：-近实时"><span class="nav-number">3.1.</span> <span class="nav-text">Near-realtime(NRT)： 近实时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster：集群"><span class="nav-number">3.2.</span> <span class="nav-text">Cluster：集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node：节点"><span class="nav-number">3.3.</span> <span class="nav-text">Node：节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index：索引"><span class="nav-number">3.4.</span> <span class="nav-text">Index：索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type：类型"><span class="nav-number">3.5.</span> <span class="nav-text">Type：类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Document：文档"><span class="nav-number">3.6.</span> <span class="nav-text">Document：文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shard：分片"><span class="nav-number">3.7.</span> <span class="nav-text">Shard：分片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Replicas：副本"><span class="nav-number">3.8.</span> <span class="nav-text">Replicas：副本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Full-text-search：全文检索"><span class="nav-number">3.9.</span> <span class="nav-text">Full-text-search：全文检索</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch的安装"><span class="nav-number">4.</span> <span class="nav-text">Elasticsearch的安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Restful-API接口规范"><span class="nav-number">5.</span> <span class="nav-text">Restful API接口规范</span></a></li></ol></div>
             
 
           </div>
@@ -1076,7 +1085,7 @@
       <i class="fa fa-area-chart"> 站点字数合计:</i>
     </span>
     
-    <span title="站点总字数">174k</span>
+    <span title="站点总字数">175k</span>
   
   
   <span class="post-meta-divider">|</span>
