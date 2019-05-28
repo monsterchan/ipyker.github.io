@@ -30,7 +30,7 @@ git rm xxx                                                # 删除暂存区中�
 git rm -r *                                               # 递归删除
 git log                                                   # 显示提交日志
 git log -1                                                # 显示最近1次commit的日志 -n为最近n次
-git log -5 --oneline									  # 极简显示最近5次的commit日志
+git log -5 --oneline                                      # 极简显示最近5次的commit日志
 git log --stat                                            # 显示提交日志及相关变动文件
 git log --graph --pretty=oneline --abbrev-commit          # 以图形表示分支合并历史
 git show dfb02e6e4f2f7b573337763e5c0013802e392818         # 显示某个提交的详细内容
