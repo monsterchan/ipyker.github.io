@@ -15,10 +15,10 @@ Tomcat Connector运行有三种模式：
 默认的模式,同步阻塞，性能非常低下,没有经过任何优化处理和支持.
 
 * __nio__ 
-同步非阻塞，利用java的异步io护理技术,noblocking IO技术,想运行在该模式下，直接修改server.xml里的Connector节点,修改protocol为```protocol="org.apache.coyote.http11.Http11NioProtocol" ``` 启动后,就可以生效。
+同步非阻塞，利用java的异步io护理技术,noblocking IO技术,想运行在该模式下，直接修改server.xml里的Connector节点,修改protocol为`protocol="org.apache.coyote.http11.Http11NioProtocol"`启动后,就可以生效。
 
 * __apr__
-安装起来最困难,但是从操作系统级别来解决异步的IO问题,大幅度的提高性能. Tomcat apr也是在Tomcat上运行高并发应用的首选模式。必须要安装apr、apr-util和native，nio修改模式，修改protocol为 `org.apache.coyote.http11.Http11AprProtocol` ，直接启动就支持apr。
+安装起来最困难,但是从操作系统级别来解决异步的IO问题,大幅度的提高性能. Tomcat apr也是在Tomcat上运行高并发应用的首选模式。必须要安装apr、apr-util和native，nio修改模式，修改protocol为`org.apache.coyote.http11.Http11AprProtocol`，直接启动就支持apr。
 
 ### 安装配置APR模式
 
