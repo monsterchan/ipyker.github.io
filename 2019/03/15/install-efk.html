@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: true,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"shrinkIn","post_header":"slideLeftIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideDownIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="试验环境本次试验的elastic stack软件都为7.0.1版本，现在官网最新的为7.1版本，用户可在官方下载下载地址。    主机名 ip地址 服务     efk-node1 192.168.20.211 elasticsearch、kibana、jdk8   efk-node2 192.168.20.212 elasticsearch、cerebro、jdk8   real-server">
+<meta name="keywords" content="elasticsearch,filebeat,kibana">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elastic stack之EFK安装">
+<meta property="og:url" content="https://www.ipyker.com/2019/03/15/install-efk.html">
+<meta property="og:site_name" content="派 | Pyker">
+<meta property="og:description" content="试验环境本次试验的elastic stack软件都为7.0.1版本，现在官网最新的为7.1版本，用户可在官方下载下载地址。    主机名 ip地址 服务     efk-node1 192.168.20.211 elasticsearch、kibana、jdk8   efk-node2 192.168.20.212 elasticsearch、cerebro、jdk8   real-server">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.ipyker.com/images/pic/cerebro.png">
+<meta property="og:updated_time" content="2019-05-26T05:08:02.455Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elastic stack之EFK安装">
+<meta name="twitter:description" content="试验环境本次试验的elastic stack软件都为7.0.1版本，现在官网最新的为7.1版本，用户可在官方下载下载地址。    主机名 ip地址 服务     efk-node1 192.168.20.211 elasticsearch、kibana、jdk8   efk-node2 192.168.20.212 elasticsearch、cerebro、jdk8   real-server">
+<meta name="twitter:image" content="https://www.ipyker.com/images/pic/cerebro.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="派 | Pyker" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.ipyker.com/2019/03/15/install-efk">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Elastic stack之EFK安装 | 派 | Pyker</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">派 | Pyker</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-bookmark"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-互动">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/guestbook/" rel="section"><i class="menu-item-icon fa fa-fw fa-comments"></i> <br>互动</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2019/03/15/install-efk.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="丨Pyker丨">
+      <meta itemprop="description" content="与其临渊羡鱼，不如退而结网。">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="派 | Pyker">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Elastic stack之EFK安装
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-15 14:15:00" itemprop="dateCreated datePublished" datetime="2019-03-15T14:15:00+08:00">2019-03-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-26 13:08:02" itemprop="dateModified" datetime="2019-05-26T13:08:02+08:00">2019-05-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/elastic/" itemprop="url" rel="index"><span itemprop="name">elastic</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">10k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">9 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="试验环境"><a href="#试验环境" class="headerlink" title="试验环境"></a>试验环境</h2><p>本次试验的<code>elastic stack</code>软件都为<code>7.0.1</code>版本，现在官网最新的为7.1版本，用户可在官方下载<a href="https://www.elastic.co/cn/downloads/" target="_blank" rel="noopener">下载地址</a>。</p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>ip地址</th>
+<th>服务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>efk-node1</td>
+<td>192.168.20.211</td>
+<td>elasticsearch、kibana、jdk8</td>
+</tr>
+<tr>
+<td>efk-node2</td>
+<td>192.168.20.212</td>
+<td>elasticsearch、cerebro、jdk8</td>
+</tr>
+<tr>
+<td>real-server</td>
+<td>192.168.20.250</td>
+<td>filebeat</td>
+</tr>
+</tbody>
+</table>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h3><p>elasticsearch需要jdk环境的支持，7.0.1版本默认已经自带JDK了，但是为了日后扩展问题，我们还是手动配置一边JDK环境。以下操作在<code>efk-node1</code>和<code>efk-node2</code>主机上进行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面下载链接因授权问题，需用户前往JDK官网下载</span></span><br><span class="line">$ wget https://download.oracle.com/otn/java/jdk/8u171-b12/478a62b7d4e34b78b671c754eaaf38ab/jdk-8u171-linux-x64.tar.gz</span><br><span class="line"></span><br><span class="line">$ tar zxvf jdk-8u171-linux-x64.tar.gz -C /usr/<span class="built_in">local</span>/</span><br><span class="line"></span><br><span class="line">$ cat &gt;&gt; /etc/profile &lt;&lt; EOF</span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/jdk1.8.0_171</span><br><span class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/dt.jar:<span class="variable">$JAVA_HOME</span>/lib/tools.jar</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">source</span> /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证JDK, JDK配置完成</span></span><br><span class="line">$ java -version</span><br><span class="line">java version <span class="string">"1.8.0_171"</span></span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_171-b11)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)</span><br></pre></td></tr></table></figure></p>
+<h3 id="设置服务器的最大文件数"><a href="#设置服务器的最大文件数" class="headerlink" title="设置服务器的最大文件数"></a>设置服务器的最大文件数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat &gt;&gt; /etc/security/limits.conf &lt;&lt; EOF</span><br><span class="line"> * soft nofile 655350</span><br><span class="line"> * hard nofile 655350</span><br><span class="line"> * soft nproc 655350</span><br><span class="line"> * hard nproc 655350</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="设置服务器打开的最大进程数"><a href="#设置服务器打开的最大进程数" class="headerlink" title="设置服务器打开的最大进程数"></a>设置服务器打开的最大进程数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat &gt; /etc/security/limits.d/20-nproc.conf &lt;&lt; EOF</span><br><span class="line">*          soft    nproc     4096</span><br><span class="line">root       soft    nproc     unlimited</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="设置nmap数量对虚拟内存的支持"><a href="#设置nmap数量对虚拟内存的支持" class="headerlink" title="设置nmap数量对虚拟内存的支持"></a>设置nmap数量对虚拟内存的支持</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat &gt;&gt; /etc/sysctl.conf &lt;&lt; EOF</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">$  sysctl -p</span><br></pre></td></tr></table></figure>
+<h3 id="本地host解析"><a href="#本地host解析" class="headerlink" title="本地host解析"></a>本地host解析</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/hosts &lt;&lt; EOF</span><br><span class="line">efk-node1 192.168.20.211</span><br><span class="line">efk-node2 192.168.20.212</span><br><span class="line">real-server 192.168.20.250</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="安装elasticsearch"><a href="#安装elasticsearch" class="headerlink" title="安装elasticsearch"></a>安装elasticsearch</h2><p>以下操作在<code>efk-node1</code>和<code>efk-node2</code>主机上进行：</p>
+<h3 id="下载和解压"><a href="#下载和解压" class="headerlink" title="下载和解压"></a>下载和解压</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建elastic工作目录</span></span><br><span class="line">$ mkdir /elastic &amp;&amp; <span class="built_in">cd</span> /elastic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载elasticsearch tar包</span></span><br><span class="line">$ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.0.1-linux-x86_64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到当前/elastic目录</span></span><br><span class="line">$ tar zxvf elasticsearch-7.0.1-linux-x86_64.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>下面只列出已配置的参数<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ cat elasticsearch-7.0.1/config/elasticsearch.yml | egrep -v <span class="string">"^$|^#"</span></span><br><span class="line">  cluster.name: efk-cluster     <span class="comment"># 集群名称</span></span><br><span class="line">  node.name: efk-node1          <span class="comment"># 节点名称，212服务器改成efk-node2</span></span><br><span class="line">  path.data: /var/lib/elasticsearch     <span class="comment"># elasticsearch数据目录</span></span><br><span class="line">  path.logs: /var/<span class="built_in">log</span>/elasticsearch     <span class="comment"># elasticsearch日志目录</span></span><br><span class="line">  network.host: 0.0.0.0                 <span class="comment"># elasticsearch绑定的地址</span></span><br><span class="line">  http.port: 9200                       <span class="comment"># elasticsearch绑定的端口</span></span><br><span class="line">  discovery.seed_hosts: [<span class="string">"efk-node1"</span>, <span class="string">"efk-node2"</span>]  <span class="comment">#集群发现</span></span><br><span class="line">  cluster.initial_master_nodes: [<span class="string">"efk-node1"</span>, <span class="string">"efk-node2"</span>]  <span class="comment">#第一次访问初始的集群节点</span></span><br><span class="line">  xpack.security.enabled: <span class="literal">true</span>          <span class="comment"># ssl\tls安全参数</span></span><br><span class="line">  xpack.security.transport.ssl.enabled: <span class="literal">true</span>    <span class="comment"># ssl\tls安全参数</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="创建运行elasticsearch用户"><a href="#创建运行elasticsearch用户" class="headerlink" title="创建运行elasticsearch用户"></a>创建运行elasticsearch用户</h3><blockquote>
+<p>elasticsearch默认是不运行root用户运行的，因此我们得创建一个新用户来运行elasticsearch。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ useradd elastic</span><br><span class="line">$ passwd elastic</span><br></pre></td></tr></table></figure>
+<h3 id="创建依赖文件"><a href="#创建依赖文件" class="headerlink" title="创建依赖文件"></a>创建依赖文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /var/<span class="built_in">log</span>/elasticsearch      <span class="comment"># 创建日志目录</span></span><br><span class="line"></span><br><span class="line">$ mkdir /var/lib/elasticsearch      <span class="comment"># 创建数据目录</span></span><br><span class="line"></span><br><span class="line">$ touch /var/run/elasticsearch.pid  <span class="comment"># 创建进程文件</span></span><br><span class="line"></span><br><span class="line">$ chown -R elastic.elastic /elastic <span class="comment"># 修改elastic工作目录所有者</span></span><br><span class="line">$ chown -R elastic.elastic /var/<span class="built_in">log</span>/elasticsearch &amp;&amp; \</span><br><span class="line">chown -R elastic.elastic /var/lib/elasticsearch &amp;&amp; \</span><br><span class="line">chown -R elastic.elastic /var/run/elasticsearch.pid   <span class="comment"># 相关目录所有者都修改成运行elasticsearch服务的用户</span></span><br></pre></td></tr></table></figure>
+<h3 id="准备elasticsearch-systemctl文件"><a href="#准备elasticsearch-systemctl文件" class="headerlink" title="准备elasticsearch systemctl文件"></a>准备elasticsearch systemctl文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Elasticsearch</span><br><span class="line">Documentation=http://www.elastic.co</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Environment=JAVA_HOME=/usr/<span class="built_in">local</span>/jdk1.8.0_171</span><br><span class="line">User=elastic</span><br><span class="line">Group=elastic</span><br><span class="line">ExecStart=/elastic/elasticsearch-7.0.1/bin/elasticsearch -p /var/run/elasticsearch.pid</span><br><span class="line"></span><br><span class="line">LimitNOFILE=65535</span><br><span class="line">LimitNPROC=65535</span><br><span class="line">LimitAS=infinity</span><br><span class="line">LimitFSIZE=infinity</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<h3 id="启动elasticsearch"><a href="#启动elasticsearch" class="headerlink" title="启动elasticsearch"></a>启动elasticsearch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl daemon-reload           <span class="comment"># 加载systemctl配置文件</span></span><br><span class="line"></span><br><span class="line">$ systemctl start elasticsearch     <span class="comment"># 启动elasticsearch</span></span><br><span class="line"></span><br><span class="line">$ systemctl <span class="built_in">enable</span> elasticsearch    <span class="comment"># 设置开机启动elasticsearch</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Tips</strong>: elasticsearch7.0.1安装完默认自带基础版的X-Pack功能，使用铂金版的需要购买或者参考<a href="https://www.ipyker.com/2019/03/13/elastic-x-pack/">破解X-pack</a>进行破解。</p>
+</blockquote>
+<h3 id="验证集群状态"><a href="#验证集群状态" class="headerlink" title="验证集群状态"></a>验证集群状态</h3><p>通过上面的配置，我们的elasticsearch服务器已经启动，并且默认监听在<code>9200</code>和<code>9300</code>端口。<br><code>9200端口</code>: 为web访问提供服务；<code>9300端口</code>：为集群节点提供通信。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 验证集群节点数，其中master为*的代表该节点为主节点</span></span><br><span class="line">$ curl http://192.168.20.211:9200/_cat/nodes?v</span><br><span class="line">ip             heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name</span><br><span class="line">192.168.20.212           10          39   0    0.00    0.01     0.05 mdi       -      efk-node2</span><br><span class="line">192.168.20.211           18          37   0    0.00    0.01     0.05 mdi       *      efk-node1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证集群健康状态，status为green表示正常</span></span><br><span class="line">$ curl http://192.168.20.211:9200/_cat/health?v</span><br><span class="line">epoch      timestamp cluster        status node.total node.data shards pri relo init unassign pending_tasks max_task_wait_time active_shards_percent</span><br><span class="line">1558517253 09:27:33  efk-cluster green           2         2      6   3    0    0        0             0                  -                100.0%</span><br></pre></td></tr></table></figure></p>
+<div class="note success">
+            <p>由上可知，我们的elasticsearch集群已经正常工作了，并且在2台集群节点下/var/lib/elasticsearch目录下都有相同的数据。更多关于elasticsearch REST API请参考官方说明。<br><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cluster.html" target="_blank" rel="noopener">cluster apis</a> <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cat.html" target="_blank" rel="noopener">_cat apis</a> <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search.html" target="_blank" rel="noopener">Search apis</a> <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs.html" target="_blank" rel="noopener">Document apis</a> </p>
+          </div>
+<h2 id="安装-Kibana"><a href="#安装-Kibana" class="headerlink" title="安装 Kibana"></a>安装 Kibana</h2><p>以下操作只在<code>efk-node1</code>主机上进行：</p>
+<h3 id="下载和解压-1"><a href="#下载和解压-1" class="headerlink" title="下载和解压"></a>下载和解压</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入elastic工作目录</span></span><br><span class="line">$ <span class="built_in">cd</span> /elastic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载kibana tar包</span></span><br><span class="line">$ wget https://artifacts.elastic.co/downloads/kibana/kibana-7.0.1-linux-x86_64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到当前/elastic目录</span></span><br><span class="line">$ tar zxvf kibana-7.0.1-linux-x86_64.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>下面只列出已配置的参数<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ cat kibana-7.0.1-linux-x86_64/config/kibana.yml | egrep -v <span class="string">"^$|^#"</span></span><br><span class="line">  server.port: 5601           <span class="comment"># kibana服务端口</span></span><br><span class="line">  server.host: <span class="string">"0.0.0.0"</span>      <span class="comment"># kibana服务地址</span></span><br><span class="line">  elasticsearch.hosts: [<span class="string">"http://192.168.20.201:9200"</span>]  <span class="comment"># es访问地址，kibana需要和它通信</span></span><br><span class="line">  elasticsearch.username: <span class="string">"elastic"</span>            <span class="comment"># es帐号，如果是X-pack铂金版可配</span></span><br><span class="line">  elasticsearch.password: <span class="string">"pyker123456"</span>        <span class="comment"># es密码，如果是X-pack铂金版可配</span></span><br><span class="line">  elasticsearch.logQueries: <span class="literal">true</span>               <span class="comment"># 查询日志是否发送到ES，配合logging.json: true</span></span><br><span class="line">  pid.file: /var/run/kibana.pid                <span class="comment"># kibana的进行id文件</span></span><br><span class="line">  logging.dest: /var/<span class="built_in">log</span>/kibana.log            <span class="comment"># kibana日志文件</span></span><br><span class="line">  logging.json: <span class="literal">true</span>                           <span class="comment"># 以json格式输出日志</span></span><br><span class="line">  logging.verbose: <span class="literal">true</span>                        <span class="comment"># 记录所有事件，包括系统使用信息和所以请求</span></span><br><span class="line">  i18n.locale: <span class="string">"zh-CN"</span>                         <span class="comment"># 设置kibana为中文</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="创建依赖文件-1"><a href="#创建依赖文件-1" class="headerlink" title="创建依赖文件"></a>创建依赖文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ touch /var/<span class="built_in">log</span>/kibana.log      <span class="comment"># 创建日志文件</span></span><br><span class="line"></span><br><span class="line">$ touch /var/run/kibana.pid      <span class="comment"># 创建进程文件</span></span><br><span class="line"></span><br><span class="line">$ chown -R elastic.elastic /elastic &amp;&amp; \</span><br><span class="line">chown -R elastic.elastic /var/<span class="built_in">log</span>/kibana.log &amp;&amp; \</span><br><span class="line">chown -R elastic.elastic /var/run/kibana.pid     <span class="comment"># 修改elastic工作目录及相关工作文件所有者</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：默认Kibana是支持root运行的，我这里为了统一elasticsearch运行环境所以打算elastic用户运行。</p>
+</blockquote>
+<h3 id="准备kibana-systemctl文件"><a href="#准备kibana-systemctl文件" class="headerlink" title="准备kibana systemctl文件"></a>准备kibana systemctl文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Kibana</span><br><span class="line">Documentation=http://www.elastic.co</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=elastic</span><br><span class="line">Group=elastic</span><br><span class="line">ExecStart=/elastic/kibana-7.0.1-linux-x86_64/bin/kibana</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<h3 id="启动kibana"><a href="#启动kibana" class="headerlink" title="启动kibana"></a>启动kibana</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl daemon-reload           <span class="comment"># 加载systemctl配置文件</span></span><br><span class="line"></span><br><span class="line">$ systemctl start kibana            <span class="comment"># 启动kibana</span></span><br><span class="line"></span><br><span class="line">$ systemctl <span class="built_in">enable</span> kibana           <span class="comment"># 设置开机启动kibana</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Kibana默认监控在5601端口上，此时可以通过<code>http://192.168.20.211:5601</code>访问kibana。</p>
+</blockquote>
+<h2 id="安装cerebro可视化集群管理工具"><a href="#安装cerebro可视化集群管理工具" class="headerlink" title="安装cerebro可视化集群管理工具"></a>安装cerebro可视化集群管理工具</h2><p>cerebro是一个使用Scala，Play Framework，AngularJS和Bootstrap构建的开源（MIT许可）elasticsearch web可视化的监控工具，<a href="https://github.com/lmenezes/cerebro" target="_blank" rel="noopener">Github项目</a><br>以下操作只在<code>efk-node2</code>主机上进行：</p>
+<h3 id="下载和解压-2"><a href="#下载和解压-2" class="headerlink" title="下载和解压"></a>下载和解压</h3><p>请前往<a href="https://github.com/lmenezes/cerebro/releases" target="_blank" rel="noopener">https://github.com/lmenezes/cerebro/releases</a> 地址下载cerebro工具<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ tar zxvf cerebro-0.8.3.tgz</span><br><span class="line">$ vim cerebro-0.8.3/conf/application.conf  </span><br><span class="line"># 设置cerebro密码登陆认证</span><br><span class="line">auth=&#123;</span><br><span class="line">    type: basic</span><br><span class="line">    settings: &#123;</span><br><span class="line">        username="admin"</span><br><span class="line">        password="pyker123456"</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"># 文件最后配置elasticsearch地址</span><br><span class="line">hosts = [</span><br><span class="line">  &#123;</span><br><span class="line">    host = "http://192.168.20.211:9200"</span><br><span class="line">    name = "efk-cluster"</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure></p>
+<h3 id="准备cerebro-systemctl文件"><a href="#准备cerebro-systemctl文件" class="headerlink" title="准备cerebro systemctl文件"></a>准备cerebro systemctl文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Cerebro</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Environment=JAVA_HOME=/usr/<span class="built_in">local</span>/jdk1.8.0_171</span><br><span class="line">User=elastic</span><br><span class="line">Group=elastic</span><br><span class="line">LimitNOFILE=65535</span><br><span class="line">ExecStart=/elastic/cerebro-0.8.3/bin/cerebro -Dconfig.file=/elastic/cerebro-0.8.3/conf/application.conf -Dhttp.port=1234</span><br><span class="line">Restart=on-failure</span><br><span class="line">WorkingDirectory=/elastic/cerebro-0.8.3</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<h3 id="命令启动cerebro"><a href="#命令启动cerebro" class="headerlink" title="命令启动cerebro"></a>命令启动cerebro</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认9000端口</span></span><br><span class="line">$ nohup ./bin/cerebro -Dhttp.port=1234 -Dhttp.address=192.168.20.212 &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="systemctl方式启动cerebro"><a href="#systemctl方式启动cerebro" class="headerlink" title="systemctl方式启动cerebro"></a>systemctl方式启动cerebro</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl daemon-reload           <span class="comment"># 加载systemctl配置文件</span></span><br><span class="line"></span><br><span class="line">$ systemctl start cerebro           <span class="comment"># 启动cerebro</span></span><br><span class="line"></span><br><span class="line">$ systemctl <span class="built_in">enable</span> cerebro          <span class="comment"># 设置开机启动cerebro</span></span><br></pre></td></tr></table></figure>
+<h3 id="访问cerebro"><a href="#访问cerebro" class="headerlink" title="访问cerebro"></a>访问cerebro</h3><p>通过浏览器访问<code>http://192.168.20.212:1234</code>就可以cerebro工具了。该工具详细的显示了es集群状态、节点数、索引数、分片数、文档数以及数据大小等参数。<br><img src="/images/pic/cerebro.png" alt></p>
+<h2 id="安装filebeat"><a href="#安装filebeat" class="headerlink" title="安装filebeat"></a>安装filebeat</h2><p><a href="https://www.ipyker.com/2019/03/14/filebeat/">此前文档</a>我们已经说明了关于filebeat的原理，以及一些配置文件参数。现在我们只初略的说明我们已使用的配置参数。以下操作只在<code>real-server</code>主机上进行：（也就是我们业务所跑的服务器，我们要抓取的是业务日志，所以当然是安装在业务服务器上咯）</p>
+<h3 id="下载和解压-3"><a href="#下载和解压-3" class="headerlink" title="下载和解压"></a>下载和解压</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入elastic工作目录</span></span><br><span class="line">$ mkdir /elastic &amp;&amp;&amp; <span class="built_in">cd</span> /elastic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载kibana tar包</span></span><br><span class="line">$ wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.0.1-linux-x86_64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到当前/elastic目录</span></span><br><span class="line">$ tar zxvf filebeat-7.0.1-linux-x86_64.tar.gz</span><br></pre></td></tr></table></figure>
+<blockquote>
+<span class="label info">本例我们使用filebeat监控tomcat日志和nginx日志</span>
+</blockquote>
+<h3 id="修改配置文件-2"><a href="#修改配置文件-2" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><h4 id="以配置文件方式支持tomcat日志输入"><a href="#以配置文件方式支持tomcat日志输入" class="headerlink" title="以配置文件方式支持tomcat日志输入"></a>以配置文件方式支持tomcat日志输入</h4><p>下面只列出已配置的参数，关于参数说明，请参考<a href="https://www.ipyker.com/2019/03/14/filebeat/">此前文档</a><br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">cat</span> <span class="string">filebeat-7.0.1-linux-x86_64/filebeat.yml</span></span><br><span class="line"><span class="string">filebeat.inputs:</span></span><br><span class="line"><span class="attr">- type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/usr/local/tomcat/logs/catalina.out</span>   <span class="comment"># 监控tomcat控制台catalina.out日志文件</span></span><br><span class="line"><span class="attr">  fields:</span></span><br><span class="line"><span class="attr">    log_topic:</span> <span class="string">tomcat_access_logs</span></span><br><span class="line"><span class="attr">  exclude_lines:</span> <span class="string">['收到ping的消息']</span></span><br><span class="line">  <span class="string">multiline.pattern:</span> <span class="string">'^[[:space:]]+|^Caused by:'</span></span><br><span class="line">  <span class="string">multiline.negate:</span> <span class="literal">false</span></span><br><span class="line">  <span class="string">multiline.match:</span> <span class="string">after</span></span><br><span class="line"><span class="attr">  ignore_older:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">  close_inactive:</span> <span class="number">2</span><span class="string">m</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/usr/local/tomcat/logs/localhost_access.*</span>  <span class="comment"># 监控tomcat访问localhost_access日志文件</span></span><br><span class="line"><span class="attr">  fields:</span></span><br><span class="line"><span class="attr">    log_topic:</span> <span class="string">tomcat_catalina_logs</span></span><br><span class="line"><span class="string">filebeat.config.modules:</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">$&#123;path.config&#125;/modules.d/*.yml</span></span><br><span class="line">  <span class="string">reload.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">setup.template.settings:</span></span><br><span class="line">  <span class="string">index.number_of_shards:</span> <span class="number">1</span></span><br><span class="line"><span class="string">setup.kibana:</span></span><br><span class="line"><span class="attr">  host:</span> <span class="string">"192.168.20.211:5601"</span></span><br><span class="line"><span class="string">output.elasticsearch:</span>     <span class="comment"># 我们这里直接输出到ES，当然也可以输出到logstash、kafka等中间件</span></span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">["192.168.20.211:9200"]</span></span><br><span class="line">  <span class="comment">#protocol: "https"</span></span><br><span class="line"><span class="attr">  username:</span> <span class="string">"elastic"</span></span><br><span class="line"><span class="attr">  password:</span> <span class="string">"pyker123456"</span></span><br><span class="line"><span class="attr">processors:</span></span><br><span class="line"><span class="attr">  - add_host_metadata:</span> <span class="string">~</span></span><br><span class="line"><span class="attr">  - add_cloud_metadata:</span> <span class="string">~</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<span class="label warning">catalina.out和localhost_access都需要使用一定的格式。方便filebeat处理多行事件日志。</span>
+</blockquote>
+<h4 id="以模版方式支持nginx日志输入"><a href="#以模版方式支持nginx日志输入" class="headerlink" title="以模版方式支持nginx日志输入"></a>以模版方式支持nginx日志输入</h4><p>默认filebeat自带诸多服务日志模版，如：nginx、redis、apache、IIS、kafka等等。默认都在filebeat解压后<code>module</code>、<code>modules.d</code>目录中。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">cat</span> <span class="string">/elastic/filebeat-7.0.1-linux-x86_64/modules.d/nginx.yml.disabled</span></span><br><span class="line"><span class="attr">- module:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  access:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="string">var.paths:</span> <span class="string">["/data/wwwlogs/access.log*"]</span>  <span class="comment"># 配置nginx实际的访问日志路径，多个文件逗号分开</span></span><br><span class="line"><span class="attr">  error:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="string">var.paths:</span> <span class="string">["/data/wwwlogs/error_nginx.log*"]</span>  <span class="comment"># 配置nginx实际的错误日志路径</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="启动nginx模版"><a href="#启动nginx模版" class="headerlink" title="启动nginx模版"></a>启动nginx模版</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /elastic/filebeat-7.0.1-linux-x86_64</span><br><span class="line">$ ./filebeat modules <span class="built_in">enable</span> nginx </span><br><span class="line"></span><br><span class="line">$ ./filebeat modules list     <span class="comment"># 列出已启动和未启动的模版</span></span><br><span class="line">Enabled:</span><br><span class="line">nginx</span><br><span class="line">system</span><br><span class="line"></span><br><span class="line">Disabled</span><br><span class="line">apache</span><br><span class="line">auditd</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="准备filebeat-systemctl文件"><a href="#准备filebeat-systemctl文件" class="headerlink" title="准备filebeat systemctl文件"></a>准备filebeat systemctl文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Filebeat sends <span class="built_in">log</span> files to Logstash or directly to Elasticsearch.</span><br><span class="line">Documentation=https://www.elastic.co/products/beats/filebeat</span><br><span class="line">Wants=network-online.target</span><br><span class="line">After=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/elastic/filebeat-7.0.1-linux-x86_64/filebeat -c /elastic/filebeat-7.0.1-linux-x86_64/filebeat.yml</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<h3 id="启动filebeat"><a href="#启动filebeat" class="headerlink" title="启动filebeat"></a>启动filebeat</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl daemon-reload           <span class="comment"># 加载systemctl配置文件</span></span><br><span class="line"></span><br><span class="line">$ systemctl start filebeat            <span class="comment"># 启动filebeat</span></span><br><span class="line"></span><br><span class="line">$ systemctl <span class="built_in">enable</span> filebeat           <span class="comment"># 设置开机启动filebeat</span></span><br></pre></td></tr></table></figure>
+<p>至此简单的EFK集群搭建完成。在生成环境中 我们还会在filebeat和elasticsearch中间加入kafka和logstash来提高日志数据的高效传输和更强的日志过滤功能，而kafka又可以配置成集群模式。</p>
+<p><strong>在当前文档中我们并未说明kibana如何使用，请参考<a href="https://www.elastic.co/guide/cn/kibana/current/introduction.html" target="_blank" rel="noopener">官方使用教程</a></strong></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/wechatpay.png" alt="丨Pyker丨 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/alipay.png" alt="丨Pyker丨 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Pyker</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://www.ipyker.com/2019/03/15/install-efk.html" title="Elastic stack之EFK安装">https://www.ipyker.com/2019/03/15/install-efk.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elasticsearch/" rel="tag"><i class="fa fa-tag"></i> elasticsearch</a>
+          
+            <a href="/tags/filebeat/" rel="tag"><i class="fa fa-tag"></i> filebeat</a>
+          
+            <a href="/tags/kibana/" rel="tag"><i class="fa fa-tag"></i> kibana</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/14/filebeat.html" rel="next" title="Elastic Stack之Filebeat7.0详解">
+                <i class="fa fa-chevron-left"></i> Elastic Stack之Filebeat7.0详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/21/install-docker-ce.html" rel="prev" title="CentOS7 安装Docker-CE">
+                CentOS7 安装Docker-CE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NDM5Mi8yMDkyNA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="丨Pyker丨">
+            
+              <p class="site-author-name" itemprop="name">丨Pyker丨</p>
+              <div class="site-description motion-element" itemprop="description">与其临渊羡鱼，不如退而结网。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ipyker" title="GitHub &rarr; https://github.com/ipyker" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:pyker@qq.com" title="E-Mail &rarr; mailto:pyker@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/viszhang" title="Weibo &rarr; https://weibo.com/viszhang" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="tencent://message/?uin=123435796&Site=&menu=yes" title="QQ &rarr; tencent://message/?uin=123435796&Site=&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-book"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ttlsa.com/" title="http://www.ttlsa.com/" rel="noopener" target="_blank">运维生存时间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.iyunw.cn" title="https://www.iyunw.cn" rel="noopener" target="_blank">爱运维</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nginxconfig.io/" title="https://nginxconfig.io/" rel="noopener" target="_blank">Nginxconfig</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://linux.51yip.com/" title="http://linux.51yip.com/" rel="noopener" target="_blank">Linux命令手册</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://echarts.baidu.com/index.html" title="https://echarts.baidu.com/index.html" rel="noopener" target="_blank">echarts可视化库</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#试验环境"><span class="nav-number">1.</span> <span class="nav-text">试验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境准备"><span class="nav-number">2.</span> <span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装JDK"><span class="nav-number">2.1.</span> <span class="nav-text">安装JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置服务器的最大文件数"><span class="nav-number">2.2.</span> <span class="nav-text">设置服务器的最大文件数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置服务器打开的最大进程数"><span class="nav-number">2.3.</span> <span class="nav-text">设置服务器打开的最大进程数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置nmap数量对虚拟内存的支持"><span class="nav-number">2.4.</span> <span class="nav-text">设置nmap数量对虚拟内存的支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地host解析"><span class="nav-number">2.5.</span> <span class="nav-text">本地host解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装elasticsearch"><span class="nav-number">3.</span> <span class="nav-text">安装elasticsearch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载和解压"><span class="nav-number">3.1.</span> <span class="nav-text">下载和解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">3.2.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建运行elasticsearch用户"><span class="nav-number">3.3.</span> <span class="nav-text">创建运行elasticsearch用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建依赖文件"><span class="nav-number">3.4.</span> <span class="nav-text">创建依赖文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备elasticsearch-systemctl文件"><span class="nav-number">3.5.</span> <span class="nav-text">准备elasticsearch systemctl文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动elasticsearch"><span class="nav-number">3.6.</span> <span class="nav-text">启动elasticsearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证集群状态"><span class="nav-number">3.7.</span> <span class="nav-text">验证集群状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Kibana"><span class="nav-number">4.</span> <span class="nav-text">安装 Kibana</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载和解压-1"><span class="nav-number">4.1.</span> <span class="nav-text">下载和解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件-1"><span class="nav-number">4.2.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建依赖文件-1"><span class="nav-number">4.3.</span> <span class="nav-text">创建依赖文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备kibana-systemctl文件"><span class="nav-number">4.4.</span> <span class="nav-text">准备kibana systemctl文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动kibana"><span class="nav-number">4.5.</span> <span class="nav-text">启动kibana</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装cerebro可视化集群管理工具"><span class="nav-number">5.</span> <span class="nav-text">安装cerebro可视化集群管理工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载和解压-2"><span class="nav-number">5.1.</span> <span class="nav-text">下载和解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备cerebro-systemctl文件"><span class="nav-number">5.2.</span> <span class="nav-text">准备cerebro systemctl文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令启动cerebro"><span class="nav-number">5.3.</span> <span class="nav-text">命令启动cerebro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl方式启动cerebro"><span class="nav-number">5.4.</span> <span class="nav-text">systemctl方式启动cerebro</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问cerebro"><span class="nav-number">5.5.</span> <span class="nav-text">访问cerebro</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装filebeat"><span class="nav-number">6.</span> <span class="nav-text">安装filebeat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载和解压-3"><span class="nav-number">6.1.</span> <span class="nav-text">下载和解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件-2"><span class="nav-number">6.2.</span> <span class="nav-text">修改配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#以配置文件方式支持tomcat日志输入"><span class="nav-number">6.2.1.</span> <span class="nav-text">以配置文件方式支持tomcat日志输入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#以模版方式支持nginx日志输入"><span class="nav-number">6.2.2.</span> <span class="nav-text">以模版方式支持nginx日志输入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动nginx模版"><span class="nav-number">6.2.3.</span> <span class="nav-text">启动nginx模版</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备filebeat-systemctl文件"><span class="nav-number">6.3.</span> <span class="nav-text">准备filebeat systemctl文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动filebeat"><span class="nav-number">6.4.</span> <span class="nav-text">启动filebeat</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style=" text-align:center;">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pyker</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"> 站点字数合计:</i>
+    </span>
+    
+    <span title="站点总字数">174k</span>
+  
+  
+  <span class="post-meta-divider">|</span>
+  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">粤ICP备19028706号 </a>
+
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+<div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("07/23/2017 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+        
+<div class="busuanzi-count" style=" text-align:center;">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+    
+    
+      
+    
+  
+  <script color="255,0,255" opacity="0.7" zindex="-1" count="140" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <script id="ribbon" size="300" alpha="0.1" zindex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2019/03/15/install-efk.html'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":200,"height":400},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
