@@ -618,7 +618,7 @@ $ curl -XGET "http://192.168.20.211:9200/_cat/indices?v"
 health status index                           uuid                   pri rep docs.count docs.deleted store.size pri.store.size
 green  open   bank                            J5R8uBBoQ4ie-x3eNf8LpQ   1   1       1000            0    828.7kb        414.3kb
 ```
-### 通过REST请求URI发送搜索参数
+## 通过REST请求URI发送搜索参数
 ```bash
 $ curl -X GET "http://192.168.20.211:9200/bank/_search?q=*&sort=account_number:asc&pretty"
 {
@@ -695,7 +695,7 @@ $ curl -X GET "http://192.168.20.211:9200/bank/_search?q=*&sort=account_number:a
 * `hits.sort`：按哪个字段排序的结果（如果按分数排序则丢失）
 * `hits._score` and `max_score`：暂时忽略这些字段
 
-### 通过REST请求体发送搜索参数
+## 通过REST请求体发送搜索参数
 
 ```bash
 $ curl -XGET "http://192.168.20.211:9200/bank/_search?pretty" -H 'Content-Type: application/json' -d '
@@ -894,7 +894,7 @@ $ curl -XGET "http://192.168.20.211:9200/bank/_search?pretty" -H 'Content-Type: 
   ]
 }'
 ```
-### 查询单个字段匹配
+## 查询单个字段匹配
 
 >为了方便演示，下面的操作都是在kibana 开发工具上操作的
 
@@ -908,7 +908,7 @@ GET /bank/_search
 }
 ```
 
-### 包含短句匹配
+## 包含短句匹配
 ```bash
 # 匹配address字段包含值为mill lane短句的文档
 GET /bank/_search
@@ -918,7 +918,7 @@ GET /bank/_search
   }}
 }
 ```
-### 与关系匹配
+## 与关系匹配
 ```bash
 # 匹配address字段值中有mill也有lane的文档
 GET /bank/_search 
@@ -934,7 +934,7 @@ GET /bank/_search
 }
 ```
 
-### 或关系匹配
+## 或关系匹配
 ```bash
 # 匹配address字段值中有mill或者有lane的文档
 GET /bank/_search
@@ -952,7 +952,7 @@ GET /bank/_search
 }
 ```
 
-### 非关系匹配
+## 非关系匹配
 ```bash
 # 匹配address字段值中不能有mill和lane的文档
 GET /bank/_search
@@ -968,7 +968,7 @@ GET /bank/_search
 }
 ```
 
-### 与和非匹配
+## 与和非匹配
 ```bash
 # 匹配age字段值为40，但是state不能是ID的文档
 GET /bank/_search
@@ -988,7 +988,7 @@ GET /bank/_search
 }
 ```
 
-### 范围匹配
+## 范围匹配
 ```bash
 # 全文匹配balance字段值大于10000小于20000的文档
 GET /bank/_search
@@ -1006,7 +1006,7 @@ GET /bank/_search
 }
 ```
 
-### 聚合匹配
+## 聚合匹配
 ```bash
 # 统计state对应的值的合计数量，size=0表示不显示搜索匹配的结果只显示聚合结果。
 GET /bank/_search
@@ -1022,7 +1022,7 @@ GET /bank/_search
 }
 ```
 
-### 嵌套聚合匹配
+## 嵌套聚合匹配
 ```bash
 # 统计state对应值的合计数量以及对应state文档中balance字段平均值
 GET /bank/_search
