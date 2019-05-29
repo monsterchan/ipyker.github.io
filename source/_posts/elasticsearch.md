@@ -894,8 +894,6 @@ $ curl -XGET "http://192.168.20.211:9200/bank/_search?pretty" -H 'Content-Type: 
   ]
 }'
 ```
-<div class="note success"><p>更多如`bool`、`must`、`must_not`、`shouldSearch`、`filter`、`range`、`aggs` 的Search API文档请参考[这里](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-search.html)</p></div>
-
 ### 查询单个字段匹配
 
 >为了方便演示，下面的操作都是在kibana 开发工具上操作的
