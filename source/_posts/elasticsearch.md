@@ -897,6 +897,7 @@ $ curl -XGET "http://192.168.20.211:9200/bank/_search?pretty" -H 'Content-Type: 
 ### 查询单个字段匹配
 
 >为了方便演示，下面的操作都是在kibana 开发工具上操作的
+
 ```bash
 # 查询匹配account_number值为200的文档
 GET /bank/_search
@@ -909,7 +910,7 @@ GET /bank/_search
 
 ### 包含短句匹配
 ```bash
-# 匹配address字段包含值为mill lane整体的文档
+# 匹配address字段包含值为mill lane短句的文档
 GET /bank/_search
 {
   "query": {"match_phrase": {
