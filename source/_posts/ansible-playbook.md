@@ -317,9 +317,9 @@ http {
   include mime.types;
   default_type application/octet-stream;
   server_names_hash_bucket_size 128;
-  client_header_buffer_size 32k;
-  large_client_header_buffers 4 32k;
-  client_max_body_size 1024m;
+  client_header_buffer_size 4k;
+  large_client_header_buffers 4 4k;
+  client_max_body_size 100m;
   client_body_buffer_size 10m;
   sendfile on;
   tcp_nopush on;
@@ -332,7 +332,7 @@ http {
   gzip_buffers 16 8k;
   gzip_comp_level 6;
   gzip_http_version 1.1;
-  gzip_min_length 256;
+  gzip_min_length 1k;
   gzip_proxied any;
   gzip_vary on;
   gzip_types
@@ -345,9 +345,9 @@ http {
   gzip_disable "MSIE [1-6]\.(?!.*SV1)";
 
   #If you have a lot of static files to serve through Nginx then caching of the files' metadata (not the actual files' contents) can save some latency.
-  open_file_cache max=1000 inactive=20s;
+  open_file_cache max=65535 inactive=20s;
   open_file_cache_valid 30s;
-  open_file_cache_min_uses 2;
+  open_file_cache_min_uses 1;
   open_file_cache_errors on;
 
 ########################## vhost #############################
