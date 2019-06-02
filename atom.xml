@@ -69,34 +69,6 @@
   </entry>
   
   <entry>
-    <title>CentOS7 安装Docker-CE</title>
-    <link href="https://www.ipyker.com/2019/03/21/install-docker-ce.html"/>
-    <id>https://www.ipyker.com/2019/03/21/install-docker-ce.html</id>
-    <published>2019-03-21T14:02:00.000Z</published>
-    <updated>2019-05-24T16:57:47.301Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="docker" scheme="https://www.ipyker.com/categories/docker/"/>
-    
-    
-      <category term="docker" scheme="https://www.ipyker.com/tags/docker/"/>
-    
-      <category term="kubernetes" scheme="https://www.ipyker.com/tags/kubernetes/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Elastic stack之EFK安装</title>
     <link href="https://www.ipyker.com/2019/03/15/install-efk.html"/>
     <id>https://www.ipyker.com/2019/03/15/install-efk.html</id>
@@ -497,7 +469,7 @@
     <link href="https://www.ipyker.com/2018/03/23/ansible-playbook.html"/>
     <id>https://www.ipyker.com/2018/03/23/ansible-playbook.html</id>
     <published>2018-03-23T02:20:00.000Z</published>
-    <updated>2019-05-23T18:36:11.015Z</updated>
+    <updated>2019-06-02T15:19:20.926Z</updated>
     
     <summary type="html">
     
@@ -541,6 +513,32 @@
     
     
       <category term="ansible" scheme="https://www.ipyker.com/tags/ansible/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CentOS7 安装Docker-CE</title>
+    <link href="https://www.ipyker.com/2018/03/21/install-docker-ce.html"/>
+    <id>https://www.ipyker.com/2018/03/21/install-docker-ce.html</id>
+    <published>2018-03-21T14:02:00.000Z</published>
+    <updated>2019-06-02T15:56:01.349Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="docker" scheme="https://www.ipyker.com/categories/docker/"/>
+    
+    
+      <category term="docker" scheme="https://www.ipyker.com/tags/docker/"/>
     
   </entry>
   
