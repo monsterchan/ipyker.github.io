@@ -4,10 +4,7 @@ author: Pyker
 categories: docker
 tags:
   - docker
-  - kubernetes
-top: false
-cover: false
-date: 2019-03-21 22:02:00
+date: 2018-03-21 22:02:00
 ---
 ### CentOS7 安装Docker-CE
 
