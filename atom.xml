@@ -491,6 +491,32 @@
   </entry>
   
   <entry>
+    <title>docker三剑客之docker-machine用法</title>
+    <link href="https://www.ipyker.com/2018/03/22/docker-machine.html"/>
+    <id>https://www.ipyker.com/2018/03/22/docker-machine.html</id>
+    <published>2018-03-22T09:12:00.000Z</published>
+    <updated>2019-06-03T17:24:59.189Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="docker" scheme="https://www.ipyker.com/categories/docker/"/>
+    
+    
+      <category term="docker" scheme="https://www.ipyker.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Ansible 常用模块指令</title>
     <link href="https://www.ipyker.com/2018/03/22/ansible-module.html"/>
     <id>https://www.ipyker.com/2018/03/22/ansible-module.html</id>
@@ -513,32 +539,6 @@
     
     
       <category term="ansible" scheme="https://www.ipyker.com/tags/ansible/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CentOS7 安装Docker-CE</title>
-    <link href="https://www.ipyker.com/2018/03/21/install-docker-ce.html"/>
-    <id>https://www.ipyker.com/2018/03/21/install-docker-ce.html</id>
-    <published>2018-03-21T14:02:00.000Z</published>
-    <updated>2019-06-02T15:56:01.349Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="docker" scheme="https://www.ipyker.com/categories/docker/"/>
-    
-    
-      <category term="docker" scheme="https://www.ipyker.com/tags/docker/"/>
     
   </entry>
   

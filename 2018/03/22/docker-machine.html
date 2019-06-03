@@ -146,18 +146,18 @@
 
 
 
-  <meta name="description" content="Nginx 内置变量解释为了方便配置和使用nginx，nginx核心模块ngx_http_core_module自带有许多内置的人性化变量，这极大的方便了系统管理员对nginx维护和管理。下面我们详解注解内置变量的含义（当然，如果你懂点HTTP知识的话，就更好理解了）：12345678910111213141516171819202122232425262728293031323334353637">
-<meta name="keywords" content="nginx">
+  <meta name="description" content="Docker Machine 概述docker-machine 是docker官方提供的docker管理工具。简单来说就是给你快速创建一个docker容器环境的, 假如你要给100台阿里云ECS安装上docker，传统方式就是你一台一台ssh上去安装，但是有了docker-machine就不一样了，你可以快速给100台ecs安装上docker，怎么快速法呢，你看完这文章就知道了。还有就是你要在本地">
+<meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nginx内置变量">
-<meta property="og:url" content="https://www.ipyker.com/2018/01/23/nginx-variable.html">
+<meta property="og:title" content="docker三剑客之docker-machine用法">
+<meta property="og:url" content="https://www.ipyker.com/2018/03/22/docker-machine.html">
 <meta property="og:site_name" content="派 | Pyker">
-<meta property="og:description" content="Nginx 内置变量解释为了方便配置和使用nginx，nginx核心模块ngx_http_core_module自带有许多内置的人性化变量，这极大的方便了系统管理员对nginx维护和管理。下面我们详解注解内置变量的含义（当然，如果你懂点HTTP知识的话，就更好理解了）：12345678910111213141516171819202122232425262728293031323334353637">
+<meta property="og:description" content="Docker Machine 概述docker-machine 是docker官方提供的docker管理工具。简单来说就是给你快速创建一个docker容器环境的, 假如你要给100台阿里云ECS安装上docker，传统方式就是你一台一台ssh上去安装，但是有了docker-machine就不一样了，你可以快速给100台ecs安装上docker，怎么快速法呢，你看完这文章就知道了。还有就是你要在本地">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T18:37:45.959Z">
+<meta property="og:updated_time" content="2019-06-03T17:24:59.189Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Nginx内置变量">
-<meta name="twitter:description" content="Nginx 内置变量解释为了方便配置和使用nginx，nginx核心模块ngx_http_core_module自带有许多内置的人性化变量，这极大的方便了系统管理员对nginx维护和管理。下面我们详解注解内置变量的含义（当然，如果你懂点HTTP知识的话，就更好理解了）：12345678910111213141516171819202122232425262728293031323334353637">
+<meta name="twitter:title" content="docker三剑客之docker-machine用法">
+<meta name="twitter:description" content="Docker Machine 概述docker-machine 是docker官方提供的docker管理工具。简单来说就是给你快速创建一个docker容器环境的, 假如你要给100台阿里云ECS安装上docker，传统方式就是你一台一台ssh上去安装，但是有了docker-machine就不一样了，你可以快速给100台ecs安装上docker，怎么快速法呢，你看完这文章就知道了。还有就是你要在本地">
 
 
 
@@ -167,7 +167,7 @@
 
   
   
-  <link rel="canonical" href="https://www.ipyker.com/2018/01/23/nginx-variable">
+  <link rel="canonical" href="https://www.ipyker.com/2018/03/22/docker-machine">
 
 
 
@@ -177,7 +177,7 @@
   };
 </script>
 
-  <title>Nginx内置变量 | 派 | Pyker</title>
+  <title>docker三剑客之docker-machine用法 | 派 | Pyker</title>
   
 
 
@@ -439,7 +439,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2018/01/23/nginx-variable.html">
+    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2018/03/22/docker-machine.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="丨Pyker丨">
@@ -456,7 +456,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Nginx内置变量
+          <h1 class="post-title" itemprop="name headline">docker三剑客之docker-machine用法
 
               
             
@@ -482,7 +482,7 @@
                 
               
 
-              <time title="创建时间：2018-01-23 21:18:00" itemprop="dateCreated datePublished" datetime="2018-01-23T21:18:00+08:00">2018-01-23</time>
+              <time title="创建时间：2018-03-22 17:12:00" itemprop="dateCreated datePublished" datetime="2018-03-22T17:12:00+08:00">2018-03-22</time>
             
 
             
@@ -499,7 +499,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-24 02:37:45" itemprop="dateModified" datetime="2019-05-24T02:37:45+08:00">2019-05-24</time>
+                <time title="修改时间：2019-06-04 01:24:59" itemprop="dateModified" datetime="2019-06-04T01:24:59+08:00">2019-06-04</time>
               
             
           </span>
@@ -516,7 +516,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a></span>
 
                 
                 
@@ -552,7 +552,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">4.3k</span>
+                <span title="本文字数">7.5k</span>
               
 
               
@@ -566,7 +566,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">4 分钟</span>
+                <span title="阅读时长">7 分钟</span>
               
             </div>
           
@@ -586,9 +586,55 @@
       
 
       
-        <h2 id="Nginx-内置变量解释"><a href="#Nginx-内置变量解释" class="headerlink" title="Nginx 内置变量解释"></a>Nginx 内置变量解释</h2><p>为了方便配置和使用nginx，nginx核心模块ngx_http_core_module自带有许多内置的人性化变量，这极大的方便了系统管理员对nginx维护和管理。下面我们详解注解内置变量的含义（当然，如果你懂点HTTP知识的话，就更好理解了）：<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">$args</span>                    #请求中的参数值</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$query</span>_string            #同 $args</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$arg</span>_NAME                #GET请求中NAME的值</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$is</span>_args                 #如果请求中有参数，值为"?"，否则为空字符串</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$uri</span>                     #请求中的当前URI(不带请求参数，参数位于$args)，可以不同于浏览器传递的$request_uri的值，它可以通过内部重定向，或者使用index指令进行修改，$uri不包含主机名，如"/foo/bar.html"。</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$document</span>_uri            #同 $uri</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$document</span>_root           #当前请求的文档根目录或别名</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$host</span>                    #优先级：HTTP请求行的主机名&gt;"HOST"请求头字段&gt;符合请求的服务器名</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$hostname</span>                #主机名</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$https</span>                   #如果开启了SSL安全模式，值为"on"，否则为空字符串。</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$binary</span>_remote_addr      #客户端地址的二进制形式，固定长度为4个字节</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$body</span>_bytes_sent         #传输给客户端的字节数，响应头不计算在内；这个变量和Apache的mod_log_config模块中的"%B"参数保持兼容</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$bytes</span>_sent              #传输给客户端的字节数</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$connection</span>              #TCP连接的序列号</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$connection</span>_requests     #TCP连接当前的请求数量</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$content</span>_length          #"Content-Length" 请求头字段</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$content</span>_type            #"Content-Type" 请求头字段</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$cookie</span>_name             #cookie名称</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$limit</span>_rate              #用于设置响应的速度限制</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$msec</span>                    #当前的Unix时间戳</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$nginx</span>_version           #nginx版本</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$pid</span>                     #工作进程的PID</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$pipe</span>                    #如果请求来自管道通信，值为"p"，否则为"."</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$proxy</span>_protocol_addr     #获取代理访问服务器的客户端地址，如果是直接访问，该值为空字符串</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$realpath</span>_root           #当前请求的文档根目录或别名的真实路径，会将所有符号连接转换为真实路径</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$remote</span>_addr             #客户端地址</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$remote</span>_port             #客户端端口</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$remote</span>_user             #用于HTTP基础认证服务的用户名</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>                 #代表客户端的请求地址</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_body            #客户端的请求主体：此变量可在location中使用，将请求主体通过proxy_pass，fastcgi_pass，uwsgi_pass和scgi_pass传递给下一级的代理服务器</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_body_file       #将客户端请求主体保存在临时文件中。文件处理结束后，此文件需删除。如果需要之一开启此功能，需要设置client_body_in_file_only。如果将次文件传递给后端的代理服务器，需要禁用request body，即设置proxy_pass_request_body off，fastcgi_pass_request_body off，uwsgi_pass_request_body off，or scgi_pass_request_body off</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_completion      #如果请求成功，值为"OK"，如果请求未完成或者请求不是一个范围请求的最后一部分，则为空</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_filename        #当前连接请求的文件路径，由root或alias指令与URI请求生成</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_length          #请求的长度 (包括请求的地址，http请求头和请求主体)</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_method          #HTTP请求方法，通常为"GET"或"POST"</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_time            #处理客户端请求使用的时间; 从读取客户端的第一个字节开始计时</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$request</span>_uri             #这个变量等于包含一些客户端请求参数的原始URI，它无法修改，请查看$uri更改或重写URI，不包含主机名，例如："/cnphp/test.php?arg=freemouse"</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$scheme</span>                  #请求使用的Web协议，"http" 或 "https"</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$server</span>_addr             #服务器端地址，需要注意的是：为了避免访问linux系统内核，应将ip地址提前设置在配置文件中</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$server</span>_name             #服务器名</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$server</span>_port             #服务器端口</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$server</span>_protocol         #服务器的HTTP版本，通常为 "HTTP/1.0" 或 "HTTP/1.1"</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$status</span>                  #HTTP响应代码</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$time</span>_iso8601            #服务器时间的ISO 8610格式</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$time</span>_local              #服务器时间（LOG Format 格式）</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$cookie</span>_NAME             #客户端请求Header头中的cookie变量，前缀"$cookie_"加上cookie名称的变量，该变量的值即为cookie名称的值</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$http</span>_NAME               #匹配任意请求头字段；变量名中的后半部分NAME可以替换成任意请求头字段，如在配置文件中需要获取http请求头："Accept-Language"，$http_accept_language即可</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$http</span>_cookie</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$http</span>_post</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$http</span>_referer			#url跳转来源 （https://www.baidu.com/）</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$http</span>_user_agent		#用户终端浏览器等信息 （"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; SV1; GTB7.0; .NET4.0C;）</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$http</span>_x_forwarded_for	#获取到最原始用户IP，或者代理IP地址。</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_NAME			#可以设置任意http响应头字段；变量名中的后半部分NAME可以替换成任意响应头字段，如需要设置响应头Content-length，$sent_http_content_length即可</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$upstream</span>_response_time	#请求过程中，upstream响应时间（0.002）</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$upstream</span>_addr			#后台upstream的地址，即真正提供服务的主机地址 （10.10.10.100:80）</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$upstream</span>_status		#upstream状态 （200）</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_cache_control</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_connection</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_content_type</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_keep_alive</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_last_modified</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_location</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$sent</span>_http_transfer_encoding</span></span><br></pre></td></tr></table></figure></p>
-<p>这些变量可以在配置文件中使用，方便你做各种nginx页面代理，转换，重写，重定向等操作；而且还可以对nginx日志做自定义的日志配置，方便你对nginx日志的收集和分析。如常用的nginx日志格式：<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">log_format</span>  main  <span class="string">'<span class="variable">$remote_addr</span> <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" '</span></span><br><span class="line">                  <span class="string">'<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>" '</span></span><br><span class="line">                  <span class="string">'<span class="variable">$http_user_agent</span> <span class="variable">$http_x_forwarded_for</span> <span class="variable">$request_time</span> <span class="variable">$upstream_response_time</span> <span class="variable">$upstream_addr</span> <span class="variable">$upstream_status</span>'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>日志截取如下（可以从日志中看到代理到后端哪台机器上的哪个端口上，负载访问的状态值等都能看到）：<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@nginx1 logs]# tail -f /data/wwwlogs/access.log</span><br><span class="line">...</span><br><span class="line"><span class="number">110.156.114.121</span> - [<span class="number">11</span>/Aug/<span class="number">2017:09:57</span>:<span class="number">19</span> +<span class="number">0800</span>] "GET /rest/mywork/latest/status/notification/count?_</span><br><span class="line">=<span class="number">1502416641768</span> HTTP/<span class="number">1</span>.<span class="number">1</span>" <span class="number">200</span> <span class="number">67</span> "http://wiki.wang-inc.com/pages/viewpage.action?pageId=<span class="number">11174759</span>" </span><br><span class="line">Mozilla/<span class="number">5</span>.<span class="number">0</span> (Windows NT <span class="number">10</span>.<span class="number">0</span><span class="comment">; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36 - </span></span><br><span class="line"><span class="number">0.006 0</span>.<span class="number">006 12.129</span>.<span class="number">120.121:8090</span> <span class="number">200</span></span><br></pre></td></tr></table></figure></p>
+        <h1 id="Docker-Machine-概述"><a href="#Docker-Machine-概述" class="headerlink" title="Docker Machine 概述"></a>Docker Machine 概述</h1><p><code>docker-machine</code> 是docker官方提供的docker管理工具。简单来说就是给你快速创建一个docker容器环境的, 假如你要给100台阿里云ECS安装上docker，传统方式就是你一台一台ssh上去安装，但是有了docker-machine就不一样了，你可以快速给100台ecs安装上docker，怎么快速法呢，你看完这文章就知道了。还有就是你要在本地快速创建docker集群环境时，总不能一台一台创建虚拟机吧，所以docker-machine可以解决这个问题。总之docker-machine就是帮助你快速去创建安装docker环境的工具，这样说应该没什么问题吧！<br>通过<code>docker-machine</code>可以轻松的做到：</p>
+<ul>
+<li>在Windows平台和MAC平台安装和运行docker</li>
+<li>搭建和管理多个docker 主机</li>
+<li>搭建swarm集群</li>
+</ul>
+<h1 id="Docker-Machine安装"><a href="#Docker-Machine安装" class="headerlink" title="Docker Machine安装"></a>Docker Machine安装</h1><p>可以手动前往<code>docker machine</code>的<a href="https://github.com/docker/machine/releases" target="_blank" rel="noopener">github地址</a>下载需要的版本,然后手动重命名且修改权限，或者也可以直接运行以下命令进行安装docker machine。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://github.com/docker/machine/releases/download/v0.16.1/docker-machine-`uname -s`-`uname -m` &gt;/tmp/docker-machine &amp;&amp;</span><br><span class="line">    chmod +x /tmp/docker-machine &amp;&amp;</span><br><span class="line">    sudo cp /tmp/docker-machine /usr/<span class="built_in">local</span>/bin/docker-machine</span><br></pre></td></tr></table></figure></p>
+<p>检查是否安装成功:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#执行docker-machine version命令查看是否安装成功以及对应的版本</span></span><br><span class="line">$ docker-machine version</span><br><span class="line">  docker-machine version 0.16.1, build cce350d7</span><br></pre></td></tr></table></figure></p>
+<h1 id="安装-bash-completion-scripts"><a href="#安装-bash-completion-scripts" class="headerlink" title="安装 bash completion scripts"></a>安装 bash completion scripts</h1><p>为了得到更好的体验，我们可以安装 bash completion script，这样在 bash 能够通过 tab 键补全 docker-mahine 的子命令和参数。</p>
+<blockquote>
+<p>请先确认版本并运行以下命令将脚本保存到/etc/bash_completion.d目录中</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">base=https://raw.githubusercontent.com/docker/machine/v0.16.1</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> docker-machine-prompt.bash docker-machine-wrapper.bash docker-machine.bash</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  sudo wget <span class="string">"<span class="variable">$base</span>/contrib/completion/bash/<span class="variable">$&#123;i&#125;</span>"</span> -P /etc/bash_completion.d</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>然后，您需要在bash终端中运行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> /etc/bash_completion.d/docker-machine-prompt.bash</span><br></pre></td></tr></table></figure></p>
+<p>要启用docker-machine shell提示符，请将$(__docker_machine_ps1)添加到~/.bashrc中的PS1设置。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; ~/.bashrc &lt;&lt; EOF</span><br><span class="line">PS1=<span class="string">'[\u@\h \W$(__docker_machine_ps1)]\$ '</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></p>
+<h1 id="Docker-Machine命令介绍"><a href="#Docker-Machine命令介绍" class="headerlink" title="Docker Machine命令介绍"></a>Docker Machine命令介绍</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">docker-machine --<span class="built_in">help</span></span><br><span class="line">Usage: docker-machine [OPTIONS] COMMAND [arg...]</span><br><span class="line"></span><br><span class="line">Create and manage machines running Docker.</span><br><span class="line"></span><br><span class="line">Version: 0.16.1, build cce350d7</span><br><span class="line"></span><br><span class="line">Author:</span><br><span class="line">  Docker Machine Contributors - &lt;https://github.com/docker/machine&gt;</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">  --debug, -D					Enable debug mode</span><br><span class="line">  --storage-path, -s <span class="string">"/root/.docker/machine"</span>	Configures storage path [<span class="variable">$MACHINE_STORAGE_PATH</span>]</span><br><span class="line">  --tls-ca-cert 				CA to verify remotes against [<span class="variable">$MACHINE_TLS_CA_CERT</span>]</span><br><span class="line">  --tls-ca-key 					Private key to generate certificates [<span class="variable">$MACHINE_TLS_CA_KEY</span>]</span><br><span class="line">  --tls-client-cert 				Client cert to use <span class="keyword">for</span> TLS [<span class="variable">$MACHINE_TLS_CLIENT_CERT</span>]</span><br><span class="line">  --tls-client-key 				Private key used <span class="keyword">in</span> client TLS auth [<span class="variable">$MACHINE_TLS_CLIENT_KEY</span>]</span><br><span class="line">  --github-api-token 				Token to use <span class="keyword">for</span> requests to the Github API [<span class="variable">$MACHINE_GITHUB_API_TOKEN</span>]</span><br><span class="line">  --native-ssh					Use the native (Go-based) SSH implementation. [<span class="variable">$MACHINE_NATIVE_SSH</span>]</span><br><span class="line">  --bugsnag-api-token 				BugSnag API token <span class="keyword">for</span> crash reporting [<span class="variable">$MACHINE_BUGSNAG_API_TOKEN</span>]</span><br><span class="line">  --<span class="built_in">help</span>, -h					show <span class="built_in">help</span></span><br><span class="line">  --version, -v					<span class="built_in">print</span> the version</span><br><span class="line">  </span><br><span class="line">Commands:</span><br><span class="line">  active		显示当前操作的是哪台machine</span><br><span class="line">  config		显示已连接machine的配置信息</span><br><span class="line">  create		创建一个machine主机</span><br><span class="line">  env			显示为Docker客户机设置环境的命令</span><br><span class="line">  inspect		检查machine的详细信息</span><br><span class="line">  ip			获取machine的ip地址</span><br><span class="line">  <span class="built_in">kill</span>			停止一个machine</span><br><span class="line">  ls			列出所有machine</span><br><span class="line">  provision		重建现有的machines</span><br><span class="line">  regenerate-certs	为计machine重新生成TLS证书</span><br><span class="line">  restart		重启machine</span><br><span class="line">  rm			剔除一个machine</span><br><span class="line">  ssh			使用SSH服务登陆machine去执行命令</span><br><span class="line">  scp			machine之间复制文件</span><br><span class="line">  mount			使用SSHFS在machine中挂载和卸载目录卷</span><br><span class="line">  start			启动一个machine</span><br><span class="line">  status		获取machine的状态</span><br><span class="line">  stop			停止一个machine</span><br><span class="line">  upgrade		将machine升级到Docker的最新版本</span><br><span class="line">  url			获取machine tcp地址的url</span><br><span class="line">  version		显示Docker machine版本</span><br><span class="line">  <span class="built_in">help</span>			显示一个命令的命令列表或帮助</span><br><span class="line">  </span><br><span class="line">Run <span class="string">'docker-machine COMMAND --help'</span> <span class="keyword">for</span> more information on a <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
+<h1 id="创建docker-machine"><a href="#创建docker-machine" class="headerlink" title="创建docker-machine"></a>创建docker-machine</h1><p>对于 <code>Docker Machine</code> 来说，术语 Machine 就是运行 docker daemon 的主机。“创建 Machine” 指的就是在 host 上安装和部署 docker。先执行 docker-machine ls 查看一下当前的 machine：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine ls</span><br><span class="line">NAME        ACTIVE   DRIVER    STATE     URL                         SWARM   DOCKER     ERRORS</span><br></pre></td></tr></table></figure></p>
+<p>当前还没有 machine，接下来我们创建第一个 machine： k8s-node1—192.168.20.213。创建 machine 要求能够无密码登录远程主机，所以需要确保docker-machine主机能无密码登陆machine主机。</p>
+<h2 id="创建docker-machine主机"><a href="#创建docker-machine主机" class="headerlink" title="创建docker-machine主机"></a>创建docker-machine主机</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine create   --driver generic   --generic-ip-address=192.168.20.213   --generic-ssh-key ~/.ssh/id_rsa  --generic-ssh-user=root k8s-node1</span><br><span class="line"></span><br><span class="line">Running pre-create checks...</span><br><span class="line">Creating machine...</span><br><span class="line">(k8s-node2) Importing SSH key...</span><br><span class="line">Waiting <span class="keyword">for</span> machine to be running, this may take a few minutes...</span><br><span class="line">Detecting operating system of created instance...</span><br><span class="line">Waiting <span class="keyword">for</span> SSH to be available...</span><br><span class="line">Detecting the provisioner...</span><br><span class="line">Provisioning with centos...</span><br><span class="line">Copying certs to the <span class="built_in">local</span> machine directory...</span><br><span class="line">Copying certs to the remote machine...</span><br><span class="line">Setting Docker configuration on the remote daemon...</span><br><span class="line">Checking connection to Docker...</span><br><span class="line">Docker is up and running!</span><br><span class="line">To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env k8s-node1</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>docker-machine</code>详细命令参见：<a href="https://docs.docker.com/machine/overview/" target="_blank" rel="noopener">https://docs.docker.com/machine/overview/</a></p>
+</blockquote>
+<p>上述命令分析：</p>
+<ul>
+<li><code>create</code>                              #创建docker主机</li>
+<li><code>--driver</code> generic                    #驱动类型 generic 支持linux通用服务器，还支持很多种云主机</li>
+<li><code>--generic-ip-address</code>=192.168.20.213 #指定主机</li>
+<li><code>--generic-ssh-key</code> ~/.ssh/id_rsa     #指定私钥</li>
+<li><code>--generic-ssh-user</code>=root             #指定用户</li>
+<li><code>k8s-node1</code>                           #主机名称</li>
+</ul>
+<blockquote>
+<p>因为我们是往普通的 Linux 中部署 docker，所以使用 generic driver。,更多driver参考：<a href="https://docs.docker.com/machine/drivers/" target="_blank" rel="noopener">https://docs.docker.com/machine/drivers/</a></p>
+</blockquote>
+<p>再次执行 docker-machine ls：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine ls</span><br><span class="line">NAME        ACTIVE   DRIVER    STATE     URL                         SWARM   DOCKER     ERRORS</span><br><span class="line">k8s-node1   -        generic   Running   tcp://192.168.20.213:2376           v18.09.6</span><br></pre></td></tr></table></figure></p>
+<p>可以使用同样的方法创建多台docker machine主机。如我这里在创建一台k8s-node2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine ls</span><br><span class="line">NAME        ACTIVE   DRIVER    STATE     URL                         SWARM   DOCKER     ERRORS</span><br><span class="line">k8s-node1   *        generic   Running   tcp://192.168.20.213:2376           v18.09.6   </span><br><span class="line">k8s-node2   -        generic   Running   tcp://192.168.20.214:2376           v18.09.6</span><br></pre></td></tr></table></figure></p>
+<h1 id="管理machine"><a href="#管理machine" class="headerlink" title="管理machine"></a>管理machine</h1><p>用 <code>docker-machine</code> 创建 machine 的过程很简洁，非常适合多主机环境。除此之外，Docker Machine 也提供了一些子命令方便对 machine 进行管理。其中最常用的就是无需登录到 machine 就能执行 docker 相关操作。</p>
+<h2 id="查看环境变量"><a href="#查看环境变量" class="headerlink" title="查看环境变量"></a>查看环境变量</h2><p>Docker Machine 则让这个过程更简单。docker-machine env k8s-node1显示访问k8s-node1 需要的所有环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine env k8s-node1</span><br><span class="line"><span class="built_in">export</span> DOCKER_TLS_VERIFY=<span class="string">"1"</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_HOST=<span class="string">"tcp://192.168.20.213:2376"</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_CERT_PATH=<span class="string">"/root/.docker/machine/machines/k8s-node1"</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_MACHINE_NAME=<span class="string">"k8s-node1"</span></span><br><span class="line"><span class="comment"># Run this command to configure your shell: </span></span><br><span class="line"><span class="comment"># eval $(docker-machine env k8s-node1)</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>根据提示，执行 <code>eval $(docker-machine env k8s-node1)</code> 会把当前shell环境设置为k8s-node1 machine的环境，之后管理docker的命令操作相当于在k8s-node1上。</p>
+</blockquote>
+<h2 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h2><p>在此状态下执行的所有 docker 命令其效果都相当于在 k8s-node1 上执行，可以通过<code>docker-machine active</code>查看当前shell对应哪个machine。例如启动一个 busybox 容器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name b1 -itd busybox</span><br><span class="line">7079c9d8283994ba77a93bddedd76856c74617e73eb374485a12247d61998e86</span><br><span class="line"></span><br><span class="line">$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">7079c9d82839        busybox             <span class="string">"sh"</span>                2 seconds ago       Up 5 second                             b1</span><br></pre></td></tr></table></figure></p>
+<h2 id="docker-machine-ssh"><a href="#docker-machine-ssh" class="headerlink" title="docker-machine ssh"></a>docker-machine ssh</h2><p>除了上面的使用方法外，我们还有更加简便的方式，就是使用docker-machine ssh，需要我们提前配置好 /etc/hosts，比如上面的命令还可以直接通过如下指令创建。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以ssh方式登陆k8s-node1 machine主机运行docker container run命令</span></span><br><span class="line">$ docker-machine ssh k8s-node1 <span class="string">"docker container run --name b1 -itd busybox"</span></span><br><span class="line"><span class="comment"># 以ssh方式登陆k8s-node1 machine主机运行docker container ls命令</span></span><br><span class="line">$ docker-machine ssh k8s-node1 <span class="string">"docker container ls"</span> </span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">7079c9d82839        busybox             <span class="string">"sh"</span>                2 minutes ago       Up 2 minutes                            b1</span><br></pre></td></tr></table></figure></p>
+<h2 id="mount挂载卷"><a href="#mount挂载卷" class="headerlink" title="mount挂载卷"></a>mount挂载卷</h2><p><code>docker-machine</code>Mount使用sshfs将目录从machine挂载到本地主机,方便我们管理。</p>
+<blockquote>
+<p>前提需要安装<code>fuse-sshfs</code>，yum install -y fuse-sshfs</p>
+</blockquote>
+<p>例如，在docker-machine主机上如下操作：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /opt/foo</span><br><span class="line">$ docker-machine ssh k8s-node1 mkdir foo</span><br><span class="line">$ docker-machine mount k8s-node1:/root/foo /opt/foo</span><br><span class="line">$ touch foo/bar</span><br><span class="line">$ docker-machine ssh k8s-node1 ls foo</span><br><span class="line">bar</span><br></pre></td></tr></table></figure></p>
+<p>那么现在，您可以使用machine机器上的目录来挂载到容器。在本地目录中所以的操作就相当于machine主机上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#通过mount可以看到挂载的是machine目录到本地</span></span><br><span class="line">$ mount | grep foo</span><br><span class="line">root@k8s-node1:/root/foo on /opt/foo <span class="built_in">type</span> fuse.sshfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0)</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -656,7 +702,7 @@
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
     
-    <a href="https://www.ipyker.com/2018/01/23/nginx-variable.html" title="Nginx内置变量">https://www.ipyker.com/2018/01/23/nginx-variable.html</a>
+    <a href="https://www.ipyker.com/2018/03/22/docker-machine.html" title="docker三剑客之docker-machine用法">https://www.ipyker.com/2018/03/22/docker-machine.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
@@ -678,7 +724,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
+            <a href="/tags/docker/" rel="tag"><i class="fa fa-tag"></i> docker</a>
           
         </div>
       
@@ -691,8 +737,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/23/Nginx-location.html" rel="next" title="详解nginx之location误区">
-                <i class="fa fa-chevron-left"></i> 详解nginx之location误区
+              <a href="/2018/03/22/ansible-module.html" rel="next" title="Ansible 常用模块指令">
+                <i class="fa fa-chevron-left"></i> Ansible 常用模块指令
               </a>
             
           </div>
@@ -701,8 +747,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/21/install-docker-ce.html" rel="prev" title="CentOS7 安装Docker-CE">
-                CentOS7 安装Docker-CE <i class="fa fa-chevron-right"></i>
+              <a href="/2018/03/23/ansible-playbook.html" rel="prev" title="Ansible playbook详解">
+                Ansible playbook详解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -993,7 +1039,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-内置变量解释"><span class="nav-number">1.</span> <span class="nav-text">Nginx 内置变量解释</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine-概述"><span class="nav-number">1.</span> <span class="nav-text">Docker Machine 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine安装"><span class="nav-number">2.</span> <span class="nav-text">Docker Machine安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-bash-completion-scripts"><span class="nav-number">3.</span> <span class="nav-text">安装 bash completion scripts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine命令介绍"><span class="nav-number">4.</span> <span class="nav-text">Docker Machine命令介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建docker-machine"><span class="nav-number">5.</span> <span class="nav-text">创建docker-machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建docker-machine主机"><span class="nav-number">5.1.</span> <span class="nav-text">创建docker-machine主机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#管理machine"><span class="nav-number">6.</span> <span class="nav-text">管理machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看环境变量"><span class="nav-number">6.1.</span> <span class="nav-text">查看环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动容器"><span class="nav-number">6.2.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-machine-ssh"><span class="nav-number">6.3.</span> <span class="nav-text">docker-machine ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mount挂载卷"><span class="nav-number">6.4.</span> <span class="nav-text">mount挂载卷</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1236,7 +1282,7 @@
   
     <script>
   window.livereOptions = {
-    refer: '2018/01/23/nginx-variable.html'
+    refer: '2018/03/22/docker-machine.html'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];
