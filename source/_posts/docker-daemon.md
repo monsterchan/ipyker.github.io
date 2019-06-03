@@ -12,7 +12,7 @@ date: 2018-03-22 12:02:00
 docker安装后默认没有`/etc/docker/daemon.json` 文件，需要进行手动创建。`--config-file`命令参数可用于指定非默认位置。但请注意：配置文件中设置的选项不得与启动参数设置的选项冲突。 如果文件和启动参数之间的选项重复，则docker守护程序无法启动，无论其值如何。 例如，如果在daemon.json配置文件中设置了守护程序标签并且还通过--label命令参数设置守护程序标签，则守护程序无法启动。 守护程序启动时将忽略文件中不存在的选项。
 
 这是Linux上允许的配置选项的完整示例：
-```json
+```java
 {
     "authorization-plugins": [],//访问授权插件
     "data-root": "",//docker数据持久化存储的根目录,默认为/var/lib/docker
@@ -107,8 +107,9 @@ docker安装后默认没有`/etc/docker/daemon.json` 文件，需要进行手动
 >您无法在`daemon.json`文件中使用已经在dockerd守护程序启动时设置的选项命令参数。 例如：在使用systemd启动Docker守护程序的系统上，-H已设置，因此您无法使用daemon.json中的hosts键添加侦听地址。 有关如何使用systemd drop-in文件完成此任务，请参阅https://docs.docker.com/engine/admin/systemd/#custom-docker-daemon-options。
 
 # dockerd守护进程选项
+
 ```bash
-dockerd --help
+$ dockerd --help
 
 Usage:  dockerd [OPTIONS]
 
