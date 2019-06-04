@@ -127,17 +127,17 @@ Checking connection to Docker...
 Docker is up and running!
 To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env k8s-node1
 ```
->`docker-machine`详细命令参见：https://docs.docker.com/machine/overview/
+<div class="note primary"><p>`docker-machine`详细命令参见：https://docs.docker.com/machine/overview/</p></div>
 
 上述命令分析：
-* `create`                              #创建docker主机
-* `--driver` generic                    #驱动类型 generic 支持linux通用服务器，还支持很多种云主机
-* `--generic-ip-address`=192.168.20.213 #指定主机
-* `--generic-ssh-key` ~/.ssh/id_rsa     #指定私钥
-* `--generic-ssh-user`=root             #指定用户
-* `k8s-node1`                           #主机名称
+* {% label warning@create %}                              #创建docker主机
+* {% label warning@--driver %} generic                    #驱动类型 generic 支持linux通用服务器，还支持很多种云主机
+* {% label warning@--generic-ip-address %}=192.168.20.213 #指定主机
+* {% label warning@--generic-ssh-key %}~/.ssh/id_rsa     #指定私钥
+* {% label warning@--generic-ssh-user %}=root             #指定用户
+* {% label warning@k8s-node1 %}                           #主机名称
 
->因为我们是往普通的 Linux 中部署 docker，所以使用 generic driver。,更多driver参考：https://docs.docker.com/machine/drivers/
+<div class="note primary"><p>因为我们是往普通的 Linux 中部署 docker，所以使用 generic driver。,更多driver参考：https://docs.docker.com/machine/drivers/</p></div>
 
 再次执行 docker-machine ls：
 ```bash
@@ -165,7 +165,7 @@ export DOCKER_MACHINE_NAME="k8s-node1"
 # Run this command to configure your shell: 
 # eval $(docker-machine env k8s-node1)
 ```
->根据提示，执行 `eval $(docker-machine env k8s-node1)` 会把当前shell环境设置为k8s-node1 machine的环境，之后管理docker的命令操作相当于在k8s-node1上。
+<div class="note primary"><p>根据提示，执行 `eval $(docker-machine env k8s-node1)` 会把当前shell环境设置为k8s-node1 machine的环境，之后管理docker的命令操作相当于在k8s-node1上。</p></div>
 
 ## 启动容器
 在此状态下执行的所有 docker 命令其效果都相当于在 k8s-node1 上执行，可以通过`docker-machine active`查看当前shell对应哪个machine。例如启动一个 busybox 容器：
@@ -189,7 +189,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 ```
 ## mount挂载卷
 `docker-machine`Mount使用sshfs将目录从machine挂载到本地主机,方便我们管理。
-> 前提需要安装`fuse-sshfs`，yum install -y fuse-sshfs
+<div class="note success"><p>前提需要安装`fuse-sshfs`，yum install -y fuse-sshfs</p></div>
 
 例如，在docker-machine主机上如下操作：
 ```bash
@@ -200,9 +200,27 @@ $ touch foo/bar
 $ docker-machine ssh k8s-node1 ls foo
 bar
 ```
-那么现在，您可以使用machine机器上的目录来挂载到容器。在本地目录中所以的操作就相当于machine主机上。
+以上命令为在k8s-node1上当前目录创建一个foo挂载目录，然后使用docker-machine mount将该目录挂载到本地/opt/foo目录下，我们可以在本地执行mount命令查看挂载情况：
 ```bash
 #通过mount可以看到挂载的是machine目录到本地
 $ mount | grep foo
 root@k8s-node1:/root/foo on /opt/foo type fuse.sshfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0)
+```
+那么现在，您可以使用machine机器上的目录来挂载到容器。而在当前docker-machine主机上就可以维护容器里的数据了。
+```bash
+#进入k8s-node1的docker shell环境，并且启动一个t1的容器并挂载/root/foo目录到容器/tmp/foo下
+$ eval $(docker-machine env k8s-node1)
+$ docker run --name t1 --rm -v /root/foo:/tmp/foo busybox ls /tmp/foo
+bar
+$ touch foo/baz
+$ docker run --name t1 --rm -v /root/foo:/tmp/foo busybox ls /tmp/foo
+bar
+baz
+```
+这些文件实际上是通过sftp(通过ssh连接)传输的，所以这个程序(“sftp”)需要在机器上显示, 通常是这样的。
+
+## 卸载挂载卷
+要再次卸载该目录，可以使用相同的选项，但使用-u标志。您还可以直接调用fuserunmount(或fusermount -u)命令。
+```bash
+$ docker-machine mount -u k8s-node1:/root/foo /opt/foo
 ```
