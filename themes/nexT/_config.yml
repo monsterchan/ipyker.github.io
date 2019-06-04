@@ -448,7 +448,7 @@ tagcloud:
 # ---------------------------------------------------------------
 
 font:
-  enable: true
+  enable: false
 
   # Uri of fonts host, e.g. //fonts.googleapis.com (Default).
   host: 
