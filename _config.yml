@@ -132,3 +132,9 @@ live2d:
     show: false
   react:
     opacity: 0.7
+
+# seo
+sitemap: 
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
