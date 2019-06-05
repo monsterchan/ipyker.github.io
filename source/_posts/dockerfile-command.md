@@ -17,14 +17,14 @@ $ docker build -t image名称:tag标签 -f <Dockerfile路径>
 <div class="note danger"><p>注意：不要使用根("/")目录作为Dockfile PATH，因为它会导致构建将硬盘驱动器的全部内容传输到Docker守护程序。</p></div>
 
 # BuildKit 
-从版本18.09开始，Docker支持一个新的后端，用于执行moby/buildkit项目提供的构建。与旧的实现相比，BuildKit后端提供了许多好处。例如，BuildKit可以：
-* 检测并跳过执行未使用的构建阶段
-* 构建阶段可独立并行构建
-* 在构建环境中，只在构建之间增量地传输已更改的文件
-* 检测并跳过在构建上下文中传输未使用的文件
-* 使用具有许多新功能的外部Dockerfile实现
-* 使用API的其余部分避免副作用（中间image和container）
-* 为自动修剪设置构建缓存的优先级
+从18.09版本开始，Docker支持一种后端程序用于运行你的构建，它可以被moby/buildkit project提供。这个 BuildKit backend 提供很多与旧版本的好处。如：
+* 捕获并跳过执行未使用的构建阶段
+* 并行构建独立地阶段
+* 在构建环境中，加强传输在构建阶段更改的文件
+* 捕获并跳过传输没有用的文件
+* 使用外部Dockerfile实现很多新的特性
+* 避免REST API的副用作影响（中间image和container）
+* 通过自动优化来提升构建缓存
 
 要使用BuildKit后端，需要在调用docker build之前在CLI上设置环境变量`DOCKER_BUILDKIT = 1`。要了解基于BuildKit的构建可用的实验性Dockerfile语法，请参阅[BuildKit存储库中的文档](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md)。
 
