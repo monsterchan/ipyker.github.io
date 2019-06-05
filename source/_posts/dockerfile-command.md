@@ -288,9 +288,85 @@ tmp?
 8.调整合理的指令顺序：           在开启缓存的情况下，内容不变的指令尽量放在前面，这样可以提高指令的复用性；
 9.减少外部源的干扰：             如果确实要从外部引入数据，需要制定持久的地址，并带有版本信息，让他人可以重复使用而不出错。
 ```
+# Dockerfile 实例
+```bash
+#Function: source install nginx1.16 on the centos7 container
+#How use：docker run --name mynginx1 -d -p hostprot:containerport -v depend:/data/depend -v wwwroot:/data/wwwroot -v wwwlogs:/data/wwwlogs image_name:tag
+FROM centos:7.6 as centos7
+LABEL MAINTAINER="pyker <pyker@qq.com>"
 
+ENV NGINX=nginx-1.16.0 \
+    OPENSSL=openssl-1.0.2r \
+    PCRE=pcre-8.42 \
+    ZLIB=zlib-1.2.11 \
+    RUN_USER=nginx \
+    LOG_DIR=/data/wwwlogs \
+    WEB_DIR=/data/wwwroot \
+    DEPEND_DIR=/data/depend
 
+VOLUME ["/data/depend","/data/wwwroot","/data/wwwlogs"]
+ADD nginx-1.16.0.tar.gz openssl-1.0.2r.tar.gz pcre-8.42.tar.gz zlib-1.2.11.tar.gz ${DEPEND_DIR}/
 
+RUN id -u ${RUN_USER} >/dev/null 2>&1 || useradd -M -s /sbin/nologin ${RUN_USER}
+RUN yum install -y epel-release && \
+    yum install -y gcc gcc-c++ gcc++ perl perl-devel perl-ExtUtils-Embed libxslt libxslt-devel libxml2 libxml2-devel gd gd-devel GeoIP GeoIP-devel make && \
+    yum clean all
+RUN cd /data/depend/${NGINX} && \
+            ./configure --prefix=/usr/local/nginx \
+            --sbin-path=/usr/sbin/nginx \
+            --user=${RUN_USER} \
+            --group=${RUN_USER} \
+            --pid-path=/var/run/nginx.pid \
+            --lock-path=/var/run/nginx.lock \
+            --error-log-path=${LOG_DIR}/error.log \
+            --http-log-path=${LOG_DIR}/access.log \
+            --with-select_module \
+            --with-poll_module \
+            --with-threads \
+            --with-file-aio \
+            --with-http_ssl_module \
+            --with-http_v2_module \
+            --with-http_realip_module \
+            --with-http_addition_module \
+            --with-http_xslt_module=dynamic \
+            --with-http_image_filter_module=dynamic \
+            --with-http_geoip_module=dynamic \
+            --with-http_sub_module \
+            --with-http_dav_module \
+            --with-http_flv_module \
+            --with-http_mp4_module \
+            --with-http_gunzip_module \
+            --with-http_gzip_static_module \
+            --with-http_auth_request_module \
+            --with-http_random_index_module \
+            --with-http_secure_link_module \
+            --with-http_degradation_module \
+            --with-http_slice_module \
+            --with-http_stub_status_module \
+            --with-mail=dynamic \
+            --with-mail_ssl_module \
+            --with-stream \
+            --with-stream_ssl_module \
+            --with-stream_realip_module \
+            --with-stream_geoip_module=dynamic \
+            --with-stream_ssl_preread_module \
+            --with-compat \
+            --with-pcre=../${PCRE} \
+            --with-pcre-jit \
+            --with-zlib=../${ZLIB} \
+            --with-openssl=../${OPENSSL}\
+            --with-openssl-opt=no-nextprotoneg \
+            --with-debug && make -j 4 && make install
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+```
+```bash
+# Dockerfile构建镜像
+$ docker build -t nginx:v1 .
+# 使用nginx:v1镜像运行容器
+$ docker run --name mynginx1 -p 80:80 -d -v depend:/data/depend -v wwwroot:/data/wwwroot -v wwwlogs:/data/wwwlogs nginx:v1
+```
+上面例子中，我们通过官方centos7的镜像源代码安装nginx1.16,并且编译诺干nginx模块，其中做了三个卷，分别存放编译安装`依赖的库文件`、`日志文件目录`以及`项目静态文件`。当然nginx配置文件没有挂载出来，如果你需要也可以挂载出来，但是nginx配置文件修改都得reload服务，甚至重启容器。如果站在容器有生命周期的角度来看的话，配置文件是可以不用挂载出来的，如果你修改了配置文件可以重新run一个新的容器，通过ENTRYPOINT用脚本的方式把配置文件模版写入到容器nginx对应的位置，每当需要修改已有配置的时候可以使用`docker run --env`来指定配置文件中需要修改的变量从而生成新的nginx容器，以后服务的配置文件修改通过修改编排工具模版实现容器重新生成和销毁。我们不直接接触容器本身。
 
 
 
