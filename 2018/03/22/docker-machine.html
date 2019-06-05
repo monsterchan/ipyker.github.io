@@ -44,50 +44,14 @@
 
 
 
+  <meta name="baidu-site-verification" content="true">
+
 
 
   
   
   <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
 
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-    
-      
-    
-
-    
-  
-
-  
-
-  
-
-  
-    
-      
-    
-
-    
-  
-
-  
-    
-    
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
-  
 
 
 
@@ -154,7 +118,7 @@
 <meta property="og:site_name" content="派 | Pyker">
 <meta property="og:description" content="Docker Machine 概述docker-machine 是docker官方提供的docker管理工具。简单来说就是给你快速创建一个docker容器环境的, 假如你要给100台阿里云ECS安装上docker，传统方式就是你一台一台ssh上去安装，但是有了docker-machine就不一样了，你可以快速给100台ecs安装上docker，怎么快速法呢，你看完这文章就知道了。还有就是你要在本地">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-03T17:24:59.189Z">
+<meta property="og:updated_time" content="2019-06-04T15:54:37.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker三剑客之docker-machine用法">
 <meta name="twitter:description" content="Docker Machine 概述docker-machine 是docker官方提供的docker管理工具。简单来说就是给你快速创建一个docker容器环境的, 假如你要给100台阿里云ECS安装上docker，传统方式就是你一台一台ssh上去安装，但是有了docker-machine就不一样了，你可以快速给100台ecs安装上docker，怎么快速法呢，你看完这文章就知道了。还有就是你要在本地">
@@ -499,7 +463,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-04 01:24:59" itemprop="dateModified" datetime="2019-06-04T01:24:59+08:00">2019-06-04</time>
+                <time title="修改时间：2019-06-04 23:54:37" itemprop="dateModified" datetime="2019-06-04T23:54:37+08:00">2019-06-04</time>
               
             
           </span>
@@ -552,7 +516,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">7.5k</span>
+                <span title="本文字数">8k</span>
               
 
               
@@ -605,36 +569,35 @@
 <h1 id="创建docker-machine"><a href="#创建docker-machine" class="headerlink" title="创建docker-machine"></a>创建docker-machine</h1><p>对于 <code>Docker Machine</code> 来说，术语 Machine 就是运行 docker daemon 的主机。“创建 Machine” 指的就是在 host 上安装和部署 docker。先执行 docker-machine ls 查看一下当前的 machine：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine ls</span><br><span class="line">NAME        ACTIVE   DRIVER    STATE     URL                         SWARM   DOCKER     ERRORS</span><br></pre></td></tr></table></figure></p>
 <p>当前还没有 machine，接下来我们创建第一个 machine： k8s-node1—192.168.20.213。创建 machine 要求能够无密码登录远程主机，所以需要确保docker-machine主机能无密码登陆machine主机。</p>
 <h2 id="创建docker-machine主机"><a href="#创建docker-machine主机" class="headerlink" title="创建docker-machine主机"></a>创建docker-machine主机</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine create   --driver generic   --generic-ip-address=192.168.20.213   --generic-ssh-key ~/.ssh/id_rsa  --generic-ssh-user=root k8s-node1</span><br><span class="line"></span><br><span class="line">Running pre-create checks...</span><br><span class="line">Creating machine...</span><br><span class="line">(k8s-node2) Importing SSH key...</span><br><span class="line">Waiting <span class="keyword">for</span> machine to be running, this may take a few minutes...</span><br><span class="line">Detecting operating system of created instance...</span><br><span class="line">Waiting <span class="keyword">for</span> SSH to be available...</span><br><span class="line">Detecting the provisioner...</span><br><span class="line">Provisioning with centos...</span><br><span class="line">Copying certs to the <span class="built_in">local</span> machine directory...</span><br><span class="line">Copying certs to the remote machine...</span><br><span class="line">Setting Docker configuration on the remote daemon...</span><br><span class="line">Checking connection to Docker...</span><br><span class="line">Docker is up and running!</span><br><span class="line">To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env k8s-node1</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>docker-machine</code>详细命令参见：<a href="https://docs.docker.com/machine/overview/" target="_blank" rel="noopener">https://docs.docker.com/machine/overview/</a></p>
-</blockquote>
+<div class="note primary"><p><code>docker-machine</code>详细命令参见：<a href="https://docs.docker.com/machine/overview/" target="_blank" rel="noopener">https://docs.docker.com/machine/overview/</a></p></div>
+
 <p>上述命令分析：</p>
 <ul>
-<li><code>create</code>                              #创建docker主机</li>
-<li><code>--driver</code> generic                    #驱动类型 generic 支持linux通用服务器，还支持很多种云主机</li>
-<li><code>--generic-ip-address</code>=192.168.20.213 #指定主机</li>
-<li><code>--generic-ssh-key</code> ~/.ssh/id_rsa     #指定私钥</li>
-<li><code>--generic-ssh-user</code>=root             #指定用户</li>
-<li><code>k8s-node1</code>                           #主机名称</li>
+<li><span class="label warning">create</span>                              #创建docker主机</li>
+<li><span class="label warning">--driver</span> generic                    #驱动类型 generic 支持linux通用服务器，还支持很多种云主机</li>
+<li><span class="label warning">--generic-ip-address</span>=192.168.20.213 #指定主机</li>
+<li><span class="label warning">--generic-ssh-key</span>~/.ssh/id_rsa     #指定私钥</li>
+<li><span class="label warning">--generic-ssh-user</span>=root             #指定用户</li>
+<li><span class="label warning">k8s-node1</span>                           #主机名称</li>
 </ul>
-<blockquote>
-<p>因为我们是往普通的 Linux 中部署 docker，所以使用 generic driver。,更多driver参考：<a href="https://docs.docker.com/machine/drivers/" target="_blank" rel="noopener">https://docs.docker.com/machine/drivers/</a></p>
-</blockquote>
+<div class="note primary"><p>因为我们是往普通的 Linux 中部署 docker，所以使用 generic driver。,更多driver参考：<a href="https://docs.docker.com/machine/drivers/" target="_blank" rel="noopener">https://docs.docker.com/machine/drivers/</a></p></div>
+
 <p>再次执行 docker-machine ls：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine ls</span><br><span class="line">NAME        ACTIVE   DRIVER    STATE     URL                         SWARM   DOCKER     ERRORS</span><br><span class="line">k8s-node1   -        generic   Running   tcp://192.168.20.213:2376           v18.09.6</span><br></pre></td></tr></table></figure></p>
 <p>可以使用同样的方法创建多台docker machine主机。如我这里在创建一台k8s-node2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine ls</span><br><span class="line">NAME        ACTIVE   DRIVER    STATE     URL                         SWARM   DOCKER     ERRORS</span><br><span class="line">k8s-node1   *        generic   Running   tcp://192.168.20.213:2376           v18.09.6   </span><br><span class="line">k8s-node2   -        generic   Running   tcp://192.168.20.214:2376           v18.09.6</span><br></pre></td></tr></table></figure></p>
 <h1 id="管理machine"><a href="#管理machine" class="headerlink" title="管理machine"></a>管理machine</h1><p>用 <code>docker-machine</code> 创建 machine 的过程很简洁，非常适合多主机环境。除此之外，Docker Machine 也提供了一些子命令方便对 machine 进行管理。其中最常用的就是无需登录到 machine 就能执行 docker 相关操作。</p>
 <h2 id="查看环境变量"><a href="#查看环境变量" class="headerlink" title="查看环境变量"></a>查看环境变量</h2><p>Docker Machine 则让这个过程更简单。docker-machine env k8s-node1显示访问k8s-node1 需要的所有环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine env k8s-node1</span><br><span class="line"><span class="built_in">export</span> DOCKER_TLS_VERIFY=<span class="string">"1"</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_HOST=<span class="string">"tcp://192.168.20.213:2376"</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_CERT_PATH=<span class="string">"/root/.docker/machine/machines/k8s-node1"</span></span><br><span class="line"><span class="built_in">export</span> DOCKER_MACHINE_NAME=<span class="string">"k8s-node1"</span></span><br><span class="line"><span class="comment"># Run this command to configure your shell: </span></span><br><span class="line"><span class="comment"># eval $(docker-machine env k8s-node1)</span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>根据提示，执行 <code>eval $(docker-machine env k8s-node1)</code> 会把当前shell环境设置为k8s-node1 machine的环境，之后管理docker的命令操作相当于在k8s-node1上。</p>
-</blockquote>
+<div class="note primary"><p>根据提示，执行 <code>eval $(docker-machine env k8s-node1)</code> 会把当前shell环境设置为k8s-node1 machine的环境，之后管理docker的命令操作相当于在k8s-node1上。</p></div>
+
 <h2 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h2><p>在此状态下执行的所有 docker 命令其效果都相当于在 k8s-node1 上执行，可以通过<code>docker-machine active</code>查看当前shell对应哪个machine。例如启动一个 busybox 容器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name b1 -itd busybox</span><br><span class="line">7079c9d8283994ba77a93bddedd76856c74617e73eb374485a12247d61998e86</span><br><span class="line"></span><br><span class="line">$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">7079c9d82839        busybox             <span class="string">"sh"</span>                2 seconds ago       Up 5 second                             b1</span><br></pre></td></tr></table></figure></p>
 <h2 id="docker-machine-ssh"><a href="#docker-machine-ssh" class="headerlink" title="docker-machine ssh"></a>docker-machine ssh</h2><p>除了上面的使用方法外，我们还有更加简便的方式，就是使用docker-machine ssh，需要我们提前配置好 /etc/hosts，比如上面的命令还可以直接通过如下指令创建。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以ssh方式登陆k8s-node1 machine主机运行docker container run命令</span></span><br><span class="line">$ docker-machine ssh k8s-node1 <span class="string">"docker container run --name b1 -itd busybox"</span></span><br><span class="line"><span class="comment"># 以ssh方式登陆k8s-node1 machine主机运行docker container ls命令</span></span><br><span class="line">$ docker-machine ssh k8s-node1 <span class="string">"docker container ls"</span> </span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">7079c9d82839        busybox             <span class="string">"sh"</span>                2 minutes ago       Up 2 minutes                            b1</span><br></pre></td></tr></table></figure></p>
 <h2 id="mount挂载卷"><a href="#mount挂载卷" class="headerlink" title="mount挂载卷"></a>mount挂载卷</h2><p><code>docker-machine</code>Mount使用sshfs将目录从machine挂载到本地主机,方便我们管理。</p>
-<blockquote>
-<p>前提需要安装<code>fuse-sshfs</code>，yum install -y fuse-sshfs</p>
-</blockquote>
+<div class="note success"><p>前提需要安装<code>fuse-sshfs</code>，yum install -y fuse-sshfs</p></div>
+
 <p>例如，在docker-machine主机上如下操作：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /opt/foo</span><br><span class="line">$ docker-machine ssh k8s-node1 mkdir foo</span><br><span class="line">$ docker-machine mount k8s-node1:/root/foo /opt/foo</span><br><span class="line">$ touch foo/bar</span><br><span class="line">$ docker-machine ssh k8s-node1 ls foo</span><br><span class="line">bar</span><br></pre></td></tr></table></figure></p>
-<p>那么现在，您可以使用machine机器上的目录来挂载到容器。在本地目录中所以的操作就相当于machine主机上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#通过mount可以看到挂载的是machine目录到本地</span></span><br><span class="line">$ mount | grep foo</span><br><span class="line">root@k8s-node1:/root/foo on /opt/foo <span class="built_in">type</span> fuse.sshfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0)</span><br></pre></td></tr></table></figure></p>
+<p>以上命令为在k8s-node1上当前目录创建一个foo挂载目录，然后使用docker-machine mount将该目录挂载到本地/opt/foo目录下，我们可以在本地执行mount命令查看挂载情况：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#通过mount可以看到挂载的是machine目录到本地</span></span><br><span class="line">$ mount | grep foo</span><br><span class="line">root@k8s-node1:/root/foo on /opt/foo <span class="built_in">type</span> fuse.sshfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0)</span><br></pre></td></tr></table></figure></p>
+<p>那么现在，您可以使用machine机器上的目录来挂载到容器。而在当前docker-machine主机上就可以维护容器里的数据了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#进入k8s-node1的docker shell环境，并且启动一个t1的容器并挂载/root/foo目录到容器/tmp/foo下</span></span><br><span class="line">$ <span class="built_in">eval</span> $(docker-machine env k8s-node1)</span><br><span class="line">$ docker run --name t1 --rm -v /root/foo:/tmp/foo busybox ls /tmp/foo</span><br><span class="line">bar</span><br><span class="line">$ touch foo/baz</span><br><span class="line">$ docker run --name t1 --rm -v /root/foo:/tmp/foo busybox ls /tmp/foo</span><br><span class="line">bar</span><br><span class="line">baz</span><br></pre></td></tr></table></figure></p>
+<p>这些文件实际上是通过sftp(通过ssh连接)传输的，所以这个程序(“sftp”)需要在机器上显示, 通常是这样的。</p>
+<h2 id="卸载挂载卷"><a href="#卸载挂载卷" class="headerlink" title="卸载挂载卷"></a>卸载挂载卷</h2><p>要再次卸载该目录，可以使用相同的选项，但使用-u标志。您还可以直接调用fuserunmount(或fusermount -u)命令。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-machine mount -u k8s-node1:/root/foo /opt/foo</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -825,7 +788,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-count">31</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1039,7 +1002,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine-概述"><span class="nav-number">1.</span> <span class="nav-text">Docker Machine 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine安装"><span class="nav-number">2.</span> <span class="nav-text">Docker Machine安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-bash-completion-scripts"><span class="nav-number">3.</span> <span class="nav-text">安装 bash completion scripts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine命令介绍"><span class="nav-number">4.</span> <span class="nav-text">Docker Machine命令介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建docker-machine"><span class="nav-number">5.</span> <span class="nav-text">创建docker-machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建docker-machine主机"><span class="nav-number">5.1.</span> <span class="nav-text">创建docker-machine主机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#管理machine"><span class="nav-number">6.</span> <span class="nav-text">管理machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看环境变量"><span class="nav-number">6.1.</span> <span class="nav-text">查看环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动容器"><span class="nav-number">6.2.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-machine-ssh"><span class="nav-number">6.3.</span> <span class="nav-text">docker-machine ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mount挂载卷"><span class="nav-number">6.4.</span> <span class="nav-text">mount挂载卷</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine-概述"><span class="nav-number">1.</span> <span class="nav-text">Docker Machine 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine安装"><span class="nav-number">2.</span> <span class="nav-text">Docker Machine安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-bash-completion-scripts"><span class="nav-number">3.</span> <span class="nav-text">安装 bash completion scripts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker-Machine命令介绍"><span class="nav-number">4.</span> <span class="nav-text">Docker Machine命令介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建docker-machine"><span class="nav-number">5.</span> <span class="nav-text">创建docker-machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建docker-machine主机"><span class="nav-number">5.1.</span> <span class="nav-text">创建docker-machine主机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#管理machine"><span class="nav-number">6.</span> <span class="nav-text">管理machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看环境变量"><span class="nav-number">6.1.</span> <span class="nav-text">查看环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动容器"><span class="nav-number">6.2.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-machine-ssh"><span class="nav-number">6.3.</span> <span class="nav-text">docker-machine ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mount挂载卷"><span class="nav-number">6.4.</span> <span class="nav-text">mount挂载卷</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卸载挂载卷"><span class="nav-number">6.5.</span> <span class="nav-text">卸载挂载卷</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1079,7 +1042,7 @@
       <i class="fa fa-area-chart"> 站点字数合计:</i>
     </span>
     
-    <span title="站点总字数">215k</span>
+    <span title="站点总字数">250k</span>
   
   
   <span class="post-meta-divider">|</span>
@@ -1633,6 +1596,16 @@
   
 
   
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
 
   
 
