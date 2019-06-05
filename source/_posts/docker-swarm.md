@@ -33,6 +33,36 @@ date: 2018-03-23 14:12:00
 * service 定义了 worker node 上要执行的任务。
 * swarm 的主要编排任务就是保证 service 处于期望的状态下。举一个 service 的例子：在 swarm 中启动一个 http 服务，使用的镜像是 httpd:latest，副本数为 3。manager node 负责创建这个 service，经过分析知道需要启动 3 个 httpd 容器，根据当前各 worker node 的状态将运行容器的任务分配下去，比如 worker1 上运行两个容器，worker2 上运行一个容器。运行了一段时间，worker2 突然宕机了，manager 监控到这个故障，于是立即在 worker1上启动了一个新的 httpd 容器。这样就保证了 service 处于期望的三个副本状态。
 
+## task
+* 任务是在 docekr 容器中执行的命令，Manager 节点根据service指定数量的任务副本分配任务给 worker 节点。
+
+# 常用指令
+<div class="note primary"><p>docker swarm：集群管理，子命令有（docker swarm --help 查看更多帮助）： 
+    init: 初始化一个swarm集群 
+    join-token: 显示manager和worker加入swarm集群的token 
+    join: 新节点接入集群 
+    leave：节点离开当前集群 
+    update：升级swarm集群</p></div>
+
+<div class="note warning"><p>docker service：服务创建，子命令有（docker service --help 查看帮助）: 
+    create：创建一个新服务
+    inspect：获取指定服务的json状态数据
+    logs：获取服务或者任务的日志
+    ls：显示当前服务列表
+    ps：显示指定服务任务状态
+    rm：删除一个或者更多服务
+    scale：伸缩一个或多个复制服务
+    update：升级一个服务</p></div>
+
+<div class="note success"><p>docker node：节点管理，子命令有 （docker service --help 查看帮助）：
+    promote：从群集中的管理器中降级一个或多个节点
+    demote：从群集中的管理器中提升一个或多个节点
+    inspect： 获取指定节点的json状态数据
+    update：升级一个节点
+    ls：显示swarm中节点列表
+    rm：从swarm集群中删除一个或者多个节点
+    ps：指定列出一个或多个节点上运行的任务，默认为当前节点</p></div>
+
 # 创建Docker swarm集群
 ## 环境准备
 * 所有节点Docker版本均不低于 v1.12，我们是最新版的V18.09.6，实验环境node的操作系统为 Centos7.4，当然其他 Linux 也是可以的。
