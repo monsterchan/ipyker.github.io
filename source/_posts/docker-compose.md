@@ -857,6 +857,7 @@ ports:
     protocol: tcp
     mode: host
 ```
+
 ## volumes
 挂载一个目录或者一个已存在的数据卷容器，可以直接使用 `HOST:CONTAINER` 这样的格式，或者使用 `HOST:CONTAINER:ro` 这样的格式，后者对于容器来说，数据卷是只读的，这样可以有效保护宿主机的文件系统。
 ```
@@ -939,6 +940,130 @@ networks:
 
 volumes:
   mydata:
+```
+
+# volumes 的配置参考
+## driver
+指定该卷使用哪个卷驱动程序。 默认为Docker Engine配置使用的任何驱动程序，在大多数情况下是local驱动程序。 如果驱动程序不可用，则当docker-compose尝试创建卷时，Engine会返回错误。
+```
+volumes:
+  example:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.40.0.199,nolock,soft,rw"
+      device: ":/docker/example"
+```
+## external
+如果设置为true，则指定此卷是在撰写之外创建的。 docker-compose up不会尝试创建它，如果它不存在则会引发错误。在下面的示例中，Compose不是尝试创建名为`[projectname] _data`的卷，而是查找名称为该数据卷的现有卷，并将其挂载到db服务的容器中。
+```
+version: "3.7"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:
+    external: true
+```
+## labels
+使用Docker标签向容器添加元数据。您可以使用数组或字典。
+```
+labels:
+  com.example.description: "Database volume"
+  com.example.department: "IT/Ops"
+  com.example.label-with-empty-value: ""
+```
+## name
+为该卷设置自定义名称。name字段可用于引用包含特殊字符的卷。该名称按原样使用，不受堆栈名称的限制。
+```
+version: "3.7"
+volumes:
+  data:
+    name: my-app-data
+```
+它也可以与 external 属性一起使用:
+```
+version: "3.7"
+volumes:
+  data:
+    external: true
+    name: my-app-data
+```
+
+# networks 的配置参考
+顶层的网络密钥允许您指定要创建的网络。
+## driver
+指定网络使用哪个驱动程序。默认驱动程序取决于您正在使用的Docker引擎是如何配置的，但在大多数情况下，它是在单个主机上桥接的，并覆盖在集群上。如果驱动程序不可用，Docker引擎会返回错误。
+```
+driver: overlay
+```
+### bridge
+Docker默认使用单个主机上的网桥。有关如何使用桥接网络的示例，请参阅有关[Bridge网络的Docker Labs教程](https://github.com/docker/labs/blob/master/networking/A2-bridge-networking.md)。
+
+### overlay
+创建一个跨主机群的多个节点的命名网络。
+
+### host or none
+使用主机的网络堆栈，或不使用网络。相当于`docker run --net = host`或`docker run --net = none`。仅在使用docker stack命令时使用。如果使用docker-compose命令，请改用network_mode。
+```
+version: "3.7"
+services:
+  web:
+    networks:
+      hostnet: {}
+
+networks:
+  hostnet:
+    external: true
+    name: host
+```
+
+## driver_opts
+将选项列表指定为键值对，以传递给此网络的驱动程序。这些选项取决于驱动程序.
+```
+driver_opts:
+  foo: "bar"
+  baz: 1
+```
+## attachable
+仅在将driver程序设置为overlay时使用,如果设置为true，则除了服务之外，还可以将独立容器附加到此网络。如果一个独立容器连接到overlay网络,那么它可以与服务和独立容器通信，这些服务和容器也从其他Docker守护进程连接到overlay网络。
+```
+networks:
+  mynet1:
+    driver: overlay
+    attachable: true
+```
+## ipam
+指定自定义IPAM配置。这是一个具有多个属性的对象，每个属性都是可选的:
+* `driver`: 自定义IPAM驱动程序，默认是default。
+* `config`: 包含零个或多个配置块的列表，每个配置块包含以下任意一个键:
+  * `subnet` : CIDR格式的子网，表示网络段
+
+一个完整的例子：
+```
+ipam:
+  driver: default
+  config:
+    - subnet: 172.28.0.0/16
+```
+>注意：其他IPAM配置（例如网关）目前仅适用于版本2。
+
+## internal
+使用Docker标签向容器添加元数据。您可以使用数组或字典。
+
+## external
+如果设置为true，则该网络已在compose外部创建。`docker-compose up`不尝试创建它，如果它不存在，就会引发错误。
+
+## name
+为此网络设置自定义名称。名称字段可用于引用包含特殊字符的网络。该名称按原样使用，不会使用堆栈名称作为范围。
+```
+version: "3.7"
+networks:
+  network1:
+    name: my-app-net
 ```
 
 #  创建一个compose实例
@@ -1066,7 +1191,8 @@ server {
 ```
 $ docker-compose restart nginx
 ```
-##访问 tomcat服务
+
+## 访问 tomcat服务
 现在可以在局域网任意设备上访问该宿主主机IP的80端口进行访问容器服务了。
 ```bash
 $ curl -I  http://192.168.20.210/webtomcat/
