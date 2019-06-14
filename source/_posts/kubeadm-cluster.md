@@ -22,6 +22,15 @@ centos7.4 | worker | 192.168.20.215 | node3 | docker-ce、 kubeadm、 kubelet
 # 安装前准备
 {% note primary %}注： 在所有节点上进行以下操作。{% endnote %}
 
+## 配置SSH免密钥登陆
+```bash
+# master1上生成密钥对
+$ ssh-keygen -t rsa 
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub node1
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub node2
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub node3
+```
+
 ## 设置主机名
 ```bash
 $ cat >> /etc/hosts << EOF
@@ -64,18 +73,19 @@ $ cat > /etc/sysctl.d/k8s.conf << EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
+vm.swappiness = 0
 EOF
 ```
 
 ## 加载ipvs模块
 ```bash
-$ cat > /etc/sysconfig/modules/ipvs.modules << EOF
+$ vi /etc/sysconfig/modules/ipvs.modules
 #!/bin/sh
 ipvs_mods_dir="/usr/lib/modules/$(uname -r)/kernel/net/netfilter/ipvs/"
 for mod in `ls ${ipvs_mods_dir} | grep -o "^[^.]*"`; do
     /sbin/modprobe $mod
 done
-EOF
+
 $ chmod +x /etc/sysconfig/modules/ipvs.modules && ./ipvs.modules
 ```
 
@@ -147,6 +157,11 @@ EOF
 ```bash
 $ yum install -y kubelet kubeadm kubectl
 ```
+```bash
+# 设置开机自启动kubelet
+$ systemctl enable kubelet
+$ systemctl start kubelet
+```
 `kubelet`负责与其他节点集群通信，并进行本节点Pod和容器生命周期的管理。`kubeadm`是Kubernetes的自动化部署工具，降低了部署难度，提高效率。`kubectl`是Kubernetes集群客户端管理工具。
 
 # 部署kubernetes master节点
@@ -194,7 +209,7 @@ networking:
   serviceSubnet: 10.96.0.0/12
 scheduler: {}
 ```
-这里可以查看到当执行`kubeadm init`初始化集群时的配置信息，其中`kubernetesVersion`版本为v1.14.0，并不是我们需要的v1.14.3，所以需要手动指定，`serviceSubnet`指定pod的网络，我们这里等会使用flannel网络，默认是10.244.0.0/16，所以也要手动指定。`imageRepository`是获取镜像的仓库地址，该地址需要科学上网才能访问哦。
+这里可以查看到当执行`kubeadm init`初始化集群时的配置信息，其中`kubernetesVersion`版本为v1.14.0，并不是我们需要的v1.14.3，所以需要手动指定，`serviceSubnet`指定pod的网络，我们这里等会使用flannel网络，默认是10.244.0.0/16，所以也要手动指定。`imageRepository`是获取镜像的仓库地址，该地址需要科学上网才能访问, 也可以在`kubeadm init`时使用`--image-repository`参数指定仓库地址。
 
 ## 获取依赖镜像
 这里手动拉取master所需要的镜像是为了等会kubeadm init时能够快些，也可以不手动拉取。在kubeadm init时也会自动拉取。
