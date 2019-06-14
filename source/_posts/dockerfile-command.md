@@ -231,9 +231,10 @@ STOPSIGNAL singnal
 ```
 	[OPTION]支持：
 	```bash
-	1.--inerval=DURATION  (默认为：30s)：多久检查一次；
-	2.--timeout=DURATION  (默认为：30s)：每次检查等待结果的超时时间；
-	3.--retries=N 　　     (默认为：3)：如果失败了，重试几次才最终确定失败。
+	1. --inerval=DURATION  (默认：30s)：多久检查一次；
+	2. --timeout=DURATION  (默认：30s)：每次检查等待结果的超时时间；
+	3. --retries=N 　　     (默认：3)：如果失败了，重试几次才最终确定失败。
+    4. --start-period=DURATION （默认：0s）启动的容器提供了初始化的时间段，在此时间段内如果检查失败， 则不会记录失败次数。
 	```
     例如：
     ```bash
