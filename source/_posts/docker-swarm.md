@@ -397,3 +397,91 @@ af66f21b53bd        docker_gwbridge     bridge              local
 
 `ingress 网络`是 swarm 创建时 Docker 为自动我们创建的，swarm 中的每个 node 都能使用 ingress。
 通过 overlay 网络，主机与容器、容器与容器之间可以相互访问；同时，routing mesh 将外部请求路由到不同主机的容器，从而实现了外部网络对 service 的访问。
+
+# Shipyard图形化管理工具
+## Shipyard介绍
+`Shipyard`构建于Docker Swarm之上，能够以web界面可视化管理Docker资源，包括容器，镜像，私有仓库等且为其提供基于身份验证和角色的访问控制。了解更多请访问[Shipyard官网](http://shipyard-project.com/)
+
+## 安装
+Shipyard提供两种安装方式：
+1. 自动安装
+2. 手动安装
+
+### 自动安装
+```bash
+$ curl -sSL https://shipyard-project.com/deploy | bash -s
+```
+一旦部署成功，脚本将显示要访问的URL以及帐号密码信息。
+
+### 手动部署
+#### datastore
+shipyard使用RethinkDB作为数据存储区。首先，我们将启动一个RethinkDB容器。
+```bash
+$ docker run \
+    -ti \
+    -d \
+    --restart=always \
+    --name shipyard-rethinkdb \
+    rethinkdb
+```
+#### Discovery
+要启用Swarm leader选举，我们必须使用Swarm容器中的外部键值存储。 我们这使用etcd，也可以使用其他键值对存储工具。
+```bash
+$ docker run \
+    -ti \
+    -d \
+    -p 4001:4001 \
+    -p 7001:7001 \
+    --restart=always \
+    --name shipyard-discovery \
+    microbox/etcd -name discovery
+```
+#### Proxy
+认情况下，Docker引擎只监听套接字。我们可以重新配置引擎以使用TLS，或者您可以使用代理容器。这是一个非常轻量级的容器，它只是将请求从TCP转发到Docker侦听的Unix套接字。当然如果你部署docker时已经让docker支持了tcp连接，则不需要这样做。
+```bash
+$ docker run \
+    -ti \
+    -d \
+    -p 2375:2375 \
+    --hostname=$HOSTNAME \
+    --restart=always \
+    --name shipyard-proxy \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e PORT=2375 \
+    shipyard/docker-proxy:latest
+```
+#### Swarm Manager
+运行配置为管理的Swarm容器
+```bash
+$ docker run \
+    -ti \
+    -d \
+    --restart=always \
+    --name shipyard-swarm-manager \
+    swarm:latest \
+    manage --host tcp://0.0.0.0:3375 etcd://<IP-OF-HOST>:4001
+```
+#### Controller
+运行shipyard控制器
+```bash
+$ docker run \
+    -ti \
+    -d \
+    --restart=always \
+    --name shipyard-controller \
+    --link shipyard-rethinkdb:rethinkdb \
+    --link shipyard-swarm-manager:swarm \
+    -p 8080:8080 \
+    shipyard/shipyard:latest \
+    server \
+    -d tcp://swarm:3375
+```
+当以上容器启动完成后，您应该可以通过http://[ip-of-host]:8080登录shipyard。默认用户名：admin，密码：shipyard
+
+以下附上几张shipyard的截图，应该很好理解其中各个选项的意思。
+![创建容器](/images/pic/shipyard-container1.jpg)
+![容器列表](/images/pic/shipyard-container2.jpg)
+![容器操作](/images/pic/shipyard-container3.jpg)
+![容器资源状态](/images/pic/shipyard-container4.jpg)
+![容器日志](/images/pic/shipyard-container5.jpg)
+![容器管理](/images/pic/shipyard-container6.jpg)
