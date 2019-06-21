@@ -43,6 +43,32 @@
   </entry>
   
   <entry>
+    <title>Kubernetes 核心概念介绍</title>
+    <link href="https://www.ipyker.com/2019/06/11/k8s-introduce.html"/>
+    <id>https://www.ipyker.com/2019/06/11/k8s-introduce.html</id>
+    <published>2019-06-11T02:22:00.000Z</published>
+    <updated>2019-06-21T15:02:42.061Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="kubernetes" scheme="https://www.ipyker.com/categories/kubernetes/"/>
+    
+    
+      <category term="kubernetes" scheme="https://www.ipyker.com/tags/kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Elasticsearch7.0详解</title>
     <link href="https://www.ipyker.com/2019/05/20/elasticsearch.html"/>
     <id>https://www.ipyker.com/2019/05/20/elasticsearch.html</id>
@@ -513,32 +539,6 @@
     
     
       <category term="docker" scheme="https://www.ipyker.com/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ansible playbook详解</title>
-    <link href="https://www.ipyker.com/2018/03/23/ansible-playbook.html"/>
-    <id>https://www.ipyker.com/2018/03/23/ansible-playbook.html</id>
-    <published>2018-03-23T02:20:00.000Z</published>
-    <updated>2019-06-02T15:19:20.926Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="CI/CD" scheme="https://www.ipyker.com/categories/CI-CD/"/>
-    
-    
-      <category term="ansible" scheme="https://www.ipyker.com/tags/ansible/"/>
     
   </entry>
   
