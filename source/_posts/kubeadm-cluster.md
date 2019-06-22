@@ -350,7 +350,8 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ## 配置flannel网络
 ```bash
-$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+$ wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+$ kubectl apply -f kube-flannel.yml
 clusterrole.rbac.authorization.k8s.io/flannel created
 clusterrolebinding.rbac.authorization.k8s.io/flannel created
 serviceaccount/flannel created
@@ -361,6 +362,12 @@ daemonset.extensions/kube-flannel-ds-arm created
 daemonset.extensions/kube-flannel-ds-ppc64le created
 daemonset.extensions/kube-flannel-ds-s390x created
 ```
+如果你的网络不能下载flannel的镜像，请手动修改`kube-flannel.yml`文件的image为`registry.cn-shenzhen.aliyuncs.com/pyker/flannel:v0.11.0-amd64`，下载完成后，请执行：
+```bash
+$ docker tag registry.cn-shenzhen.aliyuncs.com/pyker/flannel:v0.11.0-amd64 quay.io/coreos/flannel:v0.11.0-amd64
+```
+然后在运行 `kubectl apply -f kube-flannel.yml`
+
 此时我们的master节点已经准备好了，可以通过`kubectl get nodes`查看
 ```bash
 $ kubectl get nodes
