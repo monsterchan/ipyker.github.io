@@ -88,6 +88,28 @@ done
 
 $ chmod +x /etc/sysconfig/modules/ipvs.modules && ./ipvs.modules
 ```
+检查模块是否加载生效,如果如下所示表示已经加载ipvs模版到内核了。
+```bash
+$ lsmod | grep ip_vs
+ip_vs_wrr              12697  0 
+ip_vs_wlc              12519  0 
+ip_vs_sh               12688  0 
+ip_vs_sed              12519  0 
+ip_vs_rr               12600  20 
+ip_vs_pe_sip           12740  0 
+nf_conntrack_sip       33860  1 ip_vs_pe_sip
+ip_vs_nq               12516  0 
+ip_vs_lc               12516  0 
+ip_vs_lblcr            12922  0 
+ip_vs_lblc             12819  0 
+ip_vs_ftp              13079  0 
+nf_nat                 26787  4 ip_vs_ftp,nf_nat_ipv4,nf_nat_ipv6,nf_nat_masquerade_ipv4
+ip_vs_dh               12688  0 
+ip_vs                 141432  44 ip_vs_dh,ip_vs_lc,ip_vs_nq,ip_vs_rr,ip_vs_sh,ip_vs_ftp,ip_vs_sed,ip_vs_wlc,ip_vs_wrr,ip_vs_pe_sip,ip_vs_lblcr,ip_vs_lblc
+nf_conntrack          133053  10 ip_vs,nf_nat,nf_nat_ipv4,nf_nat_ipv6,xt_conntrack,nf_nat_masquerade_ipv4,nf_conntrack_netlink,nf_conntrack_sip,nf_conntrack_ipv4,nf_conntrack_ipv6
+libcrc32c              12644  4 xfs,ip_vs,nf_nat,nf_conntrack
+```
+> 请确保ipset也已经安装了，如未安装请执行`yum install -y ipset`安装。
 
 # 安装docker-ce
 <div class="note primary"><p>注： 在所有节点上进行以下操作。</p></div>
@@ -430,6 +452,26 @@ deployment.apps/coredns   2/2     2            2           3h22m
 
 NAME                                DESIRED   CURRENT   READY   AGE
 replicaset.apps/coredns-fb8b8dccf   2         2         2       3h22m
+```
+# 配置kubernetes使用ipvs
+```bash
+# 1、使用参数加载ipvs (master上操作)
+$ cat >> /etc/sysconfig/kubelet << EOF
+KUBE_PROXY_MODE=ipvs
+EOF
+# 2、通过在线修改kube-proxy配置文件
+$ kubectl edit configMap kube-proxy -n kube-system
+    ipvs:
+      excludeCIDRs: null
+      minSyncPeriod: 0s
+      scheduler: ""
+      strictARP: false
+      syncPeriod: 30s
+    kind: KubeProxyConfiguration
+    metricsBindAddress: 127.0.0.1:10249
+    mode: "ipvs"        # mode改为ipvs
+    nodePortAddresses: null
+    oomScoreAdj: -999
 ```
 
 # master隔离
