@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.ipyker.com/"/>
-  <updated>2019-06-22T04:53:36.182Z</updated>
+  <updated>2019-07-01T12:20:42.548Z</updated>
   <id>https://www.ipyker.com/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>kubeadm安装Kubernetes1.14.3多master集群</title>
+    <link href="https://www.ipyker.com/2019/06/15/kubeadm-multi-cluster.html"/>
+    <id>https://www.ipyker.com/2019/06/15/kubeadm-multi-cluster.html</id>
+    <published>2019-06-15T04:20:00.000Z</published>
+    <updated>2019-07-01T12:20:42.548Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="kubernetes" scheme="https://www.ipyker.com/categories/kubernetes/"/>
+    
+    
+      <category term="kubernetes" scheme="https://www.ipyker.com/tags/kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
     <title>kubeadm安装Kubernetes1.14.3单master集群</title>
     <link href="https://www.ipyker.com/2019/06/12/kubeadm-cluster.html"/>
     <id>https://www.ipyker.com/2019/06/12/kubeadm-cluster.html</id>
     <published>2019-06-12T10:12:00.000Z</published>
-    <updated>2019-06-22T04:53:36.182Z</updated>
+    <updated>2019-07-01T12:18:47.663Z</updated>
     
     <summary type="html">
     
@@ -513,32 +539,6 @@
     
     
       <category term="aliyun" scheme="https://www.ipyker.com/tags/aliyun/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker三剑客之docker-swarm集群</title>
-    <link href="https://www.ipyker.com/2018/03/23/docker-swarm.html"/>
-    <id>https://www.ipyker.com/2018/03/23/docker-swarm.html</id>
-    <published>2018-03-23T06:12:00.000Z</published>
-    <updated>2019-06-15T03:37:13.008Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="docker" scheme="https://www.ipyker.com/categories/docker/"/>
-    
-    
-      <category term="docker" scheme="https://www.ipyker.com/tags/docker/"/>
     
   </entry>
   

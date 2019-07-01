@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="true">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: true,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"shrinkIn","post_header":"slideLeftIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideDownIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="概念证书: 英文叫digital certificate 或public key certificate。 用于在客户端和服务器端做通信时的一种验证证明。CA: CA是Certificate Authority的缩写,也叫“证书授权中心”。如果要被他人安全访问，该证书授权中心为第三方公司（要钱）CA证书: 顾名思义，就是CA(证书授权中心)颁发的证书。 安装想要使用证书，首先需要安装openssl">
+<meta name="keywords" content="openssl,ssl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenSSL自签证书">
+<meta property="og:url" content="https://www.ipyker.com/2018/01/10/openssl-cert.html">
+<meta property="og:site_name" content="派 | Pyker">
+<meta property="og:description" content="概念证书: 英文叫digital certificate 或public key certificate。 用于在客户端和服务器端做通信时的一种验证证明。CA: CA是Certificate Authority的缩写,也叫“证书授权中心”。如果要被他人安全访问，该证书授权中心为第三方公司（要钱）CA证书: 顾名思义，就是CA(证书授权中心)颁发的证书。 安装想要使用证书，首先需要安装openssl">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-01T12:18:47.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenSSL自签证书">
+<meta name="twitter:description" content="概念证书: 英文叫digital certificate 或public key certificate。 用于在客户端和服务器端做通信时的一种验证证明。CA: CA是Certificate Authority的缩写,也叫“证书授权中心”。如果要被他人安全访问，该证书授权中心为第三方公司（要钱）CA证书: 顾名思义，就是CA(证书授权中心)颁发的证书。 安装想要使用证书，首先需要安装openssl">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="派 | Pyker" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.ipyker.com/2018/01/10/openssl-cert">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>OpenSSL自签证书 | 派 | Pyker</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">派 | Pyker</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-bookmark"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-互动">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/guestbook/" rel="section"><i class="menu-item-icon fa fa-fw fa-comments"></i> <br>互动</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2018/01/10/openssl-cert.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="丨Pyker丨">
+      <meta itemprop="description" content="与其临渊羡鱼，不如退而结网。">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="派 | Pyker">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OpenSSL自签证书
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-01-10 19:15:00" itemprop="dateCreated datePublished" datetime="2018-01-10T19:15:00+08:00">2018-01-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-01 20:18:47" itemprop="dateModified" datetime="2019-07-01T20:18:47+08:00">2019-07-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/TLS/" itemprop="url" rel="index"><span itemprop="name">TLS</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p><code>证书</code>: 英文叫<code>digital certificate</code> 或<code>public key certificate</code>。 用于在客户端和服务器端做通信时的一种验证证明。<br><code>CA</code>: CA是Certificate Authority的缩写,也叫“证书授权中心”。如果要被他人安全访问，该证书授权中心为第三方公司（要钱）<br><code>CA证书</code>: 顾名思义，就是CA(证书授权中心)颁发的证书。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>想要使用证书，首先需要安装openssl。利用openssl生成根证书，以后的服务器端证书或者客户端证书都用他来签发，可以建立多个根证书。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">$ yum install -y openssl-devel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看版本</span></span><br><span class="line">$ openssl version</span><br><span class="line">OpenSSL 1.0.2k-fips  26 Jan 2017</span><br></pre></td></tr></table></figure></p>
+<h1 id="X509证书链"><a href="#X509证书链" class="headerlink" title="X509证书链"></a>X509证书链</h1><p>x509证书一般会用到三类文件，它们分别是<code>key</code>，<code>csr</code>，<code>crt</code>。 key是私用密钥，openssl格式，通常是rsa算法。<code>csr</code>是证书请求文件，用于申请证书。在制作csr文件的时候，必须使用自己的私钥来签署申请，还可以设定一个密钥。<code>crt</code>是CA认证后的证书文件，签署人用自己的key给你签署的凭证。</p>
+<h2 id="证书格式"><a href="#证书格式" class="headerlink" title="证书格式"></a>证书格式</h2><p><code>.key格式</code>：私有的密钥<br><code>.csr格式</code>：证书签名请求（证书请求文件），含有公钥信息，certificate signing request的缩写<br><code>.crt格式</code>：证书文件，certificate的缩写<br><code>.crl格式</code>：证书吊销列表，Certificate Revocation List的缩写<br><code>.pem格式</code>：用于导出，导入证书时候的证书的格式，有证书开头，结尾的格式</p>
+<h1 id="openssl常用命令"><a href="#openssl常用命令" class="headerlink" title="openssl常用命令"></a>openssl常用命令</h1><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">genrsa          产生RSA密钥命令</span><br><span class="line">-<span class="ruby">new            表示生成新的证书请求。</span></span><br><span class="line"><span class="ruby">-key            指定证书私钥</span></span><br><span class="line"><span class="ruby">-out            输出路径</span></span><br><span class="line"><span class="ruby">-<span class="keyword">in</span>             输入文件</span></span><br><span class="line"><span class="ruby">req             产生证书签发申请命令</span></span><br><span class="line"><span class="ruby">x509            签发X.<span class="number">509</span>格式证书命令。 </span></span><br><span class="line"><span class="ruby">-signkey        表示自签名密钥</span></span><br><span class="line"><span class="ruby">-req            表示证书输入请求。</span></span><br><span class="line"><span class="ruby">-days           表示有效天数</span></span><br><span class="line"><span class="ruby">-CAcreateserial 表示创建CA证书序列号</span></span><br><span class="line"><span class="ruby">-CAkey          表示CA证书密钥</span></span><br><span class="line"><span class="ruby">-CA             表示CA证书</span></span><br><span class="line"><span class="ruby">-CAserial       表示CA证书序列号文件</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line"><span class="ruby">ca              签发证书命令</span></span><br><span class="line"><span class="ruby">-cert           表示证书文件</span></span><br><span class="line"><span class="ruby">-keyfile        表示根证书密钥文件</span></span><br><span class="line"><span class="ruby">-subj           指定用户信息 </span></span><br><span class="line"><span class="ruby">-clcerts        表示仅导出客户证书。</span></span><br><span class="line"><span class="ruby">-inkey          表示输入文件</span></span><br><span class="line"><span class="ruby">-export         表示导出证书。</span></span><br><span class="line"><span class="ruby">-extensions     表示按OpenSSL配置文件v3_ca项添加扩展。</span></span><br><span class="line"><span class="ruby">-extensions     表示按OpenSSL配置文件v3_req项添加扩展。</span></span><br><span class="line"><span class="ruby">-sha1           表示证书摘要算法,这里为SHA1算法。</span></span><br><span class="line"><span class="ruby">pkcs12          PKCS<span class="comment">#12编码格式证书命令。</span></span></span><br><span class="line"><span class="ruby">rand            随机数命令 </span></span><br><span class="line"><span class="ruby">-aes256         使用AES算法（<span class="number">256</span>为密钥）对产生的私钥加密。可选算法包括DES,DESede,IDEA和AES。</span></span><br></pre></td></tr></table></figure>
+<h1 id="生成CA证书步骤"><a href="#生成CA证书步骤" class="headerlink" title="生成CA证书步骤"></a>生成CA证书步骤</h1><p>生成CA私钥（.key）–&gt; 生成CA证书请求（.csr）–&gt; 自签名得到CA根证书（.crt）（CA给自已颁发的证书）。该CA证书可用于签名其他服务证书。</p>
+<h2 id="生成CA密钥"><a href="#生成CA密钥" class="headerlink" title="生成CA密钥"></a>生成CA密钥</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ openssl genrsa -out cakey.pem 2048</span><br><span class="line">$ cat ca.key</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEpAIBAAKCAQEAtTAp8GmUsWJ7q3UPcaQUCYx7ue32Ki0nzI6X8BA2zNT0lMkD</span><br><span class="line">HhxdbWPWXaSEiaoiRPtMoCOtemLMzX8MRjCtA31yf3RRsXKIIg6OFfhesgBDdGcf</span><br><span class="line">7Zkhk9zKq1evs8y4G7wNduOg76lKLQg3SuWSS8OlRBS4t17jPY7Z4Kr6UZtn40Fc</span><br><span class="line">19I1FEEjZaOCTUk/WN9G2E/pO+NWN23+2m6O/STiESyFSq5wSx1Vqio2BAoidiCh</span><br><span class="line">dJgxT4lL8tv3YBHCO4oWkex6Nb3yhZq86yfJIwXXj+feJZb0hFJQ2MpECMhk95HH</span><br><span class="line">kiwLlQc+y3Nj0fOrqbBMFdnmyCv2wzC6xx1/HQIDAQABAoIBAC586BXOER+eJBru</span><br><span class="line">0wKWVanJiKlA2+sgYNjEMUmf71+IuCRAmvMr1fDOL98g6fykUVyfmZ5w6P7AwMls</span><br><span class="line">8opDzPBbTHhVMOy1dSY/08bhTfKfzK7eErwUkR/uA3YI7oTUXtyG2HGLn+w95FE/</span><br><span class="line">jWhDFNEppoqcQnSR/P37W/2gAM/VADSAwF44mBeJMwWEH51FbTQVDWtnaXnzEtnG</span><br><span class="line">qXBe7Jrfy01EvNp9auQ6arGgdBf0YcmGEd/5d0numkvCrmm0YgkNzhG5abcl75W6</span><br><span class="line">bwkY8ubGUhbe/JXxyXfr2ryKcin1LkiERgmwSUwjcAuskuIJMJmAk4weIos5RXLp</span><br><span class="line">Igx2r8ECgYEA3mv7dSAOtEs3ztD5D5VqirEs/QLb6hKtKSDJhwn66FAl3A6NWvTU</span><br><span class="line">p/nhZ/RznP2VGPRCAJeBg9SFj7wkMP77bz5dPyJBWfX8CK92PMWreSfzYrs32xah</span><br><span class="line">Zqs6+7rML94MSPuSwNE7rY4tyUwyFj1wA7UqwheRe6rfkEej7LveATECgYEA0Iqb</span><br><span class="line">3VmxKwIraNlPlhgOxwX2cNzLPCUT0UWSYMdy1E6BwOuluauqx1VHdGZ7k51Di9Sa</span><br><span class="line">DRgMQpVPF9Bk83P/x9h4qF6EsVCV+sVw5pWB+dhAEjA3UgOFGYG+RjyfFRboQbcc</span><br><span class="line">sMQpXjfcdJT4lRSRA3WICPxLFn2/m+7d5CQNga0CgYEA2crovma2n0qsCgLMbrsD</span><br><span class="line">SW12PQWIq6rADm7Bh055dvPMLq+9MJxeg2EGm9FdSBNy5K2A162DL8BxTC6RTbzQ</span><br><span class="line">Hbz2d7SmQ12//g05/QYeAxPgmgPzDMAbKTpwFkByYkjOxMQ6jj4Tbr2zDdJjlS1x</span><br><span class="line">ut+yT73eQjculMvhsxS+rXECgYAYp4ptzODJOORw7OAf2pBEr0vHZBMS9T82iocX</span><br><span class="line">sfy9ZNqqODHLlaQHFOnxtPv/I6SMr4HW8nTgmk5Tfmuw7JHcypbZMPN3ExPoJdeH</span><br><span class="line">Kz3Gj+5jOBgSNiBSN6iLHTehgqfKvR9DNq29WdVSYxpQZbIPOqHujgVCj3NLuB27</span><br><span class="line">jxeZsQKBgQCIkOrz8Ly2heIhhkBLcP5D90RW4lG4nbWpHSmKU06t8lKozB1YppUH</span><br><span class="line">2JsKJm8X4kh+VfzcpheY3Hju3Nw/aL/xQDmoh74kE8/VvTfB4HuAVbV9cQArL+6C</span><br><span class="line">UANsu9K+NtnME1cbluQtLpe0XhElcix5mXWnGYX4ZojBzVxt/o+mww==</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<h2 id="生成CA证书请求"><a href="#生成CA证书请求" class="headerlink" title="生成CA证书请求"></a>生成CA证书请求</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">$ openssl req -new -key cakey.pem -out ca.csr</span><br><span class="line"></span><br><span class="line">You are about to be asked to enter information that will be incorporated</span><br><span class="line">into your certificate request.</span><br><span class="line">What you are about to enter is what is called a Distinguished Name or a DN.</span><br><span class="line">There are quite a few fields but you can leave some blank</span><br><span class="line">For some fields there will be a default value,</span><br><span class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</span><br><span class="line">-----</span><br><span class="line">Country Name (2 letter code) [XX]:CN               <span class="comment"># ----- 证书持有者所在国家</span></span><br><span class="line">State or Province Name (full name) []:GuangDong    <span class="comment"># ----- 证书持有者所在州或省份</span></span><br><span class="line">Locality Name (eg, city) [Default City]:ShenZhen   <span class="comment"># ----- 证书持有者所在城市</span></span><br><span class="line">Organization Name (eg, company) [Default Company Ltd]:派有限公司 <span class="comment"># -----  证书持有者公司</span></span><br><span class="line">Organizational Unit Name (eg, section) []:IT <span class="comment"># ----- 证书持有者所属部门</span></span><br><span class="line">Common Name (eg, your name or your server<span class="string">'s hostname) []:ssl.ipyker.com # ---- 域名</span></span><br><span class="line"><span class="string">Email Address []:pyker@qq.com # ----- 邮箱 （可不填）</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Please enter the following '</span>extra<span class="string">' attributes</span></span><br><span class="line"><span class="string">to be sent with your certificate request</span></span><br><span class="line"><span class="string">A challenge password []:   # ----- 证书密码</span></span><br><span class="line"><span class="string">An optional company name []:  # ----- 确认证书密码</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ cat ca.csr</span></span><br><span class="line"><span class="string">-----BEGIN CERTIFICATE REQUEST-----</span></span><br><span class="line"><span class="string">MIIC2DCCAcACAQAwgZIxCzAJBgNVBAYTAkNOMRIwEAYDVQQIDAlHdWFuZ0Rvbmcx</span></span><br><span class="line"><span class="string">ETAPBgNVBAcMCFNoZW5aaGVuMQ8wDQYDVQQKDAZpcHlrZXIxFTATBgNVBAsMDHB5</span></span><br><span class="line"><span class="string">a2VyJ3MgYmxvZzEXMBUGA1UEAwwOc3NsLmlweWtlci5jb20xGzAZBgkqhkiG9w0B</span></span><br><span class="line"><span class="string">CQEWDHB5a2VyQHFxLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB</span></span><br><span class="line"><span class="string">ALUwKfBplLFie6t1D3GkFAmMe7nt9iotJ8yOl/AQNszU9JTJAx4cXW1j1l2khImq</span></span><br><span class="line"><span class="string">IkT7TKAjrXpizM1/DEYwrQN9cn90UbFyiCIOjhX4XrIAQ3RnH+2ZIZPcyqtXr7PM</span></span><br><span class="line"><span class="string">uBu8DXbjoO+pSi0IN0rlkkvDpUQUuLde4z2O2eCq+lGbZ+NBXNfSNRRBI2Wjgk1J</span></span><br><span class="line"><span class="string">P1jfRthP6TvjVjdt/tpujv0k4hEshUqucEsdVaoqNgQKInYgoXSYMU+JS/Lb92AR</span></span><br><span class="line"><span class="string">wjuKFpHsejW98oWavOsnySMF14/n3iWW9IRSUNjKRAjIZPeRx5IsC5UHPstzY9Hz</span></span><br><span class="line"><span class="string">q6mwTBXZ5sgr9sMwuscdfx0CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQA4UgXf</span></span><br><span class="line"><span class="string">pamRmrL74i7EpzaLw1RQ0T4dF/VCbNuVU8ajvR8ajm6pe1XkoYjKarnc8mQo0Wwq</span></span><br><span class="line"><span class="string">ukWZhyGoG0ggn0HpgfEQA4AQSjQTjp7Kh8B0N5i+KnfygzQzRyDr+MXdAvvwd9aq</span></span><br><span class="line"><span class="string">1Hkyb2dqQhamyK62gQ4A2AG9xraxVsJB4KLEGY/wCLzIjaqToPv1LlyWpejn6jeJ</span></span><br><span class="line"><span class="string">XbfC+pI52yRdWYCvEBXzp8pNp0EdCVeUXJ05c6KZHEx+GuhiRMxWqLRqiqrgdi2u</span></span><br><span class="line"><span class="string">OX5v4HxMuvHrd3l7eb2qt/82gnmIlNODfFv3ogIAZz/1ut4d+XUle6gWlTtDjCLl</span></span><br><span class="line"><span class="string">BKGSxBd2ELFmSTCc</span></span><br><span class="line"><span class="string">-----END CERTIFICATE REQUEST-----</span></span><br></pre></td></tr></table></figure>
+<h2 id="自签名得到CA根证书"><a href="#自签名得到CA根证书" class="headerlink" title="自签名得到CA根证书"></a>自签名得到CA根证书</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ openssl x509 -req -<span class="keyword">in</span> ca.csr -out ca.pem -signkey cakey.pem -days 3650</span><br><span class="line">$ cat ca.pem </span><br><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">MIIDojCCAooCCQD1vqZ2J4Kr9TANBgkqhkiG9w0BAQsFADCBkjELMAkGA1UEBhMC</span><br><span class="line">Q04xEjAQBgNVBAgMCUd1YW5nRG9uZzERMA8GA1UEBwwIU2hlblpoZW4xDzANBgNV</span><br><span class="line">BAoMBmlweWtlcjEVMBMGA1UECwwMcHlrZXIncyBibG9nMRcwFQYDVQQDDA5zc2wu</span><br><span class="line">aXB5a2VyLmNvbTEbMBkGCSqGSIb3DQEJARYMcHlrZXJAcXEuY29tMB4XDTE5MDYy</span><br><span class="line">NjAyMDcxOVoXDTI5MDYyMzAyMDcxOVowgZIxCzAJBgNVBAYTAkNOMRIwEAYDVQQI</span><br><span class="line">DAlHdWFuZ0RvbmcxETAPBgNVBAcMCFNoZW5aaGVuMQ8wDQYDVQQKDAZpcHlrZXIx</span><br><span class="line">FTATBgNVBAsMDHB5a2VyJ3MgYmxvZzEXMBUGA1UEAwwOc3NsLmlweWtlci5jb20x</span><br><span class="line">GzAZBgkqhkiG9w0BCQEWDHB5a2VyQHFxLmNvbTCCASIwDQYJKoZIhvcNAQEBBQAD</span><br><span class="line">ggEPADCCAQoCggEBALUwKfBplLFie6t1D3GkFAmMe7nt9iotJ8yOl/AQNszU9JTJ</span><br><span class="line">Ax4cXW1j1l2khImqIkT7TKAjrXpizM1/DEYwrQN9cn90UbFyiCIOjhX4XrIAQ3Rn</span><br><span class="line">H+2ZIZPcyqtXr7PMuBu8DXbjoO+pSi0IN0rlkkvDpUQUuLde4z2O2eCq+lGbZ+NB</span><br><span class="line">XNfSNRRBI2Wjgk1JP1jfRthP6TvjVjdt/tpujv0k4hEshUqucEsdVaoqNgQKInYg</span><br><span class="line">oXSYMU+JS/Lb92ARwjuKFpHsejW98oWavOsnySMF14/n3iWW9IRSUNjKRAjIZPeR</span><br><span class="line">x5IsC5UHPstzY9Hzq6mwTBXZ5sgr9sMwuscdfx0CAwEAATANBgkqhkiG9w0BAQsF</span><br><span class="line">AAOCAQEAOtAJpnww2LLO1pMVb/tBChgAYloCj0GfykGUryLiWqDCeFXYMO5KLonW</span><br><span class="line">0T87aDxvYDEKgo1ITAK26EXlcvi03Pq1DfUfLWrLK+B1+IXXFYGuAcWyrxqM1hp8</span><br><span class="line">TN/g9CB5GXnY8AiEflLw7IpajYRJ0f9sSaIcH8o0sUVTZzBJ9kExv+m0w6GW8+oX</span><br><span class="line">+2Olh8KKavw7ctNze2/A9dTRucIfWH+a+A0dtPX5rnSnkiiBG8xHfMxKsgTl83l5</span><br><span class="line">CunrFcarJMeI/f/49rdiaUr68thNTVx/eUWpAKdgjO2t5JLPGx1iqs9bJCiaWbpg</span><br><span class="line">M97z4KTuB6BizyQBicILVDULhMCtag==</span><br><span class="line">-----END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
+<p>以上步骤即是自签根证书了。</p>
+<h1 id="用户证书生成步骤"><a href="#用户证书生成步骤" class="headerlink" title="用户证书生成步骤"></a>用户证书生成步骤</h1><p>一般说的生成用户证书分两种，客户端证书和服务端证书，除了名称不一样步骤命令完全一样一样的。<br><code>生成私钥（.key）--&gt;生成证书请求（.csr）--&gt;用CA根证书签名得到证书（.crt）</code></p>
+<h2 id="生成密钥"><a href="#生成密钥" class="headerlink" title="生成密钥"></a>生成密钥</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ openssl genrsa -out serverkey.pem 2048</span><br><span class="line">$ cat server.key </span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEogIBAAKCAQEAvC2I47h2lMYsZalJ16Uy9HYqcoecTep2gT/RRMO3wnHF8e1p</span><br><span class="line">I8iU+GQXkIsMhTmjjcyhjfxxtooxnkp+U6mVdhkDkufMm+ER3z5mCXlhbA8T2Ia6</span><br><span class="line">GGcUScX+4qA834H/Ams8r0UoOc6zi9Tnku+AnK6eq7apYc3KoIc2Uj6qyS9jAkGN</span><br><span class="line">JFplEdjUgSHBsaB78wi8ukN2nGeZR9c4WVoXm8Cz63RR8a9FB/JjVrCe8Ey1Xk55</span><br><span class="line">uTiU/NJa2VWLi/92MKwvnyulr004yIS1DsN06X3fneffV8HVux+LPgL6QHH55UJj</span><br><span class="line">Kp1LBqvmNFrrS4AReI73JVQR5j6vVvsyeSXbuwIDAQABAoIBADpkJsYCx0kC9WPW</span><br><span class="line">VAOGT3lr8V/4lJfY2Uzh8J3V3X+IrlOTx7xC0XcCGA3SF+B/MjEd/kOAwghSeXMU</span><br><span class="line">yn5LcQVkXaeIJgV4oYMUabUm5QQS6aWWqMhJtBHwTlckQb9ZJzgo7nu0ifbmHPCW</span><br><span class="line">8AS4LMBxruq5k3W11dpaGpEKwRQMB97ZvbgaIJxgIp/9Oevjq6OYX9UXa0ztxY8k</span><br><span class="line">itvLpMPaNlSc39T5XYumq52MvOccZGzDO3Njv9MG6rWt/Fw1NWsB/6RshUr4yeVe</span><br><span class="line">QD66Wp+HaD9qaycb9jIR3SeJQoKaEgq0mmA/y5np3SKP/HzcmYK/ubcapF/7cilE</span><br><span class="line">XR9MwYECgYEA5i7d4qSmX1BmphrTJ1yWcTESx4aXsjAuDY+HHMe1nLyozek3aXuc</span><br><span class="line">IkTx4JE/HGYqjOeminYhuaZ5jJLRf07s1VT+8lk/XobDplmQmH8kAHtHFuIWY5l/</span><br><span class="line">EW2L+QV31AFv0Dt5OEhUuTE6F1+6xG8dDPoIGIWIg4luNtylslhQO30CgYEA0UiX</span><br><span class="line">4ED2yHF5cd9cLKWi0niYQZILO87N9U0IRxIQbpdm7UZGuLPLMs/W7Xf+kjOb3qFC</span><br><span class="line">hNS5KGT3JbuhbcwO+34gULrK7AYejwhUhO7CYi28OaRropjoxId7nMcQw2ciISTE</span><br><span class="line">eJHKVXz0PKW7Wt2uq3n6unwW8VNZm6qXfA3G6ZcCgYA78ZqRCkXVbo+81CGHD6KS</span><br><span class="line">CbCVS2S337ouh+EsyoluLuda8FAg5TLs7b17uPeRgr20AiOpzUfNHCBtTlLGb5xX</span><br><span class="line">lhHqtPk+uaO773krbXjHs1L5D5m7CF9B/6BDEnx5NoKS3NodoSCHNd2l9qUhwLn1</span><br><span class="line">BiwTjrrVXnXYTa/M+Riz1QKBgEIdjN1rqIrqTlOLHLN+IFIdhvwwBxx92NMF4veQ</span><br><span class="line">3WAStJGBAhaXtjn3Lw8WOXY2l6ddioYsLdJ1Ex74h6cIMDODRPI8EJ8/z6egGhNk</span><br><span class="line">2kPp7uzG5LoZVG/B3WtJ+CHDEyUlWGw+oo0fTIlcUjQClIvXnT4MtbLHgieLXQ/z</span><br><span class="line">ykNBAoGADlz53txUajLxhBPdEs6f7rIOux0e02AaYff9oJlvikjmIAdvUDQ2HI6i</span><br><span class="line">118pZpTwyi8wDDw6QlhpHssEIUEeZ4Umu1k/tvKqGg5VWfisUU9gch5lbxtZ7tdp</span><br><span class="line">RpsBDBtqfjUbWhnApZCxfA45mfB/xGwPPFLdPUKX9578wsDQQlU=</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<h2 id="生成证书请求文件"><a href="#生成证书请求文件" class="headerlink" title="生成证书请求文件"></a>生成证书请求文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ openssl req -new -key serverkey.pem -out server.csr -subj <span class="string">"/C=CN/ST=GuangDong/L=ShenZhen/O=公司名/OU=it/CN=tls.ipyker.com/emailAddress=pyker@qq.com"</span></span><br><span class="line">$ cat server.csr </span><br><span class="line">-----BEGIN CERTIFICATE REQUEST-----</span><br><span class="line">MIIC2jCCAcICAQAwgZQxCzAJBgNVBAYTAkNOMRIwEAYDVQQIDAlHdWFuZ0Rvbmcx</span><br><span class="line">ETAPBgNVBAcMCFNoZW5aaGVuMRswGQYDVQQKDBLDpcKFwqzDpcKPwrjDpcKQwo0x</span><br><span class="line">CzAJBgNVBAsMAml0MRcwFQYDVQQDDA50bHMuaXB5a2VyLmNvbTEbMBkGCSqGSIb3</span><br><span class="line">DQEJARYMcHlrZXJAcXEuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC</span><br><span class="line">AQEAvC2I47h2lMYsZalJ16Uy9HYqcoecTep2gT/RRMO3wnHF8e1pI8iU+GQXkIsM</span><br><span class="line">hTmjjcyhjfxxtooxnkp+U6mVdhkDkufMm+ER3z5mCXlhbA8T2Ia6GGcUScX+4qA8</span><br><span class="line">34H/Ams8r0UoOc6zi9Tnku+AnK6eq7apYc3KoIc2Uj6qyS9jAkGNJFplEdjUgSHB</span><br><span class="line">saB78wi8ukN2nGeZR9c4WVoXm8Cz63RR8a9FB/JjVrCe8Ey1Xk55uTiU/NJa2VWL</span><br><span class="line">i/92MKwvnyulr004yIS1DsN06X3fneffV8HVux+LPgL6QHH55UJjKp1LBqvmNFrr</span><br><span class="line">S4AReI73JVQR5j6vVvsyeSXbuwIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBACIL</span><br><span class="line">Q8Exa81xOEPliER0b86h5xKqxBXInqETn0vKYXjU+D5hjePtNB0NTP/gleYMNrjK</span><br><span class="line">V14XMj3iI9Dq3lMAiWa06Z4Mx2CowqbQY9dvkm/MoDOIoA2q+fWr4H+NACsALYWh</span><br><span class="line">3/sALDdcry9FcOrC6nxD9sBcK8n65z3hBjWudvBFtFYTQ+zRuWHeD4aBxmbpfaDC</span><br><span class="line">W/rl644AJ6varcAQ29yqxiWFvyD+C3lKycCmFY2D52pJLcw4IoVvGx5VzG7KrTUD</span><br><span class="line">W+qPclyM6vj0SeDaYKZKmUDRLzPTroxNganc+TDsaz6CmgXQ5sJGaIiDmGdpbGzP</span><br><span class="line">evDa5t3GovDNWiyZDog=</span><br><span class="line">-----END CERTIFICATE REQUEST-----</span><br></pre></td></tr></table></figure>
+<h2 id="使用CA证书及CA密钥-对请求签发证书进行签发，生成-x509证书"><a href="#使用CA证书及CA密钥-对请求签发证书进行签发，生成-x509证书" class="headerlink" title="使用CA证书及CA密钥 对请求签发证书进行签发，生成 x509证书"></a>使用CA证书及CA密钥 对请求签发证书进行签发，生成 x509证书</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ openssl x509 -req -<span class="keyword">in</span> server.csr -CA ca.pem -CAkey cakey.pem -CAcreateserial -out server.pem -days 3650</span><br><span class="line">$ cat server.pem</span><br><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">MIIDmjCCAoICCQCO6Ai3pDkDkjANBgkqhkiG9w0BAQsFADCBiDELMAkGA1UEBhMC</span><br><span class="line">Q04xEjAQBgNVBAgMCUdVQU5HRE9ORzERMA8GA1UEBwwIU0hFTlpIRU4xDzANBgNV</span><br><span class="line">BAoMBklQWUtFUjELMAkGA1UECwwCSVQxFzAVBgNVBAMMDnNzbC5pcHlrZXIuY29t</span><br><span class="line">MRswGQYJKoZIhvcNAQkBFgxweWtlckBxcS5jb20wHhcNMTkwNjI2MDIyNDM0WhcN</span><br><span class="line">MjkwNjIzMDIyNDM0WjCBlDELMAkGA1UEBhMCQ04xEjAQBgNVBAgMCUd1YW5nRG9u</span><br><span class="line">ZzERMA8GA1UEBwwIU2hlblpoZW4xGzAZBgNVBAoMEsOlwoXCrMOlwo/CuMOlwpDC</span><br><span class="line">jTELMAkGA1UECwwCaXQxFzAVBgNVBAMMDnRscy5pcHlrZXIuY29tMRswGQYJKoZI</span><br><span class="line">hvcNAQkBFgxweWtlckBxcS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK</span><br><span class="line">AoIBAQDGbvCmdHFwF5fEI49P0CsFcIjvCFX8esLNQyX7ldEAVXBaW/JHfeNZv2ko</span><br><span class="line">C6TsXLrywaKhqzK4IOf15tLd3pQGEA+9N9JtpZIjNNztzby2shWZqCWxDa+k1qZF</span><br><span class="line">tQ7TgX4LrytSDtjJHZgHR0zPZkjBTI8SBETfhTxIFWE75dGQrejhaSXeqL32Rs1x</span><br><span class="line">OJmBlcJq0eNvljeCnZ+VPU9Ujnge8WwEZ8bMgd35XuvmPZyZiP0HAjg6+8BI1icc</span><br><span class="line">Pgu9utPoF8sZ4+npYkkWUht7hmw03pWGv3xu5XE2nwdnuUTlpKwcOYv90YD3kVvP</span><br><span class="line">5sHlMvimErLSV7jRWF394GyRBhItAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAJkl</span><br><span class="line">54O5RpxaIfDtdT+LOxB2iwLe36XybJV0EvBffZH9vyK0Xg/OBLrMHAnZ8B5Y1u+t</span><br><span class="line">P9nn5QtM+pnBXBt+qtO45nUG1bjGZQPHpvC68tG6eB+iw98u72cuMD6wbPE+kfaQ</span><br><span class="line">Q3VS+xbyDvdRwscmOQjDLMfR0mLVM1WTWOW7IaII75IIJuHBTx7eSvhERtyVFP1g</span><br><span class="line">j7FaJMmMhK0vCrG4awofpzdlV2bTGp7oD0XaEAxYb5pF+x3e5GzOZXFR/1gGezC8</span><br><span class="line">ubyFuyUkifpg4015e+Rnv7KSIRWaegT4fGSZ0eMMNaSn+8WUIhOvnZtptZCeL9Rp</span><br><span class="line">f0vimC2Ad3IyRt8GmsQ=</span><br><span class="line">-----END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
+<p>查看当前生成的CA、客户端证书私钥、证书请求以及CA证书。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l</span><br><span class="line">-rw-r--r-- 1 root root 1050 Jun 26 10:21 ca.csr</span><br><span class="line">-rw-r--r-- 1 root root 1679 Jun 26 10:21 cakey.pem</span><br><span class="line">-rw-r--r-- 1 root root 1294 Jun 26 10:21 ca.pem</span><br><span class="line">-rw-r--r-- 1 root root   17 Jun 26 10:24 ca.srl</span><br><span class="line">-rw-r--r-- 1 root root 1066 Jun 26 10:22 server.csr</span><br><span class="line">-rw-r--r-- 1 root root 1679 Jun 26 10:22 serverkey.pem</span><br><span class="line">-rw-r--r-- 1 root root 1310 Jun 26 10:24 server.pem</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/wechatpay.png" alt="丨Pyker丨 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/alipay.png" alt="丨Pyker丨 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Pyker</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://www.ipyker.com/2018/01/10/openssl-cert.html" title="OpenSSL自签证书">https://www.ipyker.com/2018/01/10/openssl-cert.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/openssl/" rel="tag"><i class="fa fa-tag"></i> openssl</a>
+          
+            <a href="/tags/ssl/" rel="tag"><i class="fa fa-tag"></i> ssl</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/26/http-header.html" rel="next" title="HTTP请求头响应头字段详解">
+                <i class="fa fa-chevron-left"></i> HTTP请求头响应头字段详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/21/echo-color.html" rel="prev" title="shell脚本echo颜色">
+                shell脚本echo颜色 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NDM5Mi8yMDkyNA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="丨Pyker丨">
+            
+              <p class="site-author-name" itemprop="name">丨Pyker丨</p>
+              <div class="site-description motion-element" itemprop="description">与其临渊羡鱼，不如退而结网。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ipyker" title="GitHub &rarr; https://github.com/ipyker" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:pyker@qq.com" title="E-Mail &rarr; mailto:pyker@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/viszhang" title="Weibo &rarr; https://weibo.com/viszhang" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="tencent://message/?uin=123435796&Site=&menu=yes" title="QQ &rarr; tencent://message/?uin=123435796&Site=&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-book"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ttlsa.com/" title="http://www.ttlsa.com/" rel="noopener" target="_blank">运维生存时间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.iyunw.cn" title="https://www.iyunw.cn" rel="noopener" target="_blank">爱运维</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nginxconfig.io/" title="https://nginxconfig.io/" rel="noopener" target="_blank">Nginxconfig</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://linux.51yip.com/" title="http://linux.51yip.com/" rel="noopener" target="_blank">Linux命令手册</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://echarts.baidu.com/index.html" title="https://echarts.baidu.com/index.html" rel="noopener" target="_blank">echarts可视化库</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#X509证书链"><span class="nav-number">3.</span> <span class="nav-text">X509证书链</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#证书格式"><span class="nav-number">3.1.</span> <span class="nav-text">证书格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#openssl常用命令"><span class="nav-number">4.</span> <span class="nav-text">openssl常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成CA证书步骤"><span class="nav-number">5.</span> <span class="nav-text">生成CA证书步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成CA密钥"><span class="nav-number">5.1.</span> <span class="nav-text">生成CA密钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成CA证书请求"><span class="nav-number">5.2.</span> <span class="nav-text">生成CA证书请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自签名得到CA根证书"><span class="nav-number">5.3.</span> <span class="nav-text">自签名得到CA根证书</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户证书生成步骤"><span class="nav-number">6.</span> <span class="nav-text">用户证书生成步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成密钥"><span class="nav-number">6.1.</span> <span class="nav-text">生成密钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成证书请求文件"><span class="nav-number">6.2.</span> <span class="nav-text">生成证书请求文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用CA证书及CA密钥-对请求签发证书进行签发，生成-x509证书"><span class="nav-number">6.3.</span> <span class="nav-text">使用CA证书及CA密钥 对请求签发证书进行签发，生成 x509证书</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style=" text-align:center;">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pyker</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"> 站点字数合计:</i>
+    </span>
+    
+    <span title="站点总字数">360k</span>
+  
+  
+  <span class="post-meta-divider">|</span>
+  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">粤ICP备19028706号 </a>
+
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+<div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("07/23/2017 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+        
+<div class="busuanzi-count" style=" text-align:center;">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+    
+    
+      
+    
+  
+  <script color="255,0,255" opacity="0.7" zindex="-1" count="140" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2018/01/10/openssl-cert.html'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

@@ -118,7 +118,7 @@
 <meta property="og:site_name" content="派 | Pyker">
 <meta property="og:description" content="kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，伴随Kubernetes每个版本的发布都会同步更新，kubeadm会对集群配置方面的一些实践做调整，通过实验kubeadm可以学习到Kubernetes官方在集群配置上一些新的最佳实践。 集群环境本次构建kubernetes集群是在ESXI主机上创建4个VM虚拟机进行演示的，docker-ce版本为18.09">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-22T04:53:36.182Z">
+<meta property="og:updated_time" content="2019-07-01T12:18:47.663Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubeadm安装Kubernetes1.14.3单master集群">
 <meta name="twitter:description" content="kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，伴随Kubernetes每个版本的发布都会同步更新，kubeadm会对集群配置方面的一些实践做调整，通过实验kubeadm可以学习到Kubernetes官方在集群配置上一些新的最佳实践。 集群环境本次构建kubernetes集群是在ESXI主机上创建4个VM虚拟机进行演示的，docker-ce版本为18.09">
@@ -463,7 +463,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-22 12:53:36" itemprop="dateModified" datetime="2019-06-22T12:53:36+08:00">2019-06-22</time>
+                <time title="修改时间：2019-07-01 20:18:47" itemprop="dateModified" datetime="2019-07-01T20:18:47+08:00">2019-07-01</time>
               
             
           </span>
@@ -530,7 +530,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">18 分钟</span>
+                <span title="阅读时长">19 分钟</span>
               
             </div>
           
@@ -599,14 +599,14 @@
 <h2 id="配置SSH免密钥登陆"><a href="#配置SSH免密钥登陆" class="headerlink" title="配置SSH免密钥登陆"></a>配置SSH免密钥登陆</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># master1上生成密钥对</span></span><br><span class="line">$ ssh-keygen -t rsa </span><br><span class="line">$ ssh-copy-id -i ~/.ssh/id_rsa.pub node1</span><br><span class="line">$ ssh-copy-id -i ~/.ssh/id_rsa.pub node2</span><br><span class="line">$ ssh-copy-id -i ~/.ssh/id_rsa.pub node3</span><br></pre></td></tr></table></figure>
 <h2 id="设置主机名"><a href="#设置主机名" class="headerlink" title="设置主机名"></a>设置主机名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cat &gt;&gt; /etc/hosts &lt;&lt; EOF</span><br><span class="line">192.168.20.210   master1.ipyker.com  master1</span><br><span class="line">192.168.20.211   master2.ipyker.com  master2</span><br><span class="line">192.168.20.212   master3.ipyker.com  master3</span><br><span class="line">192.168.20.213   node1.ipyker.com  node1</span><br><span class="line">192.168.20.214   node2.ipyker.com  node2</span><br><span class="line">192.168.20.215   node3.ipyker.com  node3</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 <h2 id="禁用防火墙"><a href="#禁用防火墙" class="headerlink" title="禁用防火墙"></a>禁用防火墙</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 禁用iptables和firewalld开机自启动</span></span><br><span class="line">$ systemctl <span class="built_in">disable</span> iptables</span><br><span class="line">$ systemctl <span class="built_in">disable</span> firewalld</span><br></pre></td></tr></table></figure>
-<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart chronyd</span><br></pre></td></tr></table></figure>
+<h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ yum install -y ntp ntpdate ntp-doc    <span class="comment"># 安装ntp服务</span></span><br><span class="line">$ ntpdate ntp1.aliyun.com   <span class="comment"># 使用阿里云的时间同步服务器</span></span><br><span class="line">$ clock -w     <span class="comment"># 系统时间写入blos时间</span></span><br><span class="line">$ crontab -e   <span class="comment"># 时间同步计划任务</span></span><br><span class="line">*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com</span><br></pre></td></tr></table></figure>
 <h2 id="禁用Selinux"><a href="#禁用Selinux" class="headerlink" title="禁用Selinux"></a>禁用Selinux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sed -i <span class="string">"s/^SELINUX=enforcing/SELINUX=disabled/g"</span> /etc/selinux/config</span><br></pre></td></tr></table></figure>
 <h2 id="关闭Swap"><a href="#关闭Swap" class="headerlink" title="关闭Swap"></a>关闭Swap</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ swapoff -a</span><br><span class="line">$ sed -i <span class="string">'s/.*swap.*/#&amp;/'</span> /etc/fstab</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>如果你的集群有其他业务不能关闭swap时，需要在安装kubelet后，修改/etc/sysconfig/kubelet内容为：<code>KUBELET_EXTRA_ARGS=--fail-swap-on=false</code></p>
 </blockquote>
 <h2 id="添加kubernetes内核参数"><a href="#添加kubernetes内核参数" class="headerlink" title="添加kubernetes内核参数"></a>添加kubernetes内核参数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat &gt; /etc/sysctl.d/k8s.conf &lt;&lt; EOF</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line">vm.swappiness = 0</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<h2 id="加载ipvs模块"><a href="#加载ipvs模块" class="headerlink" title="加载ipvs模块"></a>加载ipvs模块</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/sysconfig/modules/ipvs.modules</span><br><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">ipvs_mods_dir=<span class="string">"/usr/lib/modules/<span class="variable">$(uname -r)</span>/kernel/net/netfilter/ipvs/"</span></span><br><span class="line"><span class="keyword">for</span> mod <span class="keyword">in</span> `ls <span class="variable">$&#123;ipvs_mods_dir&#125;</span> | grep -o <span class="string">"^[^.]*"</span>`; <span class="keyword">do</span></span><br><span class="line">    /sbin/modprobe <span class="variable">$mod</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">$ chmod +x /etc/sysconfig/modules/ipvs.modules &amp;&amp; ./ipvs.modules</span><br></pre></td></tr></table></figure>
+<h2 id="加载ipvs模块"><a href="#加载ipvs模块" class="headerlink" title="加载ipvs模块"></a>加载ipvs模块</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/sysconfig/modules/ipvs.modules</span><br><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">ipvs_mods_dir=<span class="string">"/usr/lib/modules/<span class="variable">$(uname -r)</span>/kernel/net/netfilter/ipvs/"</span></span><br><span class="line"><span class="keyword">for</span> mod <span class="keyword">in</span> `ls <span class="variable">$&#123;ipvs_mods_dir&#125;</span> | grep -o <span class="string">"^[^.]*"</span>`; <span class="keyword">do</span></span><br><span class="line">    /sbin/modprobe <span class="variable">$mod</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">$ chmod +x /etc/sysconfig/modules/ipvs.modules &amp;&amp; sh /etc/sysconfig/modules/ipvs.modules</span><br></pre></td></tr></table></figure>
 <p>检查模块是否加载生效,如果如下所示表示已经加载ipvs模版到内核了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ lsmod | grep ip_vs</span><br><span class="line">ip_vs_wrr              12697  0 </span><br><span class="line">ip_vs_wlc              12519  0 </span><br><span class="line">ip_vs_sh               12688  0 </span><br><span class="line">ip_vs_sed              12519  0 </span><br><span class="line">ip_vs_rr               12600  20 </span><br><span class="line">ip_vs_pe_sip           12740  0 </span><br><span class="line">nf_conntrack_sip       33860  1 ip_vs_pe_sip</span><br><span class="line">ip_vs_nq               12516  0 </span><br><span class="line">ip_vs_lc               12516  0 </span><br><span class="line">ip_vs_lblcr            12922  0 </span><br><span class="line">ip_vs_lblc             12819  0 </span><br><span class="line">ip_vs_ftp              13079  0 </span><br><span class="line">nf_nat                 26787  4 ip_vs_ftp,nf_nat_ipv4,nf_nat_ipv6,nf_nat_masquerade_ipv4</span><br><span class="line">ip_vs_dh               12688  0 </span><br><span class="line">ip_vs                 141432  44 ip_vs_dh,ip_vs_lc,ip_vs_nq,ip_vs_rr,ip_vs_sh,ip_vs_ftp,ip_vs_sed,ip_vs_wlc,ip_vs_wrr,ip_vs_pe_sip,ip_vs_lblcr,ip_vs_lblc</span><br><span class="line">nf_conntrack          133053  10 ip_vs,nf_nat,nf_nat_ipv4,nf_nat_ipv6,xt_conntrack,nf_nat_masquerade_ipv4,nf_conntrack_netlink,nf_conntrack_sip,nf_conntrack_ipv4,nf_conntrack_ipv6</span><br><span class="line">libcrc32c              12644  4 xfs,ip_vs,nf_nat,nf_conntrack</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>请确保ipset也已经安装了，如未安装请执行<code>yum install -y ipset</code>安装。</p>
@@ -773,6 +773,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/06/15/kubeadm-multi-cluster.html" rel="prev" title="kubeadm安装Kubernetes1.14.3多master集群">
+                kubeadm安装Kubernetes1.14.3多master集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -847,7 +851,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-count">37</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -888,7 +892,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -947,7 +953,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1109,7 +1119,7 @@
       <i class="fa fa-area-chart"> 站点字数合计:</i>
     </span>
     
-    <span title="站点总字数">311k</span>
+    <span title="站点总字数">360k</span>
   
   
   <span class="post-meta-divider">|</span>
@@ -1233,10 +1243,6 @@
 
 
 
-
-  
-  
-  <script id="ribbon" size="300" alpha="0.1" zindex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
 
 
 
@@ -1699,7 +1705,7 @@
 
   
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":200,"height":400},"mobile":{"show":false},"react":{"opacity":0.7},"log":false});</script></body>
+</body>
 </html>
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/src/clicklove.js"></script>
