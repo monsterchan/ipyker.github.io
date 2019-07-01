@@ -7,7 +7,7 @@ tags:
 date: 2019-06-15 12:20:00
 ---
 
-前面我们已经使用[kubeadm安装Kubernetes1.14.3单master集群](https://www.ipyker.com/2019/06/12/kubeadm-cluster.html)，该架构部署的kubernetes集群比较适合开发、测试环境，并不太适用于生产环境，因为master存在单点故障，从而导致整个集群不可用。而鉴于此问题我们现在需要部署一套多master节点的kubernetes集群。此种架构的kubernetes master各个组件是通过选举leader经行高可用的。
+前面我们已经使用[kubeadm安装Kubernetes1.14.3单master集群](https://www.ipyker.com/2019/06/12/kubeadm-cluster.html)，该架构部署的kubernetes集群比较适合开发、测试环境，并不太适用于生产环境，因为master存在单点故障，从而导致整个集群不可用。鉴于此问题我们现在需要部署一套多master节点的kubernetes集群。此种架构的kubernetes master各个组件是通过选举leader进行高可用的。
 
 # 集群环境
 本次构建kubernetes集群是在ESXI主机上创建11个VM虚拟机进行演示的，docker-ce版本为`18.9.7`，kubernetes组件均为`1.14.3`版本，环境信息如表所示：
