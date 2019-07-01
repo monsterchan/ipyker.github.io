@@ -52,7 +52,11 @@ $ systemctl disable firewalld
 
 ## 时间同步
 ```bash
-$ systemctl restart chronyd
+$ yum install -y ntp ntpdate ntp-doc    # 安装ntp服务
+$ ntpdate ntp1.aliyun.com   # 使用阿里云的时间同步服务器
+$ clock -w     # 系统时间写入blos时间
+$ crontab -e   # 时间同步计划任务
+*/5 * * * * /usr/sbin/ntpdate ntp1.aliyun.com
 ```
 
 ## 禁用Selinux
@@ -86,7 +90,7 @@ for mod in `ls ${ipvs_mods_dir} | grep -o "^[^.]*"`; do
     /sbin/modprobe $mod
 done
 
-$ chmod +x /etc/sysconfig/modules/ipvs.modules && ./ipvs.modules
+$ chmod +x /etc/sysconfig/modules/ipvs.modules && sh /etc/sysconfig/modules/ipvs.modules
 ```
 检查模块是否加载生效,如果如下所示表示已经加载ipvs模版到内核了。
 ```bash
