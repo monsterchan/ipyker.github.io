@@ -305,6 +305,9 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 EOF
 ```
+```bash
+$ kubectl apply -f dashboard-admin.yaml
+```
 查看serviceaccount生成的secret文件
 ```bash
 $ kubectl get secret -n kube-system | grep dashboard-admin
