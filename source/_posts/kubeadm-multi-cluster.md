@@ -929,7 +929,7 @@ root      37678   1531  0 16:17 pts/0    00:00:00 grep --color=auto kube
 ```
 当前显示kube相关的进程已经没有了，那么我们在执行命令查看当前组件选举的哪个节点
 ```bash
-$ kubectl get endpoints kube-controller-manager -n kube-system -o yaml
+$ kubectl get endpoints kube-scheduler -n kube-system -o yaml
 apiVersion: v1
 kind: Endpoints
 metadata:
@@ -941,7 +941,8 @@ metadata:
   resourceVersion: "31875"
   selfLink: /api/v1/namespaces/kube-system/endpoints/kube-scheduler
   uid: 0805a77e-9bb3-11e9-a8cd-000c29b438b3
-[root@master1 ~]# kubectl get endpoints kube-controller-manager -n kube-system -o yaml
+
+$ kubectl get endpoints kube-controller-manager -n kube-system -o yaml
 apiVersion: v1
 kind: Endpoints
 metadata:
