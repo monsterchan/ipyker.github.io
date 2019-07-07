@@ -127,6 +127,8 @@ After=network.target
 User=mongod
 Type=forking
 ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/config.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/config.conf
 
 [Install]
 WantedBy=multi-user.target
@@ -280,6 +282,8 @@ After=network.target
 User=mongod
 Type=forking
 ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/shard1.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/shard1.conf
 
 [Install]
 WantedBy=multi-user.target
@@ -295,6 +299,8 @@ After=network.target
 User=mongod
 Type=forking
 ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/shard2.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/shard2.conf
 
 [Install]
 WantedBy=multi-user.target
@@ -310,6 +316,8 @@ After=network.target
 User=mongod
 Type=forking
 ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/shard3.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/shard3.conf
 
 [Install]
 WantedBy=multi-user.target
@@ -402,6 +410,7 @@ After=network.target
 User=mongod
 Type=forking
 ExecStart=/usr/bin/mongos --config /usr/local/mongodb/conf/mongos.conf
+ExecReload=/bin/kill -s HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
