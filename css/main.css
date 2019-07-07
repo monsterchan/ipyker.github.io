@@ -1812,7 +1812,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #8663f6;
+  background: #c29436;
 }
 .feed-link,
 .chat {
@@ -1992,7 +1992,6 @@ pre .javascript .function {
 .footer {
   font-size: 14px;
   color: #999;
-  background: url("/images/headbg.jpg") repeat !important;
 }
 .footer img {
   border: none;
@@ -2417,9 +2416,6 @@ hr {
 .main-inner {
   margin-top: 80px;
 }
-.header {
-  background: url("/images/headbg.jpg") repeat !important;
-}
 .header-inner {
   padding: 20px 0;
   display: flex;
@@ -2525,7 +2521,7 @@ hr {
 .menu-item-active a,
 .menu .menu-item a:hover,
 .menu .menu-item span.exturl:hover {
-  background: #c39aad;
+  background: #d4d0d0;
 }
 .menu {
   margin: 0;
@@ -2744,7 +2740,7 @@ hr {
 .footer {
   margin-top: 80px;
   padding: 10px 0;
-  background: url("/images/headbg.jpg") repeat !important;
+  background: #eaeaea repeat !important;
   color: #666;
 }
 .footer-inner {
