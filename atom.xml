@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.ipyker.com/"/>
-  <updated>2019-07-01T16:12:31.603Z</updated>
+  <updated>2019-07-07T06:06:58.569Z</updated>
   <id>https://www.ipyker.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mongodb4.0分片集群安装</title>
+    <link href="https://www.ipyker.com/2019/07/07/install-mongodb.html"/>
+    <id>https://www.ipyker.com/2019/07/07/install-mongodb.html</id>
+    <published>2019-07-07T03:12:00.000Z</published>
+    <updated>2019-07-07T06:06:58.569Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="SQL" scheme="https://www.ipyker.com/categories/SQL/"/>
+    
+    
+      <category term="mongodb" scheme="https://www.ipyker.com/tags/mongodb/"/>
+    
+  </entry>
   
   <entry>
     <title>kubernetes安装dashboard</title>
@@ -496,32 +522,6 @@
     <id>https://www.ipyker.com/2018/09/11/zabbix-server.html</id>
     <published>2018-09-11T05:47:00.000Z</published>
     <updated>2019-05-27T08:07:22.622Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="Zabbix" scheme="https://www.ipyker.com/categories/Zabbix/"/>
-    
-    
-      <category term="zabbix" scheme="https://www.ipyker.com/tags/zabbix/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Zabbix服务器监控之《初识zabbix概念》（一）</title>
-    <link href="https://www.ipyker.com/2018/09/11/zabbix-summarize.html"/>
-    <id>https://www.ipyker.com/2018/09/11/zabbix-summarize.html</id>
-    <published>2018-09-11T04:27:00.000Z</published>
-    <updated>2019-05-27T08:07:26.487Z</updated>
     
     <summary type="html">
     
