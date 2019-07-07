@@ -11,7 +11,7 @@ date: 2019-07-7 11:12:00
 mongodb支持架构有`单机(stand-alone)`、`主从(master-slave)`、`副本集(replica set)`以及`分片(sharding)`, 而最常用的架构莫过于`副本集 + 分片`。而分片有三大组件，分别为`mongos`、`configsvr`、`sharding server`，他们的功能如下：
 * `mongos`: 它是前端路由，应用程序由此接入，且让整个集群看上去像单一数据库，前端应用可以透明使用。它不存储任何数据，只载入configsvr的配置。
 * `configsvr`: 它是一个mongod 实例，存储了整个 Cluster Metadata，其中包括 chunk 信息。它是存放着分片和数据的对应关系。
-* `sharding server`: 它是一个mongod 实例，用于存储实际的数据块，实际生产环境中一个shard server角色可由几台机器组个一个relica set承担，防止主机单点故障。
+* `sharding server`: 它是一个mongod 实例，用于存储实际的数据块，实际生产环境中一个shard server角色可由几台机器组个一个replica set承担，防止主机单点故障。
 
 # 安装环境
 本次试验有三台主机，即三个分片和三个副本集，可以保证高可用，即使一台机器全宕机了，服务仍然能够正常访问, 本次环境的主机分别充当另外一个分片的从，他们的角色功能如下：
@@ -411,7 +411,7 @@ EOF
 ```bash
 $ chown -R mongod /data/ && chown -R mongod /usr/local/mongodb/
 $ systemctl start mongos && systemctl enable mongos
-$ systemctl start mongos2 && systemctl enable mongos
+$ systemctl start mongos && systemctl enable mongos
 ```
 至此已经搭建了mongodb配置服务器、路由服务器，各个分片服务器，不过应用程序连接到mongos路由服务器并不能使用分片机制，还需要在程序里设置分片配置，让分片生效。
 登录任意一台mongos，设置分片配置。
