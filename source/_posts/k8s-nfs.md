@@ -53,6 +53,15 @@ $ mount -t 192.168.3.125:/data/nfs /mnt
 ```
 如果一切正常，说明NFS服务正常！此时才能进行后面的操作！
 
+# NFS内核性能优化
+Linux nfs客户端对于同时发起的NFS请求数量进行了控制，若该参数配置较小会导致IO性能较差，请查看该参数：`cat /proc/sys/sunrpc/tcp_slot_table_entries`
+默认编译的内核该参数最大值为256，可适当提高该参数的值来取得较好的性能，请以root身份执行以下命令：
+```bash
+$ echo "options sunrpc tcp_slot_table_entries=128" >> /etc/modprobe.d/sunrpc.conf
+$ echo "options sunrpc tcp_max_slot_table_entries=128" >>  /etc/modprobe.d/sunrpc.conf
+$ sysctl -w sunrpc.tcp_slot_table_entries=128
+```
+
 # 创建StorageClass RBAC
 我这里是使用了nfs的名称空间，也可以使用别的或者删掉，使用默认的名称空间。如果要使用名称空间需要先创建。
 ```bash
