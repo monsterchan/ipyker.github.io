@@ -167,7 +167,7 @@ spec:
 #              topologyKey: kubernetes.io/hostname
       containers:
       - name: redis
-        image: "reg.yl.com/basic/redis:4.0.11-2"
+        image: registry.cn-shenzhen.aliyuncs.com/pyker/redis:4.0.11
         command: ["/etc/redis/fix-ip.sh", "redis-server", "/etc/redis/redis.conf"]
         readinessProbe:
 #          exec:
