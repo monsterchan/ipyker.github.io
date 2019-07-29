@@ -40,10 +40,22 @@ metadata:
   name: redis-conf-cluster
   namespace: sts-app
 data:
+  fix-ip.sh: |
+    #!/bin/sh
+    CLUSTER_CONFIG="/data/nodes.conf"
+    if [ -f ${CLUSTER_CONFIG} ]; then
+      if [ -z "${POD_IP}" ]; then
+        echo "Unable to determine Pod IP address!"
+        exit 1
+      fi
+      echo "Updating my IP to ${POD_IP} in ${CLUSTER_CONFIG}"
+      sed -i.bak -e '/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/'${POD_IP}'/' ${CLUSTER_CONFIG}
+    fi
+    exec "$@"
   redis.conf: |
     cluster-enabled yes
     cluster-config-file /data/nodes.conf
-    cluster-node-timeout 5000
+    cluster-node-timeout 10000
     protected-mode no
     daemonize no
     pidfile /var/run/redis.pid
@@ -91,6 +103,8 @@ data:
     hz 10
     aof-rewrite-incremental-fsync yes
 ```
+> `fix-ip.sh` 脚本的作用用于当redis集群某pod重建后Pod IP发生变化，在/data/nodes.conf中将新的Pod IP替换原Pod IP。不然集群会出问题。
+
 #  准备redis statsfulset文件
 ```bash
 $ cat redis-statefulset.yaml
@@ -153,12 +167,11 @@ spec:
 #              topologyKey: kubernetes.io/hostname
       containers:
       - name: redis
-        image: "registry.cn-shenzhen.aliyuncs.com/pyker/redis:4.0.11"
-        command:
-          - "redis-server"
-        args:
-          - "/etc/redis/redis.conf"
+        image: "reg.yl.com/basic/redis:4.0.11-2"
+        command: ["/etc/redis/fix-ip.sh", "redis-server", "/etc/redis/redis.conf"]
         readinessProbe:
+#          exec:
+#            command: ["/bin/sh", "-c", "redis-cli -h $(hostname) ping"]
           tcpSocket:
             port: 6379
           timeoutSeconds: 5
@@ -170,28 +183,38 @@ spec:
           timeoutSeconds: 5
           periodSeconds: 3
           initialDelaySeconds: 2
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         resources:
           requests:
             memory: "1Gi"
         ports:
             - name: redis
               containerPort: 6379
-              protocol: "TCP"
+              protocol: TCP
             - name: cluster
               containerPort: 16379
-              protocol: "TCP"
+              protocol: TCP
         volumeMounts:
-          - name: "redis-conf"
-            mountPath: "/etc/redis"
-          - name: "redis-data"
-            mountPath: "/data"
+          - name: redis-conf
+            mountPath: /etc/redis/
+            readOnly: false
+          - name: redis-data
+            mountPath: /data
+            readOnly: false
       volumes:
-      - name: "redis-conf"
+      - name: redis-conf
         configMap:
-          name: "redis-conf-cluster"
+          name: redis-conf-cluster
           items:
-            - key: "redis.conf"
-              path: "redis.conf"
+            - key: redis.conf
+              path: redis.conf
+            - key: fix-ip.sh
+              path: fix-ip.sh
+          defaultMode: 0755
   volumeClaimTemplates:
   - metadata:
       name: redis-data
