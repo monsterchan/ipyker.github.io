@@ -34,20 +34,31 @@ date: 2019-07-30 19:43:00
 
 > 注意：
 * 2台Ambari Server主机到Ambari Agent主机配置免密登录
-* Ambari Server/Agent主机需安装JDK
+* Ambari Server/Agent主机需安装JDK（不低于JDK8）
 * 确保主机的hostname -f 满足FQDN格式（在安装集群的第三步Confirm Host需要）
-* 关闭防火墙
+* 关闭firewalld和iptables防火墙，（如有规则要清空）
 * 确认主机字符集编码为UTF-8（否则Ambari Server 配置数据库可能报错）
-* 开启NTP服务
+* 开启NTP服务，（ntp1.aliyun.com，time.windows.com）
 * selinux配置为disbaled
 * 配置描述文件数量65535
 
 ## 配置免密钥登陆
 ```bash
-# bigdata1、bigdata2都要操作
+# bigdata1操作
 $ ssh-keygen -t rsa
-$ for i in `seq 1 6`;do ssh-copy-id bigdata${i}.jms.com;done 
+$ ssh-copy-id bigdata1.jms.com
+$ ssh-copy-id bigdata2.jms.com
+$ ssh-copy-id bigdata3.jms.com
+$ ssh-copy-id bigdata4.jms.com
+$ ssh-copy-id bigdata5.jms.com
+$ ssh-copy-id bigdata6.jms.com
+
+# 将bigdata1上的公钥私钥复制到bigdata2上
+$ scp ~/.ssh/id_rsa.pub bigdata2.jms.com:~/.ssh/
+$ scp ~/.ssh/id_rsa bigdata2.jms.com:~/.ssh/
 ```
+因为在web界面配置集群的时候需要输入ambari-server的私钥，只能配置一个，所以我们手动将bigdata1公钥和私钥复制给bigdate2。以达到同一密钥多主机生效。
+
 ## 手动配置VIP地址
 先在192.168.12.201服务器上配置ambari-server VIP，当192.168.12.201宕机后，手动配置`ifcfg-em1:1`到192.168.12.202上。
 ```bash
@@ -135,8 +146,11 @@ EOF
 ```bash
 $ yum install -y lrzsz ntpdate supervisor sysstat net-tools vim wget ntp lsof
 ```
-## 关闭transparent_hugepage
+## 关闭THP（如果不关闭THP，Hadoop的系统CPU使用率很高）
 ```bash
+$ echo never > /sys/kernel/mm/transparent_hugepage/enabled
+$ echo never > /sys/kernel/mm/transparent_hugepage/defrag
+# 开机自启动关闭
 $ cat >> /etc/rc.local << EOF
 if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
    echo never > /sys/kernel/mm/transparent_hugepage/enabled
@@ -148,9 +162,60 @@ EOF
 chmod +x /etc/rc.local
 ```
 
-# 安装mysql主从
+# 配置mysql数据库
+## 安装mysql主从
+mysql主从安装这里跳过。但mysql配置文件要保证以下配置正确：
+```bash
+在[mysqld]下添加
+collation_server=utf8_general_ci
+character_set_server=utf8
+default-storage-engine=INNODB
+在[client]下添加（如果没有[client]，则创建）
+default_character-set=utf8
+```
+## 配置ambari需要的数据库
+在192.168.12.201 mysql主上进行新建数据库：
+* 创建ambari数据库及数据库的用户名和密码
 
+```bash
+mysql> create database ambari character set utf8;
+Query OK, 1 row affected (0.00 sec)
+mysql> GRANT ALL PRIVILEGES ON ambari.* TO 'ambari'@'%' IDENTIFIED BY 'Ambari123';
+Query OK, 0 rows affected (0.00 sec)
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+```
+* 创建hive数据库及hive库的用户名和密码
 
+```bash
+mysql> create database hive character set utf8;
+Query OK, 1 row affected (0.00 sec)
+mysql> GRANT ALL PRIVILEGES ON hive.* TO 'hive'@'%' IDENTIFIED BY 'Hive123';
+Query OK, 0 rows affected (0.00 sec)
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+```
+* 创建oozie数据库及oozie库的用户名和密码
+
+```bash
+mysql> create database oozie character set utf8;
+Query OK, 1 row affected (0.00 sec)
+mysql> GRANT ALL PRIVILEGES ON oozie.* TO 'oozie'@'%' IDENTIFIED BY 'Oozie123';
+Query OK, 0 rows affected (0.00 sec)
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+```
+* 创建ranger数据库及ranger库的用户名和密码
+
+```bash
+mysql> create database ranger character set utf8;
+Query OK, 1 row affected (0.04 sec)
+mysql> GRANT ALL PRIVILEGES ON rangeradmin.* TO 'rangeradmin'@'%' IDENTIFIED BY 'Ranger123';
+Query OK, 0 rows affected (0.02 sec)
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.04 sec)
+```
+以上数据库只有ambari是必须要新建的，其他3个数据库只有在你需要安装该服务的时候需要进行配置，为了日后需要安装这些服务，我这里就先建立这些数据库。
 
 # 配置ambari yum私仓
 在这里ambari yum私仓安装在192.168.12.205服务器上。
@@ -242,6 +307,7 @@ $ createrepo /data/wwwroot/default/hdp/HDP-UTILS-1.1.0.22/
 # 安装ambari-server
 在192.168.12.201和192.168.12.202上安装ambari-server。安装前请配置mysql和ambari连接器，如下：
 ```bash
+$ yum install -y mysql-connector-java
 $ ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar
 ```
 ```bash
@@ -343,6 +409,16 @@ max_reconnect_retry_delay=30
 ```
 
 # 访问ambari-server web页面
-默认端口8080，Username：admin；Password：admin；http://ambari.jms.com:8080
-![](/images/ambari/1.jpg)
+* 默认端口8080，Username：admin；Password：admin；http://ambari.jms.com:8080
 
+![](/images/ambari/1.jpg)
+* 创建集群
+
+![](/images/ambari/2.jpg)
+![](/images/ambari/3.jpg)
+* 选择HDP版本以及配置私仓地址
+
+![](/images/ambari/4.jpg)
+![](/images/ambari/5.jpg)
+要注意的地方就这些了，剩下的步骤就是按照引导进行下一步操作即可。直到第七步骤，如下图需要选择自己前面安装好的数据库，以及数据库地址和用户名密码进行连接即可。
+![](/images/ambari/6.jpg)
