@@ -102,6 +102,8 @@ disable_firewalld(){
 config_sysctl() {
     echo "Staring config sysctl..."
     /usr/bin/cp -f /etc/sysctl.conf /etc/sysctl.conf.bak
+    modprobe nf_conntrack_ipv4
+    modprobe nf_conntrack
     cat > /etc/sysctl.conf << EOF
 fs.file-max=1000000
 vm.swappiness = 0
