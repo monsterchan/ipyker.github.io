@@ -107,6 +107,8 @@ sharding:
 EOF
 ```
 分别在mongo1、mongo2、mongo3上配置systemctl文件：
+> 使用`numactl`禁用numa需要安装numactl，`yum install -y numactl`
+
 ```bash
 $ cat > /etc/systemd/system/mongo-config.service << EOF
 [Unit]
@@ -116,7 +118,7 @@ After=network.target
 [Service]
 User=mongod
 Type=forking
-ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/config.conf
+ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /usr/local/mongodb/conf/config.conf
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/config.conf
 
@@ -271,7 +273,7 @@ After=network.target
 [Service]
 User=mongod
 Type=forking
-ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/shard1.conf
+ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /usr/local/mongodb/conf/shard1.conf
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/shard1.conf
 
@@ -288,7 +290,7 @@ After=network.target
 [Service]
 User=mongod
 Type=forking
-ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/shard2.conf
+ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /usr/local/mongodb/conf/shard2.conf
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/shard2.conf
 
@@ -305,7 +307,7 @@ After=network.target
 [Service]
 User=mongod
 Type=forking
-ExecStart=/usr/bin/mongod --config /usr/local/mongodb/conf/shard3.conf
+ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /usr/local/mongodb/conf/shard3.conf
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/usr/bin/mongod --shutdown --config /usr/local/mongodb/conf/shard3.conf
 

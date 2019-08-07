@@ -23,27 +23,39 @@ fi
 echo "+------------------------------------------------------------------------+"
 echo "|       To initialization the system for security and performance        |"
 echo "+------------------------------------------------------------------------+"
-# add mongod user
+
+# set hostname
+edit_hostname() {
+  read -p "Please input your hostname: " hs
+  echo "${hs}" > /etc/hostname
+
+}
+# add user for os
 user_add() {
-  # add mongod for os
-  id -u mongod
-  if [ $? -ne 0 ];then
-    useradd -s /bin/bash -d /home/mongod -m mongod && echo password | passwd --stdin mongod && echo "mongod ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/mongod
+  read -p "To create a system user, enter username created or input 'n' not created: " new_user
+  if [ $new_user == "n" ]; then
+    echo "Skip create user..."
+  else
+    id -u $new_user
+    if [ $? -ne 0 ];then
+      useradd -s /bin/bash -d /home/$new_user -m $new_user && echo password | passwd --stdin $new_user && echo "mongod ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$new_user
     else
-    echo "mongod user is exist."
+      echo "$new_user user is exist."
+    fi
   fi
 }
 # update system & install pakeage
-system_update(){
+system_update() {
     echo "*** Starting update system && install tools pakeage... ***"
-    yum install epel-release -y && yum -y update
+    mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+    yum -y update
     yum clean all && yum makecache
     yum -y install rsync wget vim openssh-clients iftop htop iotop sysstat lsof telnet traceroute tree lrzsz  net-tools dstat tree ntpdate dos2unix net-tools egrep
     [ $? -eq 0 ] && echo "System upgrade && install pakeages complete."
 }
 # Set timezone synchronization
-timezone_config()
-{
+timezone_config() {
     echo "Setting timezone..."
     /usr/bin/timedatectl | grep "Asia/Shanghai"
     if [ $? -eq 0 ];then
@@ -56,26 +68,24 @@ timezone_config()
     [ $? -eq 0 ] && echo "Setting timezone && Sync network time complete."
 }
 # disable selinux
-selinux_config()
-{
-       sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-       setenforce 0
-       echo "Dsiable selinux complete."
+selinux_config() {
+  sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+  setenforce 0
+  echo "Dsiable selinux complete."
 }
 # ulimit comfig
-ulimit_config()
-{
-echo "Starting config ulimit..."
-cat >> /etc/security/limits.conf <<EOF
+ulimit_config() {
+  echo "Starting config ulimit..."
+  cat >> /etc/security/limits.conf << EOF
 * soft nproc 65535
 * hard nproc 65535
 * soft nofile 65535
 * hard nofile 65535
 EOF
-[ $? -eq 0 ] && echo "Ulimit config complete!"
+  [ $? -eq 0 ] && echo "Ulimit config complete!"
 }
 # sshd config
-sshd_config(){
+sshd_config() {
     echo "Starting config sshd..."
     sed -i '/^#Port/s/#Port 22/Port 2024/g' /etc/ssh/sshd_config
     #sed -i "$ a\ListenAddress 0.0.0.0:21212\nListenAddress 0.0.0.0:22 " /etc/ssh/sshd_config
@@ -86,7 +96,7 @@ sshd_config(){
     [ $? -eq 0 ] && echo "SSH config complete."
 }
 # firewalld config
-disable_firewalld(){
+disable_firewalld() {
    echo "clean iptables roles..."
    iptables -F && iptables -X && iptables -t nat -F && iptables -t nat -X
    echo "Starting disable firewalld..."
@@ -116,10 +126,6 @@ net.ipv4.tcp_timestamps = 1
 net.ipv4.tcp_tw_recycle = 0
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_syncookies = 1
-kernel.msgmnb = 65536
-kernel.msgmax = 65536
-kernel.shmmax = 68719476736
-kernel.shmall = 4294967296
 net.ipv4.tcp_max_syn_backlog = 262144
 net.core.netdev_max_backlog = 262144
 net.core.somaxconn = 262144
@@ -144,12 +150,11 @@ net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 120
 net.netfilter.nf_conntrack_tcp_timeout_time_wait = 120
 net.netfilter.nf_conntrack_tcp_timeout_established = 3600
 EOF
-# eg：https://www.vultr.com/docs/securing-and-hardening-the-centos-7-kernel-with-sysctl
 # set kernel parameters work
     /usr/sbin/sysctl -p
     [ $? -eq 0 ] && echo "Sysctl config complete."
 }
-# cloase THP
+# close THP
 close_thp() {
   echo "Close THP..."
   if [[ -f /sys/kernel/mm/transparent_hugepage/enabled ]]; then
@@ -176,13 +181,9 @@ disable_numa() {
   echo "rebuild grub2.cfg configure file..."
   grub2-mkconfig -o /etc/grub2.cfg
 }
-# set hostname
-edit_hostname() {
-  read -p "Please input your hostname: " HOSTNAME
-  echo "$HOSTNAME" > /etc/hostname
-}
 #main function
-main(){
+main() {
+    edit_hostname
     user_add
     system_update
     timezone_config
@@ -193,19 +194,11 @@ main(){
     config_sysctl
     close_thp
     disable_numa
-    edit_hostname
 }
 # execute main functions
 main
 echo "+------------------------------------------------------------------------+"
 echo "|            To initialization system all completed !!!                  |"
+echo "|   You can now restart the system for the configuration to take effect  |"
 echo "+------------------------------------------------------------------------+"
-echo
-read -p "Now you need to reboot your system again[y/n]: " YES
-if [ $YES == "y" -o $YES == "Y" ]; then
-  sync
-  echo "The system will restart in 5 seconds..."
-  sleep 5
-  reboot
-fi
 ```
