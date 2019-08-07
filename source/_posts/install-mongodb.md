@@ -68,16 +68,6 @@ EOF
 $ systemctl start thpset && systemctl enable thpset
 ```
 
-# 集群认证文件
-在分片集群环境中，副本集内成员之间需要用`keyFile`认证，mongos与配置服务器，副本集之间也要keyFile认证，集群所有`mongod`和`mongos`实例使用内容相同的keyFile文件，我们这里只在mongo1上生成，然后复制到其他节点上。
-```bash
-$ openssl rand -base64 753  > /usr/local/mongodb/keyfile
-$ scp /usr/local/mongodb/keyfile mongo2:/usr/local/mongodb/keyfile
-$ scp /usr/local/mongodb/keyfile mongo3:/usr/local/mongodb/keyfile
-$ chmod 400 /usr/local/mongodb/keyfile
-```
-该文件在mongodb集群配置中需要使用到，所以我们先生成。
-
 # 配置ConfigSvr
 分别在mongo1、mongo2、mongo3上配置，要修改的地方只有bindIp为本机IP即可：
 ```bash
@@ -111,9 +101,9 @@ sharding:
     clusterRole: configsvr
 
 # configure security
-security:
-  authorization: enabled
-  keyFile: /usr/local/mongodb/keyfile
+#security:
+#  authorization: enabled
+#  keyFile: /usr/local/mongodb/keyfile
 EOF
 ```
 分别在mongo1、mongo2、mongo3上配置systemctl文件：
@@ -190,9 +180,9 @@ replication:
 sharding:
     clusterRole: shardsvr
 # configure security
-security:
-  authorization: enabled
-  keyFile: /usr/local/mongodb/keyfile
+#security:
+#  authorization: enabled
+#  keyFile: /usr/local/mongodb/keyfile
 ```
 ```bash
 $ vi /usr/local/mongodb/conf/shard2.conf
@@ -227,9 +217,9 @@ replication:
 sharding:
     clusterRole: shardsvr
 # configure security
-security:
-  authorization: enabled
-  keyFile: /usr/local/mongodb/keyfile
+#security:
+#  authorization: enabled
+#  keyFile: /usr/local/mongodb/keyfile
 ```
 ```bash
 $ vi /usr/local/mongodb/conf/shard3.conf
@@ -265,9 +255,9 @@ sharding:
     clusterRole: shardsvr
 
 # configure security
-security:
-  authorization: enabled
-  keyFile: /usr/local/mongodb/keyfile
+#security:
+#  authorization: enabled
+#  keyFile: /usr/local/mongodb/keyfile
 ```
 复制mongo1节点上的shard1.conf、shard2.conf、shard3.conf到mongo2和mongo3主机上。要改动的地方只有bindIp，修改为本机IP即可。
 
@@ -336,9 +326,9 @@ $ mongo 192.168.3.125:27001
 > rs.initiate( {
     _id : "shard1",
      members : [
-         {_id : 0, host : "192.168.3.125:21000" },
-         {_id : 1, host : "192.168.3.126:21000" },
-         {_id : 2, host : "192.168.3.127:21000" }
+         {_id : 0, host : "192.168.3.125:27001" },
+         {_id : 1, host : "192.168.3.126:27001" },
+         {_id : 2, host : "192.168.3.127:27001" }
      ]
    }
 )
@@ -349,9 +339,9 @@ $ mongo 192.168.3.125:27002
 > rs.initiate( {
     _id : "shard2",
      members : [
-         {_id : 0, host : "192.168.3.125:21000" },
-         {_id : 1, host : "192.168.3.126:21000" },
-         {_id : 2, host : "192.168.3.127:21000" }
+         {_id : 0, host : "192.168.3.125:27002" },
+         {_id : 1, host : "192.168.3.126:27002" },
+         {_id : 2, host : "192.168.3.127:27002" }
      ]
    }
 )
@@ -363,14 +353,15 @@ $ mongo 192.168.3.125:27003
 > rs.initiate( {
     _id : "shard3",
      members : [
-         {_id : 0, host : "192.168.3.125:21000" },
-         {_id : 1, host : "192.168.3.126:21000" },
-         {_id : 2, host : "192.168.3.127:21000" }
+         {_id : 0, host : "192.168.3.125:27003" },
+         {_id : 1, host : "192.168.3.126:27003" },
+         {_id : 2, host : "192.168.3.127:27003" }
      ]
    }
 )
 > rs.status();    # 查看当前shard3副本集状态
 ```
+> 如果1分片只需要2副本1仲裁的话，只需要在`rs.initiate`命令后对应的host加上`, arbiterOnly: true`即可让该主机称为仲裁节点。
 
 # 配置mongos
 mongos这里只配置在mongo1和mongo2上，所以只要在这两台主机上配置即可。
@@ -396,8 +387,8 @@ sharding:
    configDB: config/192.168.3.125:21000,192.168.3.126:21000,192.168.3.127:21000
 
 # configure security
-security:
-  keyFile: /usr/local/mongodb/keyfile
+#security:
+#  keyFile: /usr/local/mongodb/keyfile
 ```
 分别在mongo1、mongo2上配置systemctl文件：
 ```bash
@@ -479,3 +470,159 @@ mongos> sh.status();
                 No recent migrations
 ```
 这样mongodb如架构图所示的集群搭建就已经完成了。
+
+# 集群认证文件
+在分片集群环境中，建议副本集内成员之间需要用`keyFile`认证或者509.x证书认证，mongos与配置服务器，副本集之间也要keyFile认证，集群所有`mongod`和`mongos`实例使用内容相同的keyFile文件，我们这里只在mongo1上生成，然后复制到其他节点上。
+```bash
+$ openssl rand -base64 753  > /usr/local/mongodb/keyfile
+$ chmod 400 /usr/local/mongodb/keyfile
+$ scp /usr/local/mongodb/keyfile mongo2:/usr/local/mongodb/keyfile
+$ scp /usr/local/mongodb/keyfile mongo3:/usr/local/mongodb/keyfile
+```
+然后修改3个configsrv、3个shard、2个mongos实例的配置文件。
+* configsrv 和 shard增加如下配置：
+
+```bash
+# configure security
+security:
+  authorization: enabled
+  keyFile: /usr/local/mongodb/keyfile
+```
+* mongos增加如下配置：
+
+```bash
+security:
+  keyFile: /usr/local/mongodb/keyfile
+```
+mongos比mongod少了`authorization：enabled`的配置。原因是，副本集加分片的安全认证需要配置两方面的，副本集各个节点之间使用内部身份验证，用于内部各个mongo实例的通信，只有相同keyfile才能相互访问。所以都要开启`keyFile: /usr/local/mongodb/keyfile`, 然而对于所有的mongod，才是真正的保存数据的分片。mongos只做路由，不保存数据。所以所有的mongod开启访问数据的授权`authorization:enabled`。这样用户只有账号密码正确才能访问到数据。
+
+## 重启集群
+我们已经配置了用户帐号密码连接集群以及集群内部通过keyfile通信，为了使配置生效，需要重启整个集群，启动的顺序为先启动configsrv，在启动分片，最后启动mongos。
+
+**为什么我们要先创建管理员帐号在配置集群内部通信认证？**
+> 账号可以在集群认开启认证以后添加。但是那时候添加比较谨慎。只能添加一次，如果忘记了就无法再连接到集群。所以才建议在没开启集群认证的时候先添加好管理员用户名和密码然后再开启认证再重启集群。
+
+# 插入数据验证分片副本
+在案例中，创建appuser用户、为数据库实例appdb启动分片。
+```bash
+$ mongo 192.168.3.125:20000
+# 创建appuser用户
+mongos> use appdb
+mongos> db.createUser({user:'appuser',pwd:'AppUser@01',roles:[{role:'dbOwner',db:'appdb'}]})
+mongos> sh.enableSharding("appdb")
+
+# 创建集合book，为其执行分片初始化
+mongos> use appdb
+mongos> db.createCollection("book")
+mongos> db.device.ensureIndex({createTime:1})
+mongos> sh.shardCollection("appdb.book", {bookId:"hashed"}, false, { numInitialChunks: 4} )
+```
+继续往device集合写入1000W条记录，观察chunks的分布情况!
+```bash
+mongos> use appdb
+mongos> var cnt = 0;
+mongos> for(var i=0; i<1000; i++){
+   var dl = [];
+   for(var j=0; j<100; j++){
+       dl.push({
+               "bookId" : "BBK-" + i + "-" + j,
+               "type" : "Revision",
+               "version" : "IricSoneVB0001",
+               "title" : "Jackson's Life",
+               "subCount" : 10,
+               "location" : "China CN Shenzhen Futian District",
+               "author" : {
+                     "name" : 50,
+                     "email" : "RichardFoo@yahoo.com",
+                     "gender" : "female"
+               },
+               "createTime" : new Date()
+           });
+     }
+     cnt += dl.length;
+     db.book.insertMany(dl);
+     print("insert ", cnt);
+}
+```
+执行`db.book.getShardDistribution()`,输出如下：
+```bash
+mongos> db.book.getShardDistribution()
+Shard shard2 at shard2/192.168.12.22:27002,192.168.12.25:27002
+ data : 6.62MiB docs : 24641 chunks : 1
+ estimated data per chunk : 6.62MiB
+ estimated docs per chunk : 24641
+
+Shard shard1 at shard1/192.168.12.21:27001,192.168.12.24:27001
+ data : 13.51MiB docs : 50294 chunks : 2
+ estimated data per chunk : 6.75MiB
+ estimated docs per chunk : 25147
+
+Shard shard3 at shard3/192.168.12.23:27003,192.168.12.26:27003
+ data : 6.73MiB docs : 25065 chunks : 1
+ estimated data per chunk : 6.73MiB
+ estimated docs per chunk : 25065
+
+Totals
+ data : 26.87MiB docs : 100000 chunks : 4
+ Shard shard2 contains 24.64% data, 24.64% docs in cluster, avg obj size on shard : 281B
+ Shard shard1 contains 50.29% data, 50.29% docs in cluster, avg obj size on shard : 281B
+ Shard shard3 contains 25.06% data, 25.06% docs in cluster, avg obj size on shard : 281B
+```
+```bash
+mongos> mongos> db.book.stats();
+{
+  "sharded" : true,
+  "capped" : false,
+  "wiredTiger" : {
+    "metadata" : {
+      "formatVersion" : 1
+    },
+  "ns" : "appdb.book",
+  "count" : 100000,
+  "size" : 28179000,
+  "storageSize" : 4239360,
+  "totalIndexSize" : 2957312,
+  "indexSizes" : {
+    "_id_" : 999424,
+    "bookId_hashed" : 1957888
+  },
+  "avgObjSize" : 281,
+  "maxSize" : NumberLong(0),
+  "nindexes" : 2,
+  "nchunks" : 4,
+  "shards" : {
+    "shard1" : {
+      "ns" : "appdb.book",
+      "size" : 14172376,
+      "count" : 50294,
+      "avgObjSize" : 281,
+      "storageSize" : 2129920,
+      "capped" : false,
+      "wiredTiger" : {
+        "metadata" : {
+          "formatVersion" : 1
+        },
+    "shard3" : {
+      "ns" : "appdb.book",
+      "size" : 7063001,
+      "count" : 25065,
+      "avgObjSize" : 281,
+      "storageSize" : 1052672,
+      "capped" : false,
+      "wiredTiger" : {
+        "metadata" : {
+          "formatVersion" : 1
+        },
+    "shard2" : {
+      "ns" : "appdb.book",
+      "size" : 6943623,
+      "count" : 24641,
+      "avgObjSize" : 281,
+      "storageSize" : 1056768,
+      "capped" : false,
+      "wiredTiger" : {
+        "metadata" : {
+          "formatVersion" : 1
+        }, 
+```
+可以看到数据分到3个分片，各自分片数量为： shard1 "count": 50294，shard2 "count": 24641，shard3 "count": 25065 。加起来为100000，数据分片已经成功了！
