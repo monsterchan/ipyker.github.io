@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="true">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: true,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"shrinkIn","post_header":"slideLeftIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideDownIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. pipeline简介通俗的讲Jenkins pipeline是一组插件，支持将连续交付的实现和持续集成到Jenkins中。个人理解就是以前你所有创建的类似自由风格或者maven风格的项目都可以用pipeline流水线进行集成。 1.1 语法介绍pipeline支持声明式和脚本化的pipeline语法，声明式和脚本化的流水线从根本上是不同的。 声明式流水线的是 Jenkins 流水线更近的特性">
+<meta name="keywords" content="jenkins,pipeline">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pipeline语法初认识">
+<meta property="og:url" content="https://www.ipyker.com/2019/08/30/pipeline简介.html">
+<meta property="og:site_name" content="派 | Pyker">
+<meta property="og:description" content="1. pipeline简介通俗的讲Jenkins pipeline是一组插件，支持将连续交付的实现和持续集成到Jenkins中。个人理解就是以前你所有创建的类似自由风格或者maven风格的项目都可以用pipeline流水线进行集成。 1.1 语法介绍pipeline支持声明式和脚本化的pipeline语法，声明式和脚本化的流水线从根本上是不同的。 声明式流水线的是 Jenkins 流水线更近的特性">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="c:/Users/Pyker/AppData/Roaming/Typora/typora-user-images/1567270095607.png">
+<meta property="og:image" content="c:/Users/Pyker/AppData/Roaming/Typora/typora-user-images/1567271373104.png">
+<meta property="og:updated_time" content="2019-08-31T18:30:07.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pipeline语法初认识">
+<meta name="twitter:description" content="1. pipeline简介通俗的讲Jenkins pipeline是一组插件，支持将连续交付的实现和持续集成到Jenkins中。个人理解就是以前你所有创建的类似自由风格或者maven风格的项目都可以用pipeline流水线进行集成。 1.1 语法介绍pipeline支持声明式和脚本化的pipeline语法，声明式和脚本化的流水线从根本上是不同的。 声明式流水线的是 Jenkins 流水线更近的特性">
+<meta name="twitter:image" content="c:/Users/Pyker/AppData/Roaming/Typora/typora-user-images/1567270095607.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="派 | Pyker" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.ipyker.com/2019/08/30/pipeline简介">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>pipeline语法初认识 | 派 | Pyker</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">派 | Pyker</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-bookmark"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-互动">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/guestbook/" rel="section"><i class="menu-item-icon fa fa-fw fa-comments"></i> <br>互动</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ipyker.com/2019/08/30/pipeline简介.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="丨Pyker丨">
+      <meta itemprop="description" content="与其临渊羡鱼，不如退而结网。">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="派 | Pyker">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">pipeline语法初认识
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-30 20:43:00" itemprop="dateCreated datePublished" datetime="2019-08-30T20:43:00+08:00">2019-08-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-01 02:30:07" itemprop="dateModified" datetime="2019-09-01T02:30:07+08:00">2019-09-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/CI-CD/" itemprop="url" rel="index"><span itemprop="name">CI/CD</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">18k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">17 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-pipeline简介"><a href="#1-pipeline简介" class="headerlink" title="1. pipeline简介"></a>1. pipeline简介</h1><p>通俗的讲<code>Jenkins pipeline</code>是一组插件，支持将连续交付的实现和持续集成到Jenkins中。个人理解就是以前你所有创建的类似自由风格或者maven风格的项目都可以用pipeline流水线进行集成。</p>
+<h2 id="1-1-语法介绍"><a href="#1-1-语法介绍" class="headerlink" title="1.1 语法介绍"></a>1.1 语法介绍</h2><p>pipeline支持<code>声明式</code>和<code>脚本化</code>的pipeline语法，声明式和脚本化的流水线从根本上是不同的。 声明式流水线的是 Jenkins 流水线更近的特性:</p>
+<ul>
+<li>相比脚本化的流水线语法，它提供更丰富的语法特性,</li>
+<li>是为了使编写和读取流水线代码更容易而设计的。</li>
+</ul>
+<p>然而通常我们在写Jenkinsfile的时候，都是声明式和脚本化相结合的流水线。但建议使用<code>声明式 Pipeline</code>的方式进行编写,从jenkins社区的动向来看，很明显这种语法结构也会是未来的趋势。</p>
+<h2 id="1-2-声明式pipeline"><a href="#1-2-声明式pipeline" class="headerlink" title="1.2 声明式pipeline"></a>1.2 声明式pipeline</h2><p><code>声明式pipeline</code>是Jenkins Pipeline 的一个相对较新的补充， 它在Pipeline子系统之上提出了一种更为简化和有意义的语法。</p>
+<p>所有有效的<code>声明式pipeline</code>必须包含在一个pipeline块内，例如：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any // 在任何可用的代理上，执行流水线或它的所有stage</span><br><span class="line">    stages &#123;</span><br><span class="line">        stage('Build') &#123; // 定义 "Build" 阶段</span><br><span class="line">            steps &#123;</span><br><span class="line">                // 执行与 "Build" 阶段相关的步骤</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage('Test') &#123; // 定义"Test" 阶段</span><br><span class="line">            steps &#123;</span><br><span class="line">                // 执行与"Test" 阶段相关的步骤</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        stage('Deploy') &#123; // 定义 "Deploy" 阶段</span><br><span class="line">            steps &#123;</span><br><span class="line">                // 执行与 "Deploy" 阶段相关的步骤</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-3-脚本化pipeline"><a href="#1-3-脚本化pipeline" class="headerlink" title="1.3 脚本化pipeline"></a>1.3 脚本化pipeline</h2><p>在脚本化流水线语法中, 一个或多个 <code>node</code> 块在整个流水线中执行核心工作。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">node &#123;  // 在任何可用的代理上，执行流水线或它的所有stage</span><br><span class="line">    stage('Build') &#123;  // 定义 "Build" 阶段</span><br><span class="line">        //  执行与 "Build" 阶段相关的步骤</span><br><span class="line">    &#125;</span><br><span class="line">    stage('Test') &#123; // 定义 "Test" 阶段</span><br><span class="line">        //  执行与 "Test" 阶段相关的步骤</span><br><span class="line">    &#125;</span><br><span class="line">    stage('Deploy') &#123; // 定义 "Deploy" 阶段</span><br><span class="line">        // 执行与 "Deploy" 阶段相关的步骤</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>本文语法将主要围绕声明式pipeline进行说明。</p>
+</blockquote>
+<h2 id="1-4-pipeline概念"><a href="#1-4-pipeline概念" class="headerlink" title="1.4 pipeline概念"></a>1.4 pipeline概念</h2><p>在我们介绍pipeline指令之前，我们先来介绍一下pipeline的几个概念，以方便我们后续对pipeline指令的理解。</p>
+<ul>
+<li><code>node</code> :  节点是一个机器 ，它是Jenkins环境的一部分，能够执行流水线。</li>
+<li><code>stage</code>：stage 块定义了通过整个流水线执行的任务在层次上不同的子集(例如，“build”、“test”和“deploy”阶段)，许多插件使用这些阶段来可视化或显示Jenkins管道状态/进度。</li>
+<li><code>steps</code> :  本质上 ，它是一个单一的任务,  steps 告诉Jenkins 在特定的时间点要做什么事 。 举个例子,要执行shell命令 ，请使用 <code>sh</code> 步骤: <code>sh &#39;make&#39;</code>。</li>
+</ul>
+<h1 id="2-pipeline指令"><a href="#2-pipeline指令" class="headerlink" title="2. pipeline指令"></a>2. pipeline指令</h1><h2 id="2-1-agent"><a href="#2-1-agent" class="headerlink" title="2.1 agent"></a>2.1 agent</h2><p>该agent部分指定整个Pipeline或特定阶段将在Jenkins环境中执行的位置，具体取决于该agent 部分的放置位置。该部分必须在pipeline块内的顶层定义 ，但stage级使用是可选的。</p>
+<p>为了支持Pipeline可能拥有的各种用例，该agent部分支持以下几种不同类型的参数。这些参数可以应用于pipeline块的顶层，也可以应用在每个stage指令内。</p>
+<ul>
+<li><p><code>any</code>： 在任何可用的agent 上执行Pipeline或stage。如：<code>agent any</code></p>
+</li>
+<li><p><code>none</code>： 当pipeline块顶层使用none时，那么整个Pipeline不会分配全局agent ，而是每个stage将会包含其自己的agent部分。</p>
+</li>
+<li><p><code>label</code>：在Jenkins环境中使用提供的label标签代理上执行Pipeline或stage。如：<code>agent { label &#39;my-defined-label&#39; }</code></p>
+</li>
+<li><p><code>node</code>： 它和label标签一样，<code>agent { node { label &#39;labelName&#39; } }</code> 等同于<code>agent { label &#39;labelName&#39; }</code></p>
+</li>
+<li><p><code>docker</code>： 使用给定的容器执行整个流水线或某阶段，该容器将在预先配置为接受该容器的节点上或者匹配到的label上进行动态供应。docker还可以接受一个<code>args参数</code>，该参数可能包含直接传递给<code>docker run</code>调用的参数，以及一个<code>alwaysPull</code>选项，该选项将强制<code>docker pull</code>，即使镜像名称已经存在。或docker还可以选择接受<code>registryUrl</code>和<code>registryCredentialsId</code>参数，这些参数将有助于指定要使用的Docker私仓及凭证。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">agent</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">docker</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">image</span> <span class="string">'maven:3-alpine'</span></span><br><span class="line">        <span class="string">label</span> <span class="string">'my-defined-label'</span></span><br><span class="line">        <span class="string">args</span>  <span class="string">'-v /tmp:/tmp'</span></span><br><span class="line">        <span class="string">registryUrl</span> <span class="string">'https://myregistry.com/'</span></span><br><span class="line">        <span class="string">registryCredentialsId</span> <span class="string">'myPredefinedCredentialsInJenkins'</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>dockerfile</code>： 使用从Dockerfile源存储库中包含的容器来构建执行Pipeline或stage，为了使用此选项，Jenkinsfile必须使用<code>Multibranch Pipeline</code>或<code>Pipeline from SCM</code>加载。默认是在Dockerfile源库的根目录：agent { dockerfile true }。如果在另一个目录中构建Dockerfile，使用dir 选项：<code>agent { Dockerfile { dir &#39;someSubDir&#39; }}</code>。如果您的Dockerfile有另一个名字，可以使用filename选项指定文件名。还可以使用additionalBuildArgs选项向docker build…命令传递额外的参数，比如代理<code>{dockerfile {additionalBuildArgs’——build-arg foo=bar’}}</code>。同样dockerfile还可以接受<code>registryUrl</code>和<code>registryCredentialsId</code>参数，这些参数将有助于指定要使用的Docker私仓及凭证。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">agent</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">//</span> <span class="string">相当于</span> <span class="string">"docker build -f Dockerfile.build --build-arg version=1.0.2 ./build/</span></span><br><span class="line"><span class="string">    dockerfile &#123;</span></span><br><span class="line"><span class="string">        filename 'Dockerfile.build'</span></span><br><span class="line"><span class="string">        dir 'build'</span></span><br><span class="line"><span class="string">        label 'my-defined-label'</span></span><br><span class="line"><span class="string">        additionalBuildArgs  '--build-arg version=1.0.2'</span></span><br><span class="line"><span class="string">        args '-v /tmp:/tmp'</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>kubernetes</code>： 执行流水线或阶段部署在Kubernetes集群上的Pod内。为了使用此选项，必须从多分支管道或“SCM管道”加载Jenkinsfile。Pod模板是在<code>kubernetes{ }</code>块中定义的。例如，如果您想要一个包含Kaniko容器的pod。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">agent</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">kubernetes</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">label</span> <span class="string">podlabel</span></span><br><span class="line">        <span class="string">yaml</span> <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">kind: Pod</span></span><br><span class="line"><span class="string">metadata:</span></span><br><span class="line"><span class="string">  name: jenkins-slave</span></span><br><span class="line"><span class="string">spec:</span></span><br><span class="line"><span class="string">  containers:</span></span><br><span class="line"><span class="string">  - name: kaniko</span></span><br><span class="line"><span class="string">    image: gcr.io/kaniko-project/executor:debug</span></span><br><span class="line"><span class="string">    imagePullPolicy: Always</span></span><br><span class="line"><span class="string">    command:</span></span><br><span class="line"><span class="string">    - /busybox/cat</span></span><br><span class="line"><span class="string">    tty: true</span></span><br><span class="line"><span class="string">    volumeMounts:</span></span><br><span class="line"><span class="string">      - name: aws-secret</span></span><br><span class="line"><span class="string">        mountPath: /root/.aws/</span></span><br><span class="line"><span class="string">      - name: docker-registry-config</span></span><br><span class="line"><span class="string">        mountPath: /kaniko/.docker</span></span><br><span class="line"><span class="string">  restartPolicy: Never</span></span><br><span class="line"><span class="string">  volumes:</span></span><br><span class="line"><span class="string">    - name: aws-secret</span></span><br><span class="line"><span class="string">      secret:</span></span><br><span class="line"><span class="string">        secretName: aws-secret</span></span><br><span class="line"><span class="string">    - name: docker-registry-config</span></span><br><span class="line"><span class="string">      configMap:</span></span><br><span class="line"><span class="string">        name: docker-registry-config</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line">   <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><p>声明式管道需要Jenkins 2.66+才支持</p>
+</li>
+<li><p>更多关于jenkins kubernetes插件使用，参考：<a href="https://github.com/jenkinsci/kubernetes-plugin" target="_blank" rel="noopener">https://github.com/jenkinsci/kubernetes-plugin</a></p>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h2 id="2-2-常见选项"><a href="#2-2-常见选项" class="headerlink" title="2.2 常见选项"></a>2.2 常见选项</h2><p>以下选项可以应用于两个或多个agent实现。除非明确说明，否则一般不需要它们。</p>
+<ul>
+<li><code>label</code>： 一个字符串。用于标记在哪里运行管道或单个阶段的标签。</li>
+<li><code>customWorkspace</code>： 一个字符串。在agent上自定义工作区来运行pipeline或单个stage</li>
+<li><p><code>reuseNode</code>： 默认为false。如果为真，则在管道顶层指定的节点的相同的工作区上运行容器，而不是在新节点上运行容器。仅在 单个stage中使用agent才有效。</p>
+</li>
+<li><p><code>args</code>： 一个字符串。要传递给docker run的运行时参数。</p>
+</li>
+</ul>
+<h2 id="2-3-post"><a href="#2-3-post" class="headerlink" title="2.3 post"></a>2.3 post</h2><p>定义Pipeline或stage运行结束时的操作。post-condition块支持post部件：<code>always</code>, <code>changed</code>, <code>failure</code>, <code>success</code>, <code>unstable</code>, 和 <code>aborted</code>。这些块允许在Pipeline或stage运行结束时执行步骤，具体取决于Pipeline的状态。</p>
+<p><strong>conditions</strong></p>
+<ul>
+<li><code>always</code>：无论流水线或阶段的完成状态如何，都允许在 <code>post</code> 部分运行该步骤。</li>
+<li><code>changed</code>：只有当前流水线或阶段的完成状态与它之前的运行不同时，才允许在 <code>post</code> 部分运行该步骤。</li>
+<li><code>failure</code>：只有当前流水线或阶段的完成状态为”failure”，才允许在 <code>post</code> 部分运行该步骤。</li>
+<li><code>success</code>：只有当前流水线或阶段的完成状态为”success”，才允许在 <code>post</code> 部分运行该步骤。</li>
+<li><code>unstable</code>：只有当前流水线或阶段的完成状态为”unstable”，才允许在 <code>post</code> 部分运行该步骤。</li>
+<li><code>aborted</code>：只有当前流水线或阶段的完成状态为”aborted”，才允许在 <code>post</code> 部分运行该步骤。</li>
+<li><code>cleanup</code>： 无论流水线或阶段的状态如何，在评估完所有其他post条件之后，在此post条件中运行步骤。</li>
+<li><p><code>unsuccessful</code>：只有当前流水线或阶段的运行不为“成功”状态时，才在post中运行这些步骤</p>
+</li>
+<li><p><code>regression</code>： 只有当前流水线或阶段运行状态为<code>failure</code>、<code>unstable</code>或<code>aborted</code>，且上一次运行<code>success</code>时，才在post中运行这些步骤。</p>
+</li>
+<li><p><code>fixed</code>： 只有当前流水线或阶段的运行成功，而前一个运行失败或不稳定时，才在post中运行这些步骤。</p>
+</li>
+</ul>
+<blockquote>
+<p>在这些conditions中，我们比较常用的就是<code>success</code>和<code>failure</code>了。通常用于构建成功或者失败发送构建通知的。</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">//</span> <span class="string">以下是一个用企业微信触发构建完成后成功和失败的通知</span></span><br><span class="line"><span class="string">post</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">success</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">script</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">sh("curl</span> <span class="bullet">-s</span> <span class="bullet">-X</span> <span class="string">POST</span> <span class="string">'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxx'</span> <span class="string">\</span></span><br><span class="line"><span class="bullet">                -</span><span class="string">H</span> <span class="string">'Content-Type: application/json'</span> <span class="string">\</span></span><br><span class="line"><span class="bullet">                -</span><span class="string">d</span> <span class="string">'&#123;\"msgtype\": \"markdown\",\"markdown\": &#123;\"content\": \"### &lt;font color=#00FF00&gt;Build Success！！ &lt;/font&gt; \n ”&#125;&#125;'</span><span class="string">")</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        failure &#123;</span></span><br><span class="line"><span class="string">            script &#123;</span></span><br><span class="line"><span class="string">                sh("</span><span class="string">curl</span> <span class="bullet">-s</span> <span class="bullet">-X</span> <span class="string">POST</span> <span class="string">'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxx'</span> <span class="string">\</span></span><br><span class="line"><span class="bullet">                -</span><span class="string">H</span> <span class="string">'Content-Type: application/json'</span> <span class="string">\</span></span><br><span class="line"><span class="bullet">                -</span><span class="string">d</span> <span class="string">'&#123;\"msgtype\": \"markdown\",\"markdown\": &#123;\"content\": \"### &lt;font color=#FF0000&gt;Build failed！！ &lt;/font&gt;  \n "&#125;&#125;'</span><span class="string">")</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-4-stages"><a href="#2-4-stages" class="headerlink" title="2.4 stages"></a>2.4 stages</h2><p>包含<code>一个或多个stage</code>指令的序列，Pipeline的大部分工作在此执行。建议stages至少包含至少一个stage指令，用于连接各个交付过程，如构建，测试和部署等。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span> </span><br><span class="line">        <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">echo</span> <span class="string">'Hello World'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-5-steps"><a href="#2-5-steps" class="headerlink" title="2.5 steps"></a>2.5 steps</h2><p><code>steps</code>部分定义了一系列要在给定阶段指令中执行的一个或多个步骤。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span> </span><br><span class="line">        <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">            	<span class="string">sh</span> <span class="string">"curl http://www.baidu.com"</span></span><br><span class="line">                <span class="string">echo</span> <span class="string">'Hello World'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-6-environment"><a href="#2-6-environment" class="headerlink" title="2.6 environment"></a>2.6 environment</h2><p><code>environment</code>指令指定一系列键值对，这些键值对将被定义为<code>所有steps</code>或<code>指定stage中steps</code>的环境变量，具体取决于environment指令在Pipeline中的位置。该指令支持一种特殊的方法<code>credentials()</code>，可以通过其在Jenkins环境中的标识符来访问预定义的凭据。</p>
+<p><strong>支持的凭据类型</strong></p>
+<ul>
+<li><code>Secret Text</code>：指定的环境变量将被设置为秘密文本内容。输出结果为密码格式的点点点。</li>
+<li><code>Secret File</code>：指定的环境变量将被设置到临时创建的文件的位置</li>
+<li><code>Username and password</code>：指定的环境变量将设置为username:password，另外两个环境变量将自动定义:<code>MYVARNAME_USR</code>和<code>MYVARNAME_PSW</code>。</li>
+<li><code>SSH with Private Key</code>：指定的环境变量将被设置到临时创建的SSH密钥文件的位置，还可以自动定义两个额外的环境变量:<code>MYVARNAME_USR</code>和<code>MYVARNAME_PSW</code>(保存密码)。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">    <span class="string">environment</span> <span class="string">&#123;</span> <span class="comment"># 顶级流水线块中使用的环境指令将应用于pipeline中的所有stage</span></span><br><span class="line">        <span class="string">CC</span> <span class="string">=</span> <span class="string">'clang'</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">environment</span> <span class="string">&#123;</span> <span class="comment"># 在阶段中定义的环境指令只将给定的环境变量应用于阶段中的steps</span></span><br><span class="line">                <span class="string">AN_ACCESS_KEY</span> <span class="string">=</span> <span class="string">credentials('my-prefined-secret-text')</span> </span><br><span class="line">                <span class="comment"># environment块有一个帮助方法credentials()，可以使用其在Jenkins环境中的标识符访问预定义凭证。</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">sh</span> <span class="string">'printenv'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-7-options"><a href="#2-7-options" class="headerlink" title="2.7 options"></a>2.7 options</h2><p><code>options</code> 指令允许从流水线内部配置特定于流水线的选项。 流水线提供了许多这样的选项, 比如 <code>buildDiscarder</code>,但也可以由插件提供, 比如 <code>timestamps</code>, 如：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">options &#123;</span><br><span class="line">  buildDiscarder(logRotator(numToKeepStr: '1'))  // pipeline保持构建的最大个数</span><br><span class="line">  checkoutToSubdirectory('foo') // 在工作区的子目录中执行自动源代码控制检出</span><br><span class="line">  disableConcurrentBuilds() // 不允许并行执行Pipeline,可用于防止同时访问共享资源等</span><br><span class="line">  skipDefaultCheckout() // 默认跳过来自源代码控制的代码</span><br><span class="line">  skipStagesAfterUnstable() // 一旦构建状态进入了"Unstable"状态，就跳过此stage</span><br><span class="line">  timeout(time: 1, unit: 'HOURS') // 设置Pipeline运行的超时时间</span><br><span class="line">  retry(3) // 失败后，重试整个Pipeline的次数</span><br><span class="line">  timestamps() // 预定义由Pipeline生成的所有控制台输出时间</span><br><span class="line">  quietPeriod(30) // 设置pipeline的静默期（以秒为单位），覆盖全局默认值</span><br><span class="line">  disableResume() // 如果主程序重新启动，不允许恢复管道</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-7-1-stage-options"><a href="#2-7-1-stage-options" class="headerlink" title="2.7.1 stage options"></a>2.7.1 stage options</h3><p><code>stage options</code>指令类似于pipeline顶层目录中的options指令。然而，<code>stage options</code>只能包含<code>retry</code>、<code>timeout</code>或<code>timestamps</code>等步骤，或者与阶段相关的声明性选项，如<code>skipDefaultCheckout</code></p>
+<h2 id="2-8-parameters"><a href="#2-8-parameters" class="headerlink" title="2.8 parameters"></a>2.8 parameters</h2><p>parameters指令提供用户在触发管道时应该提供的参数列表。也就是平常使用的参数化构建。这些用户指定参数的值可通过params对象用于pipeline steps。</p>
+<p><strong>可用的parameters</strong></p>
+<ul>
+<li><code>string</code>：字符串类型的参数。如：<code>parameters { string(name: &#39;DEPLOY_ENV&#39;, defaultValue: &#39;staging&#39;, description: &#39;&#39;) }</code></li>
+<li><code>text</code>：一个文本参数，它可以包含多行。如：<code>parameters { text(name: &#39;DEPLOY_TEXT&#39;, defaultValue: &#39;One\nTwo\nThree\n&#39;, description: &#39;&#39;) }</code></li>
+<li><code>booleanParam</code>：一个布尔参数，如：<code>parameters { booleanParam(name: &#39;DEBUG_BUILD&#39;, defaultValue: true, description: &#39;&#39;) }</code></li>
+<li><code>choice</code>：一个选择参数，如：<code>parameters { choice(name: &#39;CHOICES&#39;, choices: [&#39;one&#39;, &#39;two&#39;, &#39;three&#39;], description: &#39;&#39;) }</code></li>
+<li><code>password</code>：一个密码参数，如：<code>parameters { password(name: &#39;PASSWORD&#39;, defaultValue: &#39;SECRET&#39;, description: &#39;A secret password&#39;) }</code></li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">    <span class="string">parameters</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">string(name:</span> <span class="string">'PERSON'</span><span class="string">,</span> <span class="attr">defaultValue:</span> <span class="string">'Mr Jenkins'</span><span class="string">,</span> <span class="attr">description:</span> <span class="string">'Who should I say hello to?'</span><span class="string">)</span></span><br><span class="line"></span><br><span class="line">        <span class="string">text(name:</span> <span class="string">'BIOGRAPHY'</span><span class="string">,</span> <span class="attr">defaultValue:</span> <span class="string">''</span><span class="string">,</span> <span class="attr">description:</span> <span class="string">'Enter some information about the person'</span><span class="string">)</span></span><br><span class="line"></span><br><span class="line">        <span class="string">booleanParam(name:</span> <span class="string">'TOGGLE'</span><span class="string">,</span> <span class="attr">defaultValue:</span> <span class="literal">true</span><span class="string">,</span> <span class="attr">description:</span> <span class="string">'Toggle this value'</span><span class="string">)</span></span><br><span class="line"></span><br><span class="line">        <span class="string">choice(name:</span> <span class="string">'CHOICE'</span><span class="string">,</span> <span class="attr">choices:</span> <span class="string">['One',</span> <span class="string">'Two'</span><span class="string">,</span> <span class="string">'Three'</span><span class="string">],</span> <span class="attr">description:</span> <span class="string">'Pick something'</span><span class="string">)</span></span><br><span class="line"></span><br><span class="line">        <span class="string">password(name:</span> <span class="string">'PASSWORD'</span><span class="string">,</span> <span class="attr">defaultValue:</span> <span class="string">'SECRET'</span><span class="string">,</span> <span class="attr">description:</span> <span class="string">'Enter a password'</span><span class="string">)</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">echo</span> <span class="string">"Hello $&#123;params.PERSON&#125;"</span></span><br><span class="line"></span><br><span class="line">                <span class="string">echo</span> <span class="string">"Biography: $&#123;params.BIOGRAPHY&#125;"</span></span><br><span class="line"></span><br><span class="line">                <span class="string">echo</span> <span class="string">"Toggle: $&#123;params.TOGGLE&#125;"</span></span><br><span class="line"></span><br><span class="line">                <span class="string">echo</span> <span class="string">"Choice: $&#123;params.CHOICE&#125;"</span></span><br><span class="line"></span><br><span class="line">                <span class="string">echo</span> <span class="string">"Password: $&#123;params.PASSWORD&#125;"</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>以上示例结果如下：</p>
+<p><img src="C:\Users\Pyker\AppData\Roaming\Typora\typora-user-images\1567270095607.png" alt="1567270095607"></p>
+<h2 id="2-9-triggers"><a href="#2-9-triggers" class="headerlink" title="2.9 triggers"></a>2.9 triggers</h2><p><code>trigger指令</code>定义了应该重新触发管道的自动化方式。对于与源(如GitHub或BitBucket)集成的管道，可能不需要触发器，因为可能已经存在基于webhook的集成。目前可用的触发器有<code>cron</code>、<code>pollSCM</code>和<code>upstream</code>。</p>
+<ul>
+<li><p><code>cron</code>： 接受cron样式的字符串，以定义应该重新触发管道的常规间隔，如: <code>trigger {cron(&#39;H */4 * * * 1-5&#39;)}</code></p>
+</li>
+<li><p><code>pollSCM</code>：接受一个cron风格的字符串来定义Jenkins检查SCM源更改的常规间隔。如果存在新的更改，则Pipeline将被重新触发。如: <code>triggers { pollSCM(&#39;H */4 * * 1-5&#39;) }</code></p>
+</li>
+<li><code>upstream</code>：接受逗号分隔的作业字符串和阈值。当字符串中的任何作业以最小阈值结束时，将重新触发pipeline。如：  <code>triggers { upstream(upstreamProjects: &#39;job1,job2&#39;, threshold: hudson.model.Result.SUCCESS) }</code></li>
+</ul>
+<blockquote>
+<p>由于正真使用jenkins的触发器时，我们一般使用gitlab的webhooks。很少使用cron或者pollscm，所以这里就先跳过。</p>
+</blockquote>
+<h2 id="2-10-tools"><a href="#2-10-tools" class="headerlink" title="2.10 tools"></a>2.10 tools</h2><p>通过tools可自动安装工具，并放置环境变量到PATH。如果设置agent none，则忽略此操作。支持自动安装的工具有<code>maven</code>，<code>jdk</code>，<code>gradle</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">    <span class="string">tools</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">maven</span> <span class="string">'apache-maven-3.0.1'</span> </span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">sh</span> <span class="string">'mvn --version'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>通常这个我们也不会自动安装，都是手动指定，<code>在Jenkins 管理Jenkins → 全局工具配置中预配置</code></p>
+</blockquote>
+<h2 id="2-11-input"><a href="#2-11-input" class="headerlink" title="2.11 input"></a>2.11 input</h2><p>input指令允许你在stage中使用input step输入提示。在应用了任何options之后，以及在进入stage 、agent或评估其when条件之前，阶段将暂停。如果输入被批准，则阶段将继续。作为输入提交的一部分提供的任何参数都将在该阶段的其余部分的环境中可用。</p>
+<p><strong>配置的选项</strong></p>
+<ul>
+<li><code>message</code>：交互式构建显示给用户的提示信息。&lt;必需项参数&gt;</li>
+<li><code>id</code>：此输入的可选标识符。默认为stage名称</li>
+<li><code>ok</code>：交互式上“ok”按钮的文本样式</li>
+<li><code>submitter</code>：允许提交此输入的用户或外部组名的可选逗号分隔列表。默认允许任何用户</li>
+<li><code>submitterParameter</code>：环境变量的可选名称，如果存在，则使用提交者名称进行设置。</li>
+<li><code>parameters</code>：一个可选的参数列表。（上文已经说过）</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">  <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">  <span class="string">stages</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">      <span class="string">input</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">message</span> <span class="string">"Should we continue?"</span></span><br><span class="line">        <span class="string">ok</span> <span class="string">"Yes, we should."</span></span><br><span class="line">        <span class="string">submitter</span> <span class="string">"alice,bob"</span></span><br><span class="line">        <span class="string">parameters</span> <span class="string">&#123;</span></span><br><span class="line">          <span class="string">string(name:</span> <span class="string">'PERSON'</span><span class="string">,</span> <span class="attr">defaultValue:</span> <span class="string">'Mr Jenkins'</span><span class="string">,</span> <span class="attr">description:</span> <span class="string">'Who should I say hello to?'</span><span class="string">)</span></span><br><span class="line">             <span class="string">&#125;</span></span><br><span class="line">          <span class="string">&#125;</span></span><br><span class="line">      <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">         <span class="string">cho</span> <span class="string">"Hello, $&#123;PERSON&#125;, nice to meet you."</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>构建时效果如下：</p>
+<p><img src="C:\Users\Pyker\AppData\Roaming\Typora\typora-user-images\1567271373104.png" alt="1567271373104"></p>
+<h2 id="2-12-when"><a href="#2-12-when" class="headerlink" title="2.12 when"></a>2.12 when</h2><p><code>when指令</code>允许Pipeline根据给定的条件确定是否执行该阶段。该when指令必须至少包含一个条件。如果when指令包含多个条件，则所有子条件必须为stage执行返回true。这与子条件嵌套在一个allOf条件中相同（见下面的例子）。<br>更复杂的条件结构可使用嵌套条件建：not，allOf或anyOf。嵌套条件可以嵌套到任意深度。</p>
+<p><strong>内建的条件</strong></p>
+<ul>
+<li><code>branch</code> 当正在构建的分支与给出的分支模式匹配时才执行stage，如：<code>when { branch &#39;master&#39; }</code> 注：只适合多分支</li>
+<li><code>buildingTag</code> 当正在构建一个Tag时执行该阶段，如：<code>when { buildingTag() }</code></li>
+<li><code>changelog</code> 当构建的SCM变更日志包含给定的正则表达式模式，则执行该阶段，如：<code>when { changelog &#39;.*^\\[DEPENDENCY\\] .+$&#39; }</code></li>
+<li><code>changeset</code> 当构建的SCM变更集包含一个或多个匹配给定字符串或glob的文件，则执行该阶段</li>
+<li><code>changeRequest</code> 如果当前构建是针对“变更请求”(也就是GitHub和Bitbucket上的Pull请求、GitLab上的Merge请求或Gerrit中的变更等)，则执行该阶段。</li>
+<li><code>environment</code> 当指定的环境变量设置为给定值时执行，如：<code>when { environment name: &#39;DEPLOY_TO&#39;, value: &#39;production&#39; }</code></li>
+<li><code>equals</code> 当期望值等于实际值时执行该stage，如：<code>when { equals expected: 2, actual: currentBuild.number }</code></li>
+<li><code>expression</code> 当指定的Groovy表达式求值为true时执行，如：<code>when { expression { return params.DEBUG_BUILD } }</code></li>
+<li><code>tag</code> 如果TAG_NAME变量与给定的模式匹配，则执行该阶段，如: <code>when { tag &quot;release-*&quot; }</code></li>
+<li><code>not</code> 当嵌套条件为false时执行。必须包含一个条件，如：<code>when { not { branch &#39;master&#39; } }</code></li>
+<li><code>allOf</code>当所有嵌套条件都为真时执行。必须至少包含一个条件，如：<code>when { allOf { branch &#39;master&#39;; environment name: &#39;DEPLOY_TO&#39;, value: &#39;production&#39; } }</code></li>
+<li><code>anyOf</code> 当至少一个嵌套条件为真时执行。必须至少包含一个条件，如：<code>when { anyOf { branch &#39;master&#39;; branch &#39;staging&#39; } }</code></li>
+<li><code>triggeredBy</code> 当给定的参数触发当前构建时，执行该阶段</li>
+</ul>
+<blockquote>
+<p>常用的有<code>branch</code>、<code>expression</code>、<code>allOf</code>、<code>anyOf</code></p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">any</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">stage('Example</span> <span class="string">Build')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">echo</span> <span class="string">'Hello World'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">        <span class="string">stage('Example</span> <span class="string">Deploy')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">when</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">expression</span> <span class="string">&#123;</span> <span class="string">BRANCH_NAME</span> <span class="string">==~</span> <span class="string">/(production|staging)/</span> <span class="string">&#125;</span></span><br><span class="line">                <span class="string">anyOf</span> <span class="string">&#123;</span></span><br><span class="line">                    <span class="string">environment</span> <span class="attr">name:</span> <span class="string">'DEPLOY_TO'</span><span class="string">,</span> <span class="attr">value:</span> <span class="string">'production'</span></span><br><span class="line">                    <span class="string">environment</span> <span class="attr">name:</span> <span class="string">'DEPLOY_TO'</span><span class="string">,</span> <span class="attr">value:</span> <span class="string">'staging'</span></span><br><span class="line">                <span class="string">&#125;</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">echo</span> <span class="string">'Deploying'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-13-Sequential-Stage"><a href="#2-13-Sequential-Stage" class="headerlink" title="2.13 Sequential Stage"></a>2.13 Sequential Stage</h2><p>声明式 pipeline中的stage可以继续声明一个嵌套的stage列表，以便按顺序在其中运行，请注意，一个stage必须有且只有一个<code>steps</code>，<code>parallel</code>或<code>stages</code>，Sequential stage的最后一个阶段。如果<code>stage</code>指令嵌套在<code>parallel</code>块本身内，则不可能在<code>stage</code>指令内在嵌套<code>parallel</code>块。然而，<code>parallel</code>块中的<code>stage</code>指令可以使用<code>stage</code>的所有其他功能，包括<code>agent</code>, <code>tools</code>, <code>when</code>等，例如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">pipeline</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">agent</span> <span class="string">none</span></span><br><span class="line">    <span class="string">stages</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">stage('Non-Sequential</span> <span class="string">Stage')</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">agent</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">label</span> <span class="string">'for-non-sequential'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">            <span class="string">steps</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">echo</span> <span class="string">"On Non-Sequential Stage"</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">        <span class="string">stage('Sequential')</span> <span class="string">&#123;</span> <span class="comment"># 一个stage必须有且只有一个steps，parallel 或 stages</span></span><br><span class="line">            <span class="string">agent</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">label</span> <span class="string">'for-sequential'</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">            <span class="string">environment</span> <span class="string">&#123;</span></span><br><span class="line">                <span class="string">FOR_SEQUENTIAL</span> <span class="string">=</span> <span class="string">"some-value"</span></span><br><span class="line">            <span class="string">&#125;</span></span><br><span class="line">            <span class="string">stages</span> <span class="string">&#123;</span>  </span><br><span class="line">                <span class="string">stage('In</span> <span class="string">Sequential</span> <span class="number">1</span><span class="string">') &#123;</span></span><br><span class="line"><span class="string">                    steps &#123;</span></span><br><span class="line"><span class="string">                        echo "In Sequential 1"</span></span><br><span class="line"><span class="string">                    &#125;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                stage('</span><span class="string">In</span> <span class="string">Sequential</span> <span class="number">2</span><span class="string">') &#123;</span></span><br><span class="line"><span class="string">                    steps &#123;</span></span><br><span class="line"><span class="string">                        echo "In Sequential 2"</span></span><br><span class="line"><span class="string">                    &#125;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                stage('</span><span class="string">Parallel</span> <span class="string">In</span> <span class="string">Sequential')</span> <span class="string">&#123;</span></span><br><span class="line">                    <span class="string">parallel</span> <span class="string">&#123;</span>  <span class="comment"># stage指令嵌套在parallel块内，不能在stage指令内在嵌套parallel块</span></span><br><span class="line">                        <span class="string">stage('In</span> <span class="string">Parallel</span> <span class="number">1</span><span class="string">') &#123;</span></span><br><span class="line"><span class="string">                            steps &#123;</span></span><br><span class="line"><span class="string">                                echo "In Parallel 1"</span></span><br><span class="line"><span class="string">                            &#125;</span></span><br><span class="line"><span class="string">                        &#125;</span></span><br><span class="line"><span class="string">                        stage('</span><span class="string">In</span> <span class="string">Parallel</span> <span class="number">2</span><span class="string">') &#123;</span></span><br><span class="line"><span class="string">                            steps &#123;</span></span><br><span class="line"><span class="string">                                echo "In Parallel 2"</span></span><br><span class="line"><span class="string">                            &#125;</span></span><br><span class="line"><span class="string">                        &#125;</span></span><br><span class="line"><span class="string">                    &#125;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-14-parallel"><a href="#2-14-parallel" class="headerlink" title="2.14 parallel"></a>2.14 parallel</h2><p>声明式pipeline中的stages可以在一个parallel块中声明多个嵌套的stages，在一个parallel块中，它将并行执行。请注意，一个阶段必须有且只有一个<code>steps</code>, <code>stages</code> 或<code>parallel</code> 。嵌套的stage不能包含进一个的<code>parallel</code>阶段本身，但其行为与任何其他阶段相同。</p>
+<h2 id="2-15-script"><a href="#2-15-script" class="headerlink" title="2.15 script"></a>2.15 script</h2><p>script步骤需要一个script Pipeline，并在声明式Pipeline中执行。对于大多数用例，script在声明式Pipeline中的步骤不是必须的，但它可以提供一个有用的加强。</p>
+<h1 id="3-脚本式pipeline"><a href="#3-脚本式pipeline" class="headerlink" title="3. 脚本式pipeline"></a>3. 脚本式pipeline</h1><p>Groovy脚本不一定适合所有使用者，因此jenkins创建了声明式pipeline，为编写Jenkins管道提供了一种更简单、更有主见的语法。但是不可否认，由于脚本化的pipeline是基于groovy的一种DSL语言，所以与声明式pipeline相比为jenkins用户提供了更巨大的灵活性和可扩展性。</p>
+<h2 id="3-1-流程控制"><a href="#3-1-流程控制" class="headerlink" title="3.1 流程控制"></a>3.1 流程控制</h2><p>脚本化pipeline从Jenkinsfile的顶部向下连续执行，就像Groovy或其他语言中的大多数传统脚本一样。因此，提供流控制依赖于Groovy表达式，比如<code>if/else</code>条件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">node</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">if</span> <span class="string">(env.BRANCH_NAME</span> <span class="string">==</span> <span class="string">'master'</span><span class="string">)</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">echo</span> <span class="string">'I only execute on the master branch'</span></span><br><span class="line">        <span class="string">&#125;</span> <span class="string">else</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">echo</span> <span class="string">'I execute elsewhere'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>管理脚本化pipeline流控制的另一种方法是使用Groovy的异常处理支持。当步骤由于某种原因失败时，它们会抛出异常。错误处理行为必须使用Groovy中的<code>try/catch/finally</code>块</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">node</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">stage('Example')</span> <span class="string">&#123;</span></span><br><span class="line">        <span class="string">try</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">sh</span> <span class="string">'exit 1'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">        <span class="string">catch</span> <span class="string">(exc)</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">echo</span> <span class="string">'Something failed, I should sound the klaxons!'</span></span><br><span class="line">            <span class="string">throw</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-2-Steps"><a href="#3-2-Steps" class="headerlink" title="3.2 Steps"></a>3.2 Steps</h2><p>正如我们开始所讨论的，pipeline最基本的部分是“steps”。从根本上说，steps告诉Jenkins要做什么，并作为声明性和脚本化pipeline语法的基本构建块。脚本化pipeline不引入任何特定于其语法的steps;而<a href="https://jenkins.io/doc/pipeline/steps/" target="_blank" rel="noopener">pipeline steps reference</a>包含管道和插件提供的完整步骤列表。</p>
+<h1 id="4-Jenkins常用内置全局变量"><a href="#4-Jenkins常用内置全局变量" class="headerlink" title="4. Jenkins常用内置全局变量"></a>4. Jenkins常用内置全局变量</h1><h2 id="4-1-为docker提供的变量"><a href="#4-1-为docker提供的变量" class="headerlink" title="4.1 为docker提供的变量"></a>4.1 为docker提供的变量</h2><ul>
+<li><code>Image.id</code>：带有标签的镜像名称或者镜像ID</li>
+<li><code>Container.id</code>：正在运行的容器ID</li>
+<li><code>Container.stop</code>：运行docker stop和docker rm关闭容器并且删除其存储</li>
+<li><code>Container.port(port)</code>： 显示容器端口和主机端口的映射方式</li>
+</ul>
+<h2 id="4-2-为环境变量env提供的变量"><a href="#4-2-为环境变量env提供的变量" class="headerlink" title="4.2 为环境变量env提供的变量"></a>4.2 为环境变量env提供的变量</h2><ul>
+<li><code>BRANCH_NAME</code>： 正在构建的分支的名称</li>
+<li><code>BUILD_BUMBER</code>：当前构建号，例如“153”</li>
+<li><code>BUILD_ID</code>：当前构建ID，与BUILD_NUMBER相同，但对于较旧构建，则为YYYY-MM-DD_hh-mm-ss时间戳</li>
+<li><code>JOB_NAME</code>：此构建的项目名称，如“foo”或“foo/bar”</li>
+<li><code>JOB_BASE_NAME</code>：此构建的项目的简短名称，将文件夹路径剥离，例如“foo”替换为“bar/foo”。</li>
+<li><code>BUILD_TAG</code>：字符串“jenkins-<em>${JOB_NAME}</em>-<em>${BUILD_NUMBER}</em>“，所有前斜杠(“/“)都替换为斜杠(“-“)。</li>
+<li><code>EXECUTOR_NUMBER</code>：标识执行此构建的当前执行器(同一机器的执行器之间的执行器)的惟一数字</li>
+<li><code>NODE_NAME</code>：如果构建在代理上，则代理的名称;如果运行在主代理上，则为“master”</li>
+<li><code>WORKSPACE</code>：分配给构建项目工作空间的目录的绝对路径。</li>
+<li><code>NODE_LABELS</code>：指定节点的标签的空白分隔列表。</li>
+<li><code>JENKINS_HOME</code>：在主节点上为Jenkins分配的用于存储数据的目录的绝对路径。</li>
+<li><code>JENKINS_URL</code>：jenkins的完整URL，（注意：仅在系统配置中设置了Jenkins URL才可用）</li>
+<li><code>BUILD_URL</code>：此构建的完整URL，如<code>http://server:port/jenkins/job/foo/15/</code>(必须设置jenkins URL)</li>
+<li><code>JOB_URL</code>:此作业的完整URL，如<code>http://server:port/jenkins/job/foo/</code>(必须设置jenkins URL)</li>
+</ul>
+<h2 id="4-3-为currentBuild提供的变量"><a href="#4-3-为currentBuild提供的变量" class="headerlink" title="4.3 为currentBuild提供的变量"></a>4.3 为currentBuild提供的变量</h2><p>该<code>currentBuild</code>变量属于<a href="https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html" target="_blank" rel="noopener">RunWrapper</a>类型 ，可用于引用当前运行的构建。它具有以下可读属性：</p>
+<ul>
+<li><code>number</code>：内部编号</li>
+<li><code>displayName</code>：通常<code>#123</code>但有时设置为例如SCM提交标识符。</li>
+<li><code>result</code>：通常为<code>SUCCESS</code>, <code>UNSTABLE</code>, <code>FAILURE</code> （对于正在进行的构建<em>可能</em>为null）</li>
+<li><code>currentResult</code>：典型地<code>SUCCESS</code>，<code>UNSTABLE</code>或<code>FAILURE</code>。永远不会为空。</li>
+<li><code>projectName</code>：构建此项目的名称，例如<code>foo</code>。</li>
+<li><code>duration</code>： 构建过程持续的时间 ，单位ms</li>
+<li><code>durationString</code>：人们可读的构建过程持续时间</li>
+<li><code>description</code>：有关构建的附加信息</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/wechatpay.png" alt="丨Pyker丨 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/reward/alipay.png" alt="丨Pyker丨 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Pyker</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://www.ipyker.com/2019/08/30/pipeline简介.html" title="pipeline语法初认识">https://www.ipyker.com/2019/08/30/pipeline简介.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jenkins/" rel="tag"><i class="fa fa-tag"></i> jenkins</a>
+          
+            <a href="/tags/pipeline/" rel="tag"><i class="fa fa-tag"></i> pipeline</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/30/ambari.html" rel="next" title="Ambari 2.7.3与HDP 3.1.0安装过程">
+                <i class="fa fa-chevron-left"></i> Ambari 2.7.3与HDP 3.1.0安装过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NDM5Mi8yMDkyNA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="丨Pyker丨">
+            
+              <p class="site-author-name" itemprop="name">丨Pyker丨</p>
+              <div class="site-description motion-element" itemprop="description">与其临渊羡鱼，不如退而结网。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">48</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ipyker" title="GitHub &rarr; https://github.com/ipyker" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:pyker@qq.com" title="E-Mail &rarr; mailto:pyker@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/viszhang" title="Weibo &rarr; https://weibo.com/viszhang" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="tencent://message/?uin=123435796&Site=&menu=yes" title="QQ &rarr; tencent://message/?uin=123435796&Site=&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-book"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ttlsa.com/" title="http://www.ttlsa.com/" rel="noopener" target="_blank">运维生存时间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.iyunw.cn" title="https://www.iyunw.cn" rel="noopener" target="_blank">爱运维</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nginxconfig.io/" title="https://nginxconfig.io/" rel="noopener" target="_blank">Nginxconfig</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://linux.51yip.com/" title="http://linux.51yip.com/" rel="noopener" target="_blank">Linux命令手册</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://echarts.baidu.com/index.html" title="https://echarts.baidu.com/index.html" rel="noopener" target="_blank">echarts可视化库</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-pipeline简介"><span class="nav-number">1.</span> <span class="nav-text">1. pipeline简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-语法介绍"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 语法介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-声明式pipeline"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 声明式pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-脚本化pipeline"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 脚本化pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-pipeline概念"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 pipeline概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-pipeline指令"><span class="nav-number">2.</span> <span class="nav-text">2. pipeline指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-agent"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-常见选项"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 常见选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-post"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 post</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-stages"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 stages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-steps"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 steps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-environment"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 environment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-options"><span class="nav-number">2.7.</span> <span class="nav-text">2.7 options</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-1-stage-options"><span class="nav-number">2.7.1.</span> <span class="nav-text">2.7.1 stage options</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-8-parameters"><span class="nav-number">2.8.</span> <span class="nav-text">2.8 parameters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-9-triggers"><span class="nav-number">2.9.</span> <span class="nav-text">2.9 triggers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-10-tools"><span class="nav-number">2.10.</span> <span class="nav-text">2.10 tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-11-input"><span class="nav-number">2.11.</span> <span class="nav-text">2.11 input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-12-when"><span class="nav-number">2.12.</span> <span class="nav-text">2.12 when</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-13-Sequential-Stage"><span class="nav-number">2.13.</span> <span class="nav-text">2.13 Sequential Stage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-14-parallel"><span class="nav-number">2.14.</span> <span class="nav-text">2.14 parallel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-15-script"><span class="nav-number">2.15.</span> <span class="nav-text">2.15 script</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-脚本式pipeline"><span class="nav-number">3.</span> <span class="nav-text">3. 脚本式pipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-流程控制"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 流程控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Steps"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Steps</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Jenkins常用内置全局变量"><span class="nav-number">4.</span> <span class="nav-text">4. Jenkins常用内置全局变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-为docker提供的变量"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 为docker提供的变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-为环境变量env提供的变量"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 为环境变量env提供的变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-为currentBuild提供的变量"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 为currentBuild提供的变量</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style=" text-align:center;">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pyker</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"> 站点字数合计:</i>
+    </span>
+    
+    <span title="站点总字数">462k</span>
+  
+  
+  <span class="post-meta-divider">|</span>
+  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">粤ICP备19028706号 </a>
+
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+<div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("07/23/2017 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+        
+<div class="busuanzi-count" style=" text-align:center;">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+    
+    
+      
+    
+  
+  <script color="255,0,255" opacity="0.7" zindex="-1" count="140" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1.0.0/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2019/08/30/pipeline简介.html'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

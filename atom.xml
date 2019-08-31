@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.ipyker.com/"/>
-  <updated>2019-08-30T16:24:09.756Z</updated>
+  <updated>2019-08-31T18:30:07.180Z</updated>
   <id>https://www.ipyker.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>pipeline语法初认识</title>
+    <link href="https://www.ipyker.com/2019/08/30/pipeline%E7%AE%80%E4%BB%8B.html"/>
+    <id>https://www.ipyker.com/2019/08/30/pipeline简介.html</id>
+    <published>2019-08-30T12:43:00.000Z</published>
+    <updated>2019-08-31T18:30:07.180Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="CI/CD" scheme="https://www.ipyker.com/categories/CI-CD/"/>
+    
+    
+      <category term="jenkins" scheme="https://www.ipyker.com/tags/jenkins/"/>
+    
+      <category term="pipeline" scheme="https://www.ipyker.com/tags/pipeline/"/>
+    
+  </entry>
   
   <entry>
     <title>Ambari 2.7.3与HDP 3.1.0安装过程</title>
@@ -513,32 +541,6 @@
     
     
       <category term="git" scheme="https://www.ipyker.com/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mysql状态信息查询</title>
-    <link href="https://www.ipyker.com/2018/10/22/mysql-status.html"/>
-    <id>https://www.ipyker.com/2018/10/22/mysql-status.html</id>
-    <published>2018-10-22T13:47:00.000Z</published>
-    <updated>2019-05-23T18:38:07.189Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="SQL" scheme="https://www.ipyker.com/categories/SQL/"/>
-    
-    
-      <category term="mysql" scheme="https://www.ipyker.com/tags/mysql/"/>
     
   </entry>
   
