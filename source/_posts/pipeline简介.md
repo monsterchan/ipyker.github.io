@@ -355,7 +355,7 @@ pipeline {
 
 以上示例结果如下：
 
-![1567270095607](C:\Users\Pyker\AppData\Roaming\Typora\typora-user-images\1567270095607.png)
+![](/images/pic/pipeline1.png)
 
 ## 2.9 triggers
 
@@ -428,7 +428,7 @@ pipeline {
 
 构建时效果如下：
 
-![1567271373104](C:\Users\Pyker\AppData\Roaming\Typora\typora-user-images\1567271373104.png)
+![](/images/pic/pipeline2.png)
 
 ## 2.12 when
 
