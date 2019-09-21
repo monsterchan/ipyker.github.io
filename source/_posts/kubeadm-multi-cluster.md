@@ -604,7 +604,7 @@ $ sh /root/kubernetes-images.sh
 
 ## 初始化集群
 ```bash
-$ kubeadm init --config kubeadm-init.yaml
+$ kubeadm init --config kubeadm-init.yaml --experimental-upload-certs
 [init] Using Kubernetes version: v1.14.3
 [preflight] Running pre-flight checks
 	[WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
